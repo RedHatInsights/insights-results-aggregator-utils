@@ -1,11 +1,11 @@
 # insights-results-aggregator-utils
 Utilities for Insights Results Aggregator
 
-# Utilitites for handling messages to be consumed by aggregator
+## Utilitites for handling messages to be consumed by aggregator
 
 These utilities are stored in `input` subdirectory.
 
-## `anonymize.py`
+### `anonymize.py`
 
 Anonymize input data produced by OCP rules engine.
 
@@ -16,7 +16,7 @@ sensitive data. Output file names are in format 's_number.json', ie.
 the original file name is not preserved as it also might contain
 sensitive data.
 
-## `2report.py`
+### `2report.py`
 
 Converts outputs from OCP rule engine into proper reports.
 
@@ -31,7 +31,7 @@ It is done by inserting organization ID, clusterName and lastChecked
 attributes and by rearanging output structure. Output files will
 have following names: 'r_\*.json'.
 
-## `fill_in_results.sh`
+### `fill_in_results.sh`
 
 This script can be used to fill in the aggregator database in the selected pipeline with data taken from test clusters.
 It performs several operations:
@@ -41,23 +41,19 @@ It performs several operations:
 1. Anonymize OCP rules results
 1. Convert OCP rules results into a form compatible with aggregator. These results (JSONs) can be published into Kafka using `produce.sh` (several times if needed)
 
-### Usage
+#### Usage
 
 ```shell
 ./fill_in_results.sh archive.tar.bz org_id cluster_name
 ```
 
-### A real example
+#### A real example
 
 ```shell
 ./fill_in_results.sh external-rules-archives-2020-03-31.tar 11789772 5d5892d3-1f74-4ccf-91af-548dfc9767aa
 ```
 
-## `stat.py`
-
-This script can be used to display statistic about rules that really 'hit' problems on clusters. Can be used against test data or production data if needed.
-
-## `gen_broken_messages.py`
+### `gen_broken_messages.py`
 
 This script read input message (that should be coorect) and generates bunch of new messages. Each generated message is broken in some way so it is possible to use such messages to test how broken messages are handled on aggregator (ie. consumer) side.
 
@@ -66,7 +62,15 @@ Types of input message mutation:
 * new items with random key and content can be added
 * any item can be replaced by new random content
 
-## `affected_clusters.py`
+## Utilitites for generating reports etc.
+
+These utilities are stored in `reports` subdirectory.
+
+### `stat.py`
+
+This script can be used to display statistic about rules that really 'hit' problems on clusters. Can be used against test data or production data if needed.
+
+### `affected_clusters.py`
 
 This script can be used to analyze data exported from `report` table by
 the following command typed into PSQL console:
