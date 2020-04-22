@@ -84,7 +84,7 @@ for filename in files:
                     if "reports" in data:
                         reports = data["reports"]
                         for r in reports:
-                            rule = p["component"]
+                            rule = r["component"]
                             reported_cnt[rule] += 1
 
 print("Rule, passed, reported, skipped")
