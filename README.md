@@ -111,3 +111,27 @@ optional arguments:
   -m MAX_RECORDS, --max_records MAX_RECORDS
                         max records to export (default=all)
 ```
+
+## Monitoring tools
+
+These utilities are stored in `monitoring` subdirectory.
+
+### `go_metrics.py`
+
+Script to retrieve memory and GC statistic from the standard Go metrics. Memory and GC statistic is being exported into CSV file to be further processed.
+
+#### Usage
+
+```
+usage: go_metrics.py [-h] [-u URL] -o OUTPUT [-d DELAY] [-m MAX_RECORDS]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -u URL, --url URL     URL to get metrics
+  -o OUTPUT, --output OUTPUT
+                        output file name
+  -d DELAY, --delay DELAY
+                        Delay in seconds between records
+  -m MAX_RECORDS, --max_records MAX_RECORDS
+                        max records to export (default=all)
+```
