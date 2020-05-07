@@ -135,3 +135,30 @@ optional arguments:
   -m MAX_RECORDS, --max_records MAX_RECORDS
                         max records to export (default=all)
 ```
+
+## Checking tools
+
+These utilities are stored in `checks` subdirectory.
+
+### `json_check.py`
+
+Simple checker if all JSONs have the correct syntax (not scheme).
+
+Usage:
+
+```
+usage: json_check.py [-h] [-v]
+
+optional arguments:
+  -h, --help     show this help message and exit
+  -v, --verbose  make it verbose
+  -n, --no-colors  disable color output
+```
+
+## Animation etc.
+
+These utilities are stored in `anim` subdirectory.
+
+### `anim_aggregator_consumer.go`
+
+Specialized utility used just to create https://github.com/RedHatInsights/insights-results-aggregator/blob/master/doc/anim_aggregator_consumer.gif
