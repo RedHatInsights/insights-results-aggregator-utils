@@ -62,6 +62,46 @@ Types of input message mutation:
 * new items with random key and content can be added
 * any item can be replaced by new random content
 
+### `gen_broken_jsons.py`
+
+This script read input message (that should be correct) and generates bunch of new messages. Each generated message is broken - it does not contain proper JSON object - to test how broken messages are handled on aggregator (ie. consumer) side.
+
+Types of input message mutation:
+* any item (identified by its key) can be removed
+* new items with random key and content can be added
+* any item can be replaced by new random content
+
+#### Usage
+
+```
+usage: gen_broken_jsons.py [-h] -i INPUT [-o OUTPUT] [-e EXPORTED] [-v] [-s]
+                           [-a] [-d] [-m] [-ap ADD_LINE_PROBABILITY]
+                           [-dp DELETE_LINE_PROBABILITY]
+                           [-mp MUTATE_LINE_PROBABILITY]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -i INPUT, --input INPUT
+                        name of input file
+  -o OUTPUT, --output OUTPUT
+                        template for output file name (default out_{}.json)
+  -e EXPORTED, --exported EXPORTED
+                        number of JSONs to be exported (10 by default)
+  -v, --verbose         make it verbose
+  -s, --shuffle_lines   shufffle lines to produce improper JSON
+  -a, --add_lines       add random lines to produce improper JSON
+  -d, --delete_lines    delete randomly selected lines to produce improper
+                        JSON
+  -m, --mutate_lines    mutate lines individually
+  -ap ADD_LINE_PROBABILITY, --add_line_probability ADD_LINE_PROBABILITY
+                        probability of new line to be added (0-100)
+  -dp DELETE_LINE_PROBABILITY, --delete_line_probability DELETE_LINE_PROBABILITY
+                        probability of line to be deleted (0-100)
+  -mp MUTATE_LINE_PROBABILITY, --mutate_line_probability MUTATE_LINE_PROBABILITY
+                        probability of line to be mutate (0-100)
+```
+
+
 ## Utilitites for generating reports etc.
 
 These utilities are stored in `reports` subdirectory.
