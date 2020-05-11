@@ -128,7 +128,7 @@ These utilities are stored in `s3` subdirectory.
 
 ### `upload_timestamps.py`
 
-"""Script to retrieve timestamp of all objects stored in AWS S3 bucket and export them to CSV."""
+Script to retrieve timestamp of all objects stored in AWS S3 bucket and export them to CSV.
 
 #### Usage
 
