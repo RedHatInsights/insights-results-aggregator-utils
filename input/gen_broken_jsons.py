@@ -175,7 +175,7 @@ def mutate_payload(args):
         payload = delete_random_lines(payload, args.delete_line_probability, args.verbose)
     if args.mutate_lines:
         payload = mutate_lines(payload, args.mutate_line_probability, args.verbose)
-        return payload
+    return payload
 
 
 def main(filename):
@@ -196,7 +196,7 @@ def main(filename):
 
 
 if len(sys.argv) < 2:
-    print("Usage: python gen_broken_messages.py input_file.json")
+    print("Usage: python gen_broken_messages.py -i=input_file.json")
     sys.exit(1)
 
 main(sys.argv[1])
