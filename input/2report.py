@@ -62,7 +62,7 @@ for filename in files:
             data = json.load(fin)
             remove_internal_rules(data, "reports", "component")
             remove_internal_rules(data, "pass", "component")
-            remove_internal_rules(data, "skips", "rule_fqdn") # oh my...
+            remove_internal_rules(data, "skips", "rule_fqdn")  # oh my...
 
             outfilename = "r_" + filename[2:]
             report = {}
