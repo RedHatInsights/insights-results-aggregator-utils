@@ -43,6 +43,7 @@ orgID = sys.argv[1]
 clusterName = sys.argv[2]
 lastChecked = datetime.datetime.utcnow().isoformat() + "Z"
 
+
 def remove_internal_rules(data, key, selector):
     if "reports" in data:
         if key in data:
