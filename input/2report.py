@@ -55,6 +55,7 @@ def remove_internal_rules(data, key, selector):
                     new.append(report)
             data[key] = new
 
+
 for filename in files:
     if filename.startswith("s_") and filename.endswith(".json"):
         with open(filename) as fin:
