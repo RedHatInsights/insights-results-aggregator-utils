@@ -10,7 +10,7 @@ from argparse import ArgumentParser
 
 
 def current_time_formatted():
-    """GitHub API accepts timestamp in following format: '2020-03-10T16:00:00Z'."""
+    """Prepare timestamp in a format: '2020-03-10T16:00:00Z' that is accepted by GitHub API."""
     return datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
 
 
