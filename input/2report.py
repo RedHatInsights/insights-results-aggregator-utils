@@ -45,6 +45,7 @@ lastChecked = datetime.datetime.utcnow().isoformat() + "Z"
 
 
 def remove_internal_rules(data, key, selector):
+    """Filter all rules and remove internal ones."""
     if "reports" in data:
         if key in data:
             reports = data[key]
