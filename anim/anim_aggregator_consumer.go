@@ -29,7 +29,12 @@ func readOriginal(filename string) *image.Paletted {
 	if err != nil {
 		panic(err)
 	}
-	defer fin.Close()
+	defer func() {
+		err := fin.Close()
+		if err != nil {
+			panic(err)
+		}
+	}()
 
 	reader := bufio.NewReader(fin)
 
