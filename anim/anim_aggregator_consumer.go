@@ -45,7 +45,12 @@ func writeAnimation(filename string, images []*image.Paletted, delays []int) {
 	if err != nil {
 		panic(err)
 	}
-	defer outfile.Close()
+	defer func() {
+		err := outfile.Close()
+		if err != nil {
+			panic(err)
+		}
+	}()
 
 	err = gif.EncodeAll(outfile, &gif.GIF{
 		Image: images,
