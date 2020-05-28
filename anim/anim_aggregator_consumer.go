@@ -47,10 +47,13 @@ func writeAnimation(filename string, images []*image.Paletted, delays []int) {
 	}
 	defer outfile.Close()
 
-	gif.EncodeAll(outfile, &gif.GIF{
+	err = gif.EncodeAll(outfile, &gif.GIF{
 		Image: images,
 		Delay: delays,
 	})
+	if err != nil {
+		panic(err)
+	}
 }
 
 func drawAnt(img *image.Paletted, x0 int, y0 int, col int) {
