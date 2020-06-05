@@ -197,6 +197,31 @@ optional arguments:
                         directory with JSON files to check
 ```
 
+## Utilities for logs handling
+
+### `anonymize_aggegator_log.py`
+
+Anonymize aggregator log files by hashing organization ID and cluster ID.
+This tool works as a standard Unix filter.
+
+
+#### Usage:
+
+```
+ anonymize_aggegator_log.py [-h] -s SALT
+
+ optional arguments:
+   -h, --help            show this help message and exit
+   -s SALT, --salt SALT  salt for hashing algorithm
+```
+
+### Example:
+
+```
+ anonymize_aggegator_log.py -s foobar < original.log > anonymized.log
+```
+
+
 ## Animation etc.
 
 These utilities are stored in `anim` subdirectory.
