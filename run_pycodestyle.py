@@ -21,14 +21,28 @@ import pycodestyle
 
 def main():
     """Run pydocstyle checker against all Python sources in the given directory."""
+    # Find all files in current directory and subdirectories with '*.py' extension.
+    # Files are found recursivelly.
     files = list(Path(".").rglob("*.py"))
 
+    # Setup the module to check style of Python sources. We already have global
+    # configuration file 'setup.cfg' that can be used. Also verbose mode would
+    # be useful for our purposes.
     style = pycodestyle.StyleGuide(quiet=False, config_file='setup.cfg')
+
+    # Check the style for all Python sources found in current directory and all
+    # subdirectories. All detected issues are displayed in the meantime.
     result = style.check_files(files)
+
+    # Print number of errors at the end of check.
     print("Total errors:", result.total_errors)
+
+    # If any error is found, return with exit code check to non-zero value.
     if result.total_errors > 0:
         exit(1)
 
 
+# If this script is started from command line, run the `main` function which is
+# entry point to the processing.
 if __name__ == "__main__":
     main()
