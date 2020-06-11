@@ -23,6 +23,8 @@
 #   -h, --help            show this help message and exit
 #   -s SALT, --salt SALT  salt for hashing algorithm
 
+# Example:
+# anonymize_aggegator_log.py -s foobar < original.log > anonymized.log
 
 from hashlib import blake2b
 from argparse import ArgumentParser
