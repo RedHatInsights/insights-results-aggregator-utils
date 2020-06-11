@@ -104,6 +104,9 @@ def main():
     # and fill in the object named `args`.
     args = parser.parse_args()
 
+    # Retrieve the salt to be used by hashing algorithm.
+    salt = args.salt.encode('utf-8')
+
     # This script works as a standard Unix filter (input->output), so we have
     # to process input in line-by-line basis.
     for cnt, line in enumerate(stdin):
@@ -111,7 +114,7 @@ def main():
         # If the line contains any information that need to be anonymized,
         # do so.
         if '"organization":' in line and '"cluster":"' in line:
-            line = hash_sensitive_values(line, salt=args.salt.encode('utf-8'))
+            line = hash_sensitive_values(line, salt=salt)
         print(line)
 
 

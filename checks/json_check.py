@@ -124,4 +124,4 @@ def main():
 # If this script is started from command line, run the `main` function which is
 # entry point to the processing.
 if __name__ == "__main__":
-        main()
+    main()
