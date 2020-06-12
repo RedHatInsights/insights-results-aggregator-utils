@@ -230,7 +230,7 @@ This tool works as a standard Unix filter.
 #### Usage:
 
 ```
- anonymize_aggegator_log.py [-h] -s SALT < input.log > output.log
+ anonymize_ccx_pipeline_log.py [-h] -s SALT < input.log > output.log
 
  optional arguments:
    -h, --help            show this help message and exit
