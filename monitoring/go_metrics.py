@@ -26,7 +26,7 @@ import time
 from argparse import ArgumentParser
 from prometheus_client.parser import text_string_to_metric_families
 
-# all exported metrics
+# Tuple containing all exported metrics.
 exported_metrics = (
         "go_gc_duration_seconds_sum",
         "go_gc_duration_seconds_count",
@@ -40,38 +40,50 @@ exported_metrics = (
 def parse_metrics(exported_metrics, payload):
     """Parse metrics from payload returned from the monitored service."""
     metrics = []
+
+    # Iterate over all families in retrieved payload.
     for family in text_string_to_metric_families(str(payload)):
+        # Each family consists of set of samples.
         for sample in family.samples:
             name, labels, value = sample
-            # try to find all metrics that need to be exported
+            # Try to find all metrics that need to be exported.
             for exported_metric in exported_metrics:
                 if exported_metric == name:
+                    # Construct the list to be exported from this function.
                     metrics.append(value)
     return metrics
 
 
 def monitor_service(exported_metric, url, csv_filename, sleep_amount, max_records):
     """Monitor selected service and export retrieved metrics into CSV file."""
+    # Try to open new file for writing.
     with open(csv_filename, 'w') as csvfile:
+        # Initialize CSV writer.
         writer = csv.writer(csvfile, quoting=csv.QUOTE_NONNUMERIC)
+
+        # First row with header.
         writer.writerow(exported_metrics)
 
         n = 0
 
+        # We are gonna to retrieve the metrics with specified frequency and process it.
         while True:
+            # TODO: make configurable
             payload = requests.get("http://localhost:8080/api/v1/metrics").text
             metrics = parse_metrics(exported_metrics, payload)
             writer.writerow(metrics)
 
-            # make sure the next Ctrl+C or kill won't affect more that the last record
+            # Make sure the next Ctrl+C or kill won't affect more that the last record.
             csvfile.flush()
             print("recorded")
 
+            # Wait for the next metrics to be processed.
             time.sleep(sleep_amount)
 
-            # it is possible to limit number of records
+            # It is possible to limit number of records.
             if max_records is not None:
                 n += 1
+                # We already acquired specified number of records, time to drop.
                 if n >= max_records:
                     print("done")
                     break
@@ -79,6 +91,8 @@ def monitor_service(exported_metric, url, csv_filename, sleep_amount, max_record
 
 def cli_arguments():
     """Retrieve all CLI arguments."""
+    # First of all, we need to specify all command line flags that are
+    # recognized by this tool.
     parser = ArgumentParser()
     parser.add_argument("-u", "--url", help="URL to get metrics",
                         default="http://localhost:8080/api/v1/metrics", type=str)
@@ -88,14 +102,21 @@ def cli_arguments():
     parser.add_argument("-m", "--max_records", help="max records to export (default=all)",
                         default=None, type=int)
 
+    # Now it is time to parse flags, check the actual content of command line
+    # and fill in the object named `args`.
     return parser.parse_args()
 
 
 def main():
     """Entry point to this script."""
+    # Parse and process all command line arguments.
     args = cli_arguments()
+
+    # Start the monitoring of service with the provided configuration.
     monitor_service(exported_metrics, args.url, args.output, args.delay, args.max_records)
 
 
+# If this script is started from command line, run the `main` function which is
+# entry point to the processing.
 if __name__ == "__main__":
     main()
