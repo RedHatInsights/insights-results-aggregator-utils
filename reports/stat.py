@@ -21,8 +21,11 @@ import json
 from os import listdir
 from os.path import isfile, join
 
+# Retrieve list of files.
 files = [f for f in listdir(".") if isfile(join(".", f))]
 
+# Names of external rules to be processed.
+# Please note that it needs to be updated later.
 rule_names = (
     'ccx_rules_ocp.external.bug_rules.bug_1766907.report',
     'ccx_rules_ocp.external.bug_rules.bug_1798049.report',
@@ -55,14 +58,23 @@ rule_names = (
     'ccx_rules_ocp.ocs.pvc_phase_check.report',
 )
 
+# Counter of rules that passed on clusters.
 passed_cnt = collections.Counter()
+
+# Counter of rules that were skipped.
 skipped_cnt = collections.Counter()
+
+# Counter of rules that were reported (hitted).
 reported_cnt = collections.Counter()
 
+# TODO: just a temporary, for quick check.
 files = files[:10]
 
+# Process all files.
 for filename in files:
+    # If it is JSON file with (possibly) cluster reports.
     if filename.endswith(".json"):
+        # Try to open and parse that file.
         with open(filename) as fin:
             data = json.load(fin)
             if "info" in data:
@@ -71,6 +83,7 @@ for filename in files:
                 for info in infolist:
                     if info["key"] == "GRAFANA_LINK":
                         cluster = info["details"]["cluster_id"]
+                # Check cluster status w.r.o. the selected rule
                 if cluster is not None:
                     if "pass" in data:
                         passed = data["pass"]
@@ -88,6 +101,7 @@ for filename in files:
                             rule = r["component"]
                             reported_cnt[rule] += 1
 
+# Display statistic to user.
 print("Rule, passed, reported, skipped")
 
 for rule in rule_names:

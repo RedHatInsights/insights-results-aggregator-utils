@@ -14,7 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Script to retrieve memory and GC statistic from the standard Go metrics.
+"""
+Script to retrieve memory and GC statistic from the standard Go metrics.
 
 Memory and GC statistic is being exported into CSV file to be further processed.
 """
