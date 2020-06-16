@@ -28,22 +28,28 @@ import json
 from os import listdir
 from os.path import isfile, join
 
+# Retrieve list of files in current directory.
 input_files = [f for f in listdir(".") if isfile(join(".", f))]
 
 i = 0
 
+# Iterate over all files found in current directory.
 for filename in input_files:
-    # process only JSON files
+    # Just proper JSON files needs to be processed.
     if filename.endswith(".json"):
+        # Try to open the given file, read its content, parse it as JSON and
+        # use the processed payload later
         with open(filename) as fin:
             data = json.load(fin)
 
-            # replace content of "info" node
+            # Replace content of "info" node by empty list.
             if "info" in data:
                 data["info"] = []
 
-            # generate output
+            # Generate output JSON file
             outfilename = "s_{:0>5d}.json".format(i)
             i += 1
+
+            # Export the updated report
             with open(outfilename, "w") as fout:
                 json.dump(data, fout, indent=4)
