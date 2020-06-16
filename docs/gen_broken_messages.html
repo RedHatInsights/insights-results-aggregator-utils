@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>gen_broken_messages.py</title>
+  <link rel="stylesheet" href="pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>gen_broken_messages.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>Copyright © 2020 Red Hat, Inc.</p>
+<p>Licensed under the Apache License, Version 2.0 (the &ldquo;License&rdquo;);
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at</p>
+<pre><code>http://www.apache.org/licenses/LICENSE-2.0
+</code></pre>
+<p>Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an &ldquo;AS IS&rdquo; BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      <p>Generate messages to be consumed by aggregator that are broken in some way.</p>
+<p>This script read input message (that should be correct) and generates bunch of
+new messages. Each generated message is broken in some way so it is possible
+to use such messages to test how broken messages are handled on aggregator
+(ie. consumer) side.</p>
+<p>Types of input message mutation:
+* any item (identified by its key) can be removed
+* new items with random key and content can be added
+* any item can be replaced by new random content</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">random</span>
+
+<span class="kn">from</span> <span class="nn">random_payload_generator</span> <span class="kn">import</span> <span class="n">RandomPayloadGenerator</span>
+
+
+<span class="n">added_counter</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">mutated_counter</span> <span class="o">=</span> <span class="mi">0</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>Load and decode JSON file.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">load_json</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">fin</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fin</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>Generate output JSON file with indentation.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">generate_output</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">payload</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">payload</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Generated file {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>Generate filename for JSON with items removed from original payload.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">filename_removed_items</span><span class="p">(</span><span class="n">removed_keys</span><span class="p">,</span> <span class="n">selector</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">removed_keys</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">selector</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;broken_without_attribute_&quot;</span> <span class="o">+</span> <span class="n">filename</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;broken_without_&quot;</span> <span class="o">+</span> <span class="n">selector</span> <span class="o">+</span> <span class="s2">&quot;_attribute_&quot;</span> <span class="o">+</span> <span class="n">filename</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      <p>Generate filename for JSON with items added into original payload.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">filename_added_items</span><span class="p">():</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">global</span> <span class="n">added_counter</span>
+    <span class="n">added_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="s2">&quot;broken_added_items_{:03d}.json&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">added_counter</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      <p>Generate filename for JSON with items added into original payload.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">filename_mutated_items</span><span class="p">():</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">global</span> <span class="n">mutated_counter</span>
+    <span class="n">mutated_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="s2">&quot;broken_mutated_items_{:03d}.json&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mutated_counter</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-13'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-13'>#</a>
+      </div>
+      <p>One iteration of algorithm to remove items from original payload.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">remove_items_one_iter</span><span class="p">(</span><span class="n">original_payload</span><span class="p">,</span> <span class="n">items_count</span><span class="p">,</span> <span class="n">remove_flags</span><span class="p">,</span>
+                          <span class="n">selector</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-14'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-14'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">if</span> <span class="n">selector</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">original_payload</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">original_payload</span><span class="p">[</span><span class="n">selector</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      <p>Perform deep copy of original payload.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">new_payload</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">original_payload</span><span class="p">)</span>
+    <span class="n">removed_keys</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">items_count</span><span class="p">):</span>
+        <span class="n">remove_flag</span> <span class="o">=</span> <span class="n">remove_flags</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">remove_flag</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">keys</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">selector</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">del</span> <span class="n">new_payload</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">del</span> <span class="n">new_payload</span><span class="p">[</span><span class="n">selector</span><span class="p">][</span><span class="n">key</span><span class="p">]</span>
+            <span class="n">removed_keys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">filename_removed_items</span><span class="p">(</span><span class="n">removed_keys</span><span class="p">,</span> <span class="n">selector</span><span class="p">)</span>
+    <span class="n">generate_output</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">new_payload</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-16'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-16'>#</a>
+      </div>
+      <p>Algorithm to remove items from original payload.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">remove_items</span><span class="p">(</span><span class="n">original_payload</span><span class="p">,</span> <span class="n">selector</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-17'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-17'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">if</span> <span class="n">selector</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">items_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">original_payload</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">items_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">original_payload</span><span class="p">[</span><span class="n">selector</span><span class="p">])</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-18'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-18'>#</a>
+      </div>
+      <p>lexicographics ordering</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">remove_flags_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">([</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">],</span>
+                             <span class="n">repeat</span><span class="o">=</span><span class="n">items_count</span><span class="p">))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-19'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-19'>#</a>
+      </div>
+      <p>the last item contains (False, False, False&hellip;) and we are not interested
+in removing ZERO items</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">remove_flags_list</span> <span class="o">=</span> <span class="n">remove_flags_list</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">remove_flags</span> <span class="ow">in</span> <span class="n">remove_flags_list</span><span class="p">:</span>
+        <span class="n">remove_items_one_iter</span><span class="p">(</span><span class="n">original_payload</span><span class="p">,</span> <span class="n">items_count</span><span class="p">,</span> <span class="n">remove_flags</span><span class="p">,</span>
+                              <span class="n">selector</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-20'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-20'>#</a>
+      </div>
+      <p>One iteration of algorithm to add items into original payload.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">add_items_one_iter</span><span class="p">(</span><span class="n">original_payload</span><span class="p">,</span> <span class="n">how_many</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-21'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-21'>#</a>
+      </div>
+      <p>Perform deep copy of original payload.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">new_payload</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">original_payload</span><span class="p">)</span>
+    <span class="n">rpg</span> <span class="o">=</span> <span class="n">RandomPayloadGenerator</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">how_many</span><span class="p">):</span>
+        <span class="n">new_key</span> <span class="o">=</span> <span class="n">rpg</span><span class="o">.</span><span class="n">generate_random_key_for_dict</span><span class="p">(</span><span class="n">new_payload</span><span class="p">)</span>
+        <span class="n">new_value</span> <span class="o">=</span> <span class="n">rpg</span><span class="o">.</span><span class="n">generate_random_payload</span><span class="p">()</span>
+        <span class="n">new_payload</span><span class="p">[</span><span class="n">new_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_value</span>
+
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">filename_added_items</span><span class="p">()</span>
+    <span class="n">generate_output</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">new_payload</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-22'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-22'>#</a>
+      </div>
+      <p>Algorithm to add items with random values into original payload.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">add_random_items</span><span class="p">(</span><span class="n">original_payload</span><span class="p">,</span> <span class="nb">min</span><span class="p">,</span> <span class="nb">max</span><span class="p">,</span> <span class="n">mutations</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-23'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-23'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">for</span> <span class="n">how_many</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">,</span> <span class="nb">max</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">mutations</span><span class="p">):</span>
+            <span class="n">add_items_one_iter</span><span class="p">(</span><span class="n">original_payload</span><span class="p">,</span> <span class="n">how_many</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-24'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-24'>#</a>
+      </div>
+      <p>One iteration of algorithm to mutate items in original payload.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">mutate_items_one_iteration</span><span class="p">(</span><span class="n">original_payload</span><span class="p">,</span> <span class="n">how_many</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-25'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-25'>#</a>
+      </div>
+      <p>Perform deep copy of original payload.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">new_payload</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">original_payload</span><span class="p">)</span>
+    <span class="n">rpg</span> <span class="o">=</span> <span class="n">RandomPayloadGenerator</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">how_many</span><span class="p">):</span>
+        <span class="n">selected_key</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">original_payload</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+        <span class="n">new_value</span> <span class="o">=</span> <span class="n">rpg</span><span class="o">.</span><span class="n">generate_random_payload</span><span class="p">()</span>
+        <span class="n">new_payload</span><span class="p">[</span><span class="n">selected_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_value</span>
+
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">filename_mutated_items</span><span class="p">()</span>
+    <span class="n">generate_output</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">new_payload</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-26'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-26'>#</a>
+      </div>
+      <p>Algorithm to mutate items with random values in original payload.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">mutate_items</span><span class="p">(</span><span class="n">original_payload</span><span class="p">,</span> <span class="nb">min</span><span class="p">,</span> <span class="nb">max</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-27'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-27'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">for</span> <span class="n">how_many</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">original_payload</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">,</span> <span class="nb">max</span><span class="p">):</span>
+            <span class="n">mutate_items_one_iteration</span><span class="p">(</span><span class="n">original_payload</span><span class="p">,</span> <span class="n">how_many</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-28'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-28'>#</a>
+      </div>
+      <p>Entry point to this script.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-29'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-29'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">original_payload</span> <span class="o">=</span> <span class="n">load_json</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="n">remove_items</span><span class="p">(</span><span class="n">original_payload</span><span class="p">)</span>
+    <span class="n">remove_items</span><span class="p">(</span><span class="n">original_payload</span><span class="p">,</span> <span class="s2">&quot;Report&quot;</span><span class="p">)</span>
+    <span class="n">add_random_items</span><span class="p">(</span><span class="n">original_payload</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">mutate_items</span><span class="p">(</span><span class="n">original_payload</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-30'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-30'>#</a>
+      </div>
+      <p>If this script is started from command line, run the <code>main</code> function which is
+entry point to the processing.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-31'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-31'>#</a>
+      </div>
+      <p>First of all, we need to parse all command line flags that are
+recognized by this tool.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Usage: python gen_broken_messages.py input_file.json&quot;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">main</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>
