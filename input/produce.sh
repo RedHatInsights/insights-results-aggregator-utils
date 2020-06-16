@@ -21,6 +21,7 @@ do
     for file in *.json
     do
         echo $file
+        # Update the port accordingly (this one is for Kafka running inside Docker)
         kafkacat -b localhost:29092 -P -t ccx.ocp.results $file
         # It is possible to change the sleep value (or remove it completely)
         sleep 1
