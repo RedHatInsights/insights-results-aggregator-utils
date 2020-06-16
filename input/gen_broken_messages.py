@@ -14,7 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Generate messages to be consumed by aggregator that are broken in some way.
+"""
+Generate messages to be consumed by aggregator that are broken in some way.
 
 This script read input message (that should be correct) and generates bunch of
 new messages. Each generated message is broken in some way so it is possible
@@ -85,7 +86,7 @@ def remove_items_one_iter(original_payload, items_count, remove_flags,
     else:
         keys = list(original_payload[selector].keys())
 
-    # deep copy
+    # Perform deep copy of original payload.
     new_payload = copy.deepcopy(original_payload)
     removed_keys = []
     for i in range(items_count):
@@ -122,7 +123,7 @@ def remove_items(original_payload, selector=None):
 
 def add_items_one_iter(original_payload, how_many):
     """One iteration of algorithm to add items into original payload."""
-    # deep copy
+    # Perform deep copy of original payload.
     new_payload = copy.deepcopy(original_payload)
     rpg = RandomPayloadGenerator()
 
@@ -144,7 +145,7 @@ def add_random_items(original_payload, min, max, mutations):
 
 def mutate_items_one_iteration(original_payload, how_many):
     """One iteration of algorithm to mutate items in original payload."""
-    # deep copy
+    # Perform deep copy of original payload.
     new_payload = copy.deepcopy(original_payload)
     rpg = RandomPayloadGenerator()
 
@@ -173,8 +174,13 @@ def main(filename):
     mutate_items(original_payload, 1, 5)
 
 
-if len(sys.argv) < 2:
-    print("Usage: python gen_broken_messages.py input_file.json")
-    sys.exit(1)
+# If this script is started from command line, run the `main` function which is
+# entry point to the processing.
+if __name__ == "__main__":
+    # First of all, we need to parse all command line flags that are
+    # recognized by this tool.
+    if len(sys.argv) < 2:
+        print("Usage: python gen_broken_messages.py input_file.json")
+        sys.exit(1)
 
-main(sys.argv[1])
+    main(sys.argv[1])

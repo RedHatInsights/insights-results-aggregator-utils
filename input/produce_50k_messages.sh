@@ -16,10 +16,13 @@
 
 for i in {1..50000}
 do
+    # All JSON files in current directory will be sent to Kafka via Kafkacat
     for file in *.json
     do
         echo $file
+        # Update the port accordingly (this one is for Kafka running locally)
         kafkacat -b localhost:9092 -P -t ccx.ocp.results $file
+        # It is possible to change the sleep value (or remove it completely)
         #sleep 1
     done
 done

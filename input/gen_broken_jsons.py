@@ -14,7 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Generate messages to be consumed by aggregator that are not proper JSONs.
+"""
+Generate messages to be consumed by aggregator that are not proper JSONs.
 
 This script read input message (that should be correct) and generates bunch of
 new messages. Each generated message is broken - it does not contain proper
@@ -35,6 +36,7 @@ import itertools
 import random
 from argparse import ArgumentParser
 
+# Basic parameters of simple fuzzer
 DEFAULT_NUMBER_OF_EXPORTED_JSONS = 10
 DEFAULT_NEW_LINE_PROBABILITY = 10
 DEFAULT_DELETE_LINE_PROBABILITY = 10
@@ -45,12 +47,14 @@ def load_input(filename, verbose):
     """Load JSON file as a regular text file."""
     if verbose:
         print("Loading original file", filename)
+    # We need to split the file content into lines.
     with open(filename) as fin:
         return fin.readlines()
 
 
 def generate_output(filename, payload, verbose):
     """Generate output file."""
+    # Try to open output file for writing and store the payload line by line.
     with open(filename, 'w') as fout:
         for line in payload:
             fout.write(line)
@@ -67,10 +71,14 @@ def shuffle_lines(payload, verbose):
 
 def add_random_lines(payload, new_line_probability, verbose):
     """Add random lines into the payload to produce possible broken JSON."""
+    # The new payload.
     res = []
     i = 1
+
+    # Iterate over the original payload.
     for line in payload:
         res.append(line)
+        # Add wrong line into new payload, but only with some probability.
         if random.random()*100 < new_line_probability:
             if verbose:
                 print("    appending error line at position", i)
@@ -86,9 +94,13 @@ def is_structure_line(line):
 
 def delete_random_lines(payload, delete_line_probability, verbose):
     """Delete random lines from the payload to produce possible broken JSON."""
+    # The new payload.
     res = []
     i = 1
+
+    # Iterate over the original payload.
     for line in payload:
+        # Skip some line in new payload, but only with some probability.
         if random.random()*100 < delete_line_probability and is_structure_line(line):
             if verbose:
                 print("    deleting line from position", i)
@@ -100,9 +112,13 @@ def delete_random_lines(payload, delete_line_probability, verbose):
 
 def mutate_lines(payload, mutate_line_probability, verbose):
     """Mutate lines in the payload to produce possible broken JSON."""
+    # The new payload.
     res = []
     i = 1
+
+    # Iterate over the original payload.
     for line in payload:
+        # Mutate some line in new payload, but only with some probability.
         if random.random()*100 < mutate_line_probability:
             i = int(len(line) * random.random())
             line = line[:i] + "***FOO***" + line[i:]
@@ -126,6 +142,8 @@ def is_proper_json(payload):
 
 def cli_arguments():
     """Retrieve all CLI arguments."""
+    # First of all, we need to specify all command line flags that are
+    # recognized by this tool.
     parser = ArgumentParser()
 
     parser.add_argument("-i", "--input", dest="input", help="name of input file",
@@ -160,6 +178,8 @@ def cli_arguments():
                         help="probability of line to be mutate (0-100)",
                         default=DEFAULT_MUTATE_LINE_PROBABILITY, type=int)
 
+    # Now it is time to parse flags, check the actual content of command line
+    # and fill in the object named `args`.
     return parser.parse_args()
 
 
@@ -167,23 +187,33 @@ def mutate_payload(args):
     """Load original JSON file and mutate it in many ways."""
     payload = load_input(args.input, args.verbose)
 
+    # Shuffle lines in the payload to produce possibly broken JSON.
     if args.shuffle_lines:
         shuffle_lines(payload, args.verbose)
+
+    # Add random lines into the payload to produce possible broken JSON.
     if args.add_lines:
         payload = add_random_lines(payload, args.add_line_probability, args.verbose)
+
+    # Delete random lines from the payload to produce possible broken JSON.
     if args.delete_lines:
         payload = delete_random_lines(payload, args.delete_line_probability, args.verbose)
+
+    # Mutate lines in the payload to produce possible broken JSON.
     if args.mutate_lines:
         payload = mutate_lines(payload, args.mutate_line_probability, args.verbose)
+
     return payload
 
 
 def main(filename):
     """Entry point to this script."""
+    # Parse all CLI arguments.
     args = cli_arguments()
     verbose = args.verbose
     max_exported = args.exported
 
+    # Generate `max_exported` files which consists of broken JSONs
     exported = 0
     while exported < max_exported:
         payload = mutate_payload(args)
@@ -195,8 +225,13 @@ def main(filename):
             exported += 1
 
 
-if len(sys.argv) < 2:
-    print("Usage: python gen_broken_messages.py -i=input_file.json")
-    sys.exit(1)
+# If this script is started from command line, run the `main` function which is
+# entry point to the processing.
+if __name__ == "__main__":
+    # First of all, we need to parse all command line flags that are
+    # recognized by this tool.
+    if len(sys.argv) < 2:
+        print("Usage: python gen_broken_messages.py -i=input_file.json")
+        sys.exit(1)
 
-main(sys.argv[1])
+    main(sys.argv[1])
