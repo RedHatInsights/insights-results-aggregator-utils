@@ -14,12 +14,15 @@
 # limitations under the License.
 
 
+# Continuously generate messages
 while true
 do
+    # All JSON files in current directory will be sent to Kafka via Kafkacat
     for file in *.json
     do
         echo $file
         kafkacat -b localhost:29092 -P -t ccx.ocp.results $file
+        # It is possible to change the sleep value (or remove it completely)
         sleep 1
     done
 done
