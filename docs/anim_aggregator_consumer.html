@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>anim_aggregator_consumer.go</title>
+<meta charset="utf-8"/>
+<style type="text/css">body {
+    background: rgb(225, 225, 225);
+    margin: 0px;
+    padding: 0px;
+}
+
+#docgo p {
+    margin-top: 0px;
+    margin-right: 0px;
+    margin-bottom: 15px;
+    margin-left: 0px;
+}
+
+#docgo div {
+    display: inline;
+}
+
+#docgo #background {
+    position: fixed;
+    top: 0; left: 525px; right: 0; bottom: 0;
+    background: rgb(47, 47, 47);
+    border-left: 1px solid #e5e5ee;
+    z-index: -1;
+}
+
+#docgo .keyword {
+    color: rgb(250, 200, 100);
+}
+
+#docgo .literal {
+    color: rgb(140, 190, 100);
+}
+
+#docgo .ident {
+    color: white;
+}
+
+#docgo .operator {
+    color: white;
+}
+
+#docgo .comment {
+}
+
+#docgo h1, h2, h3, h4, h5 {
+    text-align: left;
+    margin-top: 0px;
+    margin-right: 0px;
+    margin-bottom: 15px;
+    margin-left: 0px;
+}
+
+#docgo h1 {
+    margin-top: 40px;
+}
+
+#docgo .doc {
+    vertical-align: top;
+    font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, FreeSerif, serif;
+    font-size: 15px;
+    line-height: 22px;
+    color: black;
+    min-width: 450px;
+    max-width: 450px;
+    padding-top: 10px;
+    padding-right: 25px;
+    padding-bottom: 1px;
+    padding-left: 50px;
+    overflow-x: hidden;
+}
+
+#docgo .code {
+    min-width: 650px;
+    max-width: 650px;
+    padding-left: 25px;
+    padding-right: 15px;
+    border-left: 1px;
+    overflow-x: hidden;
+    vertical-align: top;
+}
+
+#docgo .code pre code  {
+    font-size: 12px;
+    line-height: 18px;
+    font-family: Menlo, Monaco, Consolas, "Lucida Console", monospace;
+    color: rgb(120, 120, 120);
+}
+</style>
+</head>
+<body>
+<div id="docgo">
+  <div id="background"></div>
+  <table>
+    <thead><tr><th class="doc"><h1>anim_aggregator_consumer.go</h1></th><th class="code"></th></tr></thead>
+    <tbody>
+      
+      <tr class="section">
+	<td class="doc"></td>
+	<td class="code"><pre><code><div class="comment">/*
+Copyright © 2020 Pavel Tisnovsky
+
+Licensed under the Apache License, Version 2.0 (the &#34;License&#34;);
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an &#34;AS IS&#34; BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/</div>
+<div class="keyword">package</div> <div class="ident">main</div><div class="operator"></div>
+
+<div class="keyword">import</div> <div class="operator">(</div>
+	<div class="literal">&#34;bufio&#34;</div><div class="operator"></div>
+	<div class="literal">&#34;image&#34;</div><div class="operator"></div>
+	<div class="literal">&#34;image/color&#34;</div><div class="operator"></div>
+	<div class="literal">&#34;image/draw&#34;</div><div class="operator"></div>
+	<div class="literal">&#34;image/gif&#34;</div><div class="operator"></div>
+	<div class="literal">&#34;os&#34;</div><div class="operator"></div>
+<div class="operator">)</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>readOriginal function tries to read the GIF file that contains the static
+input image. Animation to be created are based on this source image.</p>
+</td>
+	<td class="code"><pre><code><div class="keyword">func</div> <div class="ident">readOriginal</div><div class="operator">(</div><div class="ident">filename</div> <div class="ident">string</div><div class="operator">)</div> <div class="operator">*</div><div class="ident">image</div><div class="operator">.</div><div class="ident">Paletted</div> <div class="operator">{</div>
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>try to open the file</p>
+</td>
+	<td class="code"><pre><code>	<div class="ident">fin</div><div class="operator">,</div> <div class="ident">err</div> <div class="operator">:=</div> <div class="ident">os</div><div class="operator">.</div><div class="ident">Open</div><div class="operator">(</div><div class="ident">filename</div><div class="operator">)</div><div class="operator"></div>
+	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
+		<div class="ident">panic</div><div class="operator">(</div><div class="ident">err</div><div class="operator">)</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>file needs to be closed properly</p>
+</td>
+	<td class="code"><pre><code>	<div class="keyword">defer</div> <div class="keyword">func</div><div class="operator">(</div><div class="operator">)</div> <div class="operator">{</div>
+		<div class="ident">err</div> <div class="operator">:=</div> <div class="ident">fin</div><div class="operator">.</div><div class="ident">Close</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
+		<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
+			<div class="ident">panic</div><div class="operator">(</div><div class="ident">err</div><div class="operator">)</div><div class="operator"></div>
+		<div class="operator">}</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
+
+	<div class="ident">reader</div> <div class="operator">:=</div> <div class="ident">bufio</div><div class="operator">.</div><div class="ident">NewReader</div><div class="operator">(</div><div class="ident">fin</div><div class="operator">)</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>try to decode GIF frames from reader</p>
+</td>
+	<td class="code"><pre><code>	<div class="ident">img</div><div class="operator">,</div> <div class="ident">err</div> <div class="operator">:=</div> <div class="ident">gif</div><div class="operator">.</div><div class="ident">Decode</div><div class="operator">(</div><div class="ident">reader</div><div class="operator">)</div><div class="operator"></div>
+	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
+		<div class="ident">panic</div><div class="operator">(</div><div class="ident">err</div><div class="operator">)</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>we have to use image.Paletted, so it is needed to convert image</p>
+</td>
+	<td class="code"><pre><code>	<div class="keyword">return</div> <div class="ident">img</div><div class="operator">.</div><div class="operator">(</div><div class="operator">*</div><div class="ident">image</div><div class="operator">.</div><div class="ident">Paletted</div><div class="operator">)</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>writeAnimation function stores all images into GIF file. Each image (from
+<code>images</code> parameter) is stored as a GIF frame and delays between frames are
+provided by <code>delays</code> parameter. Please note that it would be possible to
+create smaller GIF image by using external tool like <code>gifsicle</code>.</p>
+</td>
+	<td class="code"><pre><code><div class="keyword">func</div> <div class="ident">writeAnimation</div><div class="operator">(</div><div class="ident">filename</div> <div class="ident">string</div><div class="operator">,</div> <div class="ident">images</div> <div class="operator">[</div><div class="operator">]</div><div class="operator">*</div><div class="ident">image</div><div class="operator">.</div><div class="ident">Paletted</div><div class="operator">,</div> <div class="ident">delays</div> <div class="operator">[</div><div class="operator">]</div><div class="ident">int</div><div class="operator">)</div> <div class="operator">{</div>
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>try to open the file</p>
+</td>
+	<td class="code"><pre><code>	<div class="ident">outfile</div><div class="operator">,</div> <div class="ident">err</div> <div class="operator">:=</div> <div class="ident">os</div><div class="operator">.</div><div class="ident">Create</div><div class="operator">(</div><div class="ident">filename</div><div class="operator">)</div><div class="operator"></div>
+	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
+		<div class="ident">panic</div><div class="operator">(</div><div class="ident">err</div><div class="operator">)</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>file needs to be closed properly</p>
+</td>
+	<td class="code"><pre><code>	<div class="keyword">defer</div> <div class="keyword">func</div><div class="operator">(</div><div class="operator">)</div> <div class="operator">{</div>
+		<div class="ident">err</div> <div class="operator">:=</div> <div class="ident">outfile</div><div class="operator">.</div><div class="ident">Close</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
+		<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
+			<div class="ident">panic</div><div class="operator">(</div><div class="ident">err</div><div class="operator">)</div><div class="operator"></div>
+		<div class="operator">}</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>try to encode all GIF frames to output file</p>
+</td>
+	<td class="code"><pre><code>	<div class="ident">err</div> <div class="operator">=</div> <div class="ident">gif</div><div class="operator">.</div><div class="ident">EncodeAll</div><div class="operator">(</div><div class="ident">outfile</div><div class="operator">,</div> <div class="operator">&amp;</div><div class="ident">gif</div><div class="operator">.</div><div class="ident">GIF</div><div class="operator">{</div>
+		<div class="ident">Image</div><div class="operator">:</div> <div class="ident">images</div><div class="operator">,</div>
+		<div class="ident">Delay</div><div class="operator">:</div> <div class="ident">delays</div><div class="operator">,</div>
+	<div class="operator">}</div><div class="operator">)</div><div class="operator"></div>
+	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
+		<div class="ident">panic</div><div class="operator">(</div><div class="ident">err</div><div class="operator">)</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>drawAnt function draws one &quot;marching&quot; ant into the frame represented by
+<code>img</code> parameter. Position (center of ant) of marching ant is specified by
+<code>x0</code> and <code>y0</code>, and the color is selected by <code>col</code> parameter. There are four
+colors that can be used.</p>
+
+<p>TODO: make color palette completely configurable</p>
+</td>
+	<td class="code"><pre><code><div class="keyword">func</div> <div class="ident">drawAnt</div><div class="operator">(</div><div class="ident">img</div> <div class="operator">*</div><div class="ident">image</div><div class="operator">.</div><div class="ident">Paletted</div><div class="operator">,</div> <div class="ident">x0</div> <div class="ident">int</div><div class="operator">,</div> <div class="ident">y0</div> <div class="ident">int</div><div class="operator">,</div> <div class="ident">col</div> <div class="ident">int</div><div class="operator">)</div> <div class="operator">{</div>
+	<div class="ident">palette</div> <div class="operator">:=</div> <div class="ident">make</div><div class="operator">(</div><div class="keyword">map</div><div class="operator">[</div><div class="ident">int</div><div class="operator">]</div><div class="ident">color</div><div class="operator">.</div><div class="ident">RGBA</div><div class="operator">,</div> <div class="literal">4</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">palette</div><div class="operator">[</div><div class="literal">0</div><div class="operator">]</div> <div class="operator">=</div> <div class="ident">color</div><div class="operator">.</div><div class="ident">RGBA</div><div class="operator">{</div><div class="literal">200</div><div class="operator">,</div> <div class="literal">100</div><div class="operator">,</div> <div class="literal">100</div><div class="operator">,</div> <div class="literal">255</div><div class="operator">}</div><div class="operator"></div>
+	<div class="ident">palette</div><div class="operator">[</div><div class="literal">1</div><div class="operator">]</div> <div class="operator">=</div> <div class="ident">color</div><div class="operator">.</div><div class="ident">RGBA</div><div class="operator">{</div><div class="literal">00</div><div class="operator">,</div> <div class="literal">200</div><div class="operator">,</div> <div class="literal">00</div><div class="operator">,</div> <div class="literal">255</div><div class="operator">}</div><div class="operator"></div>
+	<div class="ident">palette</div><div class="operator">[</div><div class="literal">2</div><div class="operator">]</div> <div class="operator">=</div> <div class="ident">color</div><div class="operator">.</div><div class="ident">RGBA</div><div class="operator">{</div><div class="literal">255</div><div class="operator">,</div> <div class="literal">255</div><div class="operator">,</div> <div class="literal">255</div><div class="operator">,</div> <div class="literal">255</div><div class="operator">}</div><div class="operator"></div>
+	<div class="ident">palette</div><div class="operator">[</div><div class="literal">3</div><div class="operator">]</div> <div class="operator">=</div> <div class="ident">color</div><div class="operator">.</div><div class="ident">RGBA</div><div class="operator">{</div><div class="literal">105</div><div class="operator">,</div> <div class="literal">62</div><div class="operator">,</div> <div class="literal">200</div><div class="operator">,</div> <div class="literal">255</div><div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>rectangle that represents ant</p>
+</td>
+	<td class="code"><pre><code>	<div class="ident">r</div> <div class="operator">:=</div> <div class="ident">image</div><div class="operator">.</div><div class="ident">Rect</div><div class="operator">(</div><div class="ident">x0</div><div class="operator">,</div> <div class="ident">y0</div><div class="operator">,</div> <div class="ident">x0</div><div class="operator">&#43;</div><div class="literal">10</div><div class="operator">,</div> <div class="ident">y0</div><div class="operator">&#43;</div><div class="literal">10</div><div class="operator">)</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>draw the rectangle using selected color</p>
+</td>
+	<td class="code"><pre><code>	<div class="ident">draw</div><div class="operator">.</div><div class="ident">Draw</div><div class="operator">(</div><div class="ident">img</div><div class="operator">,</div> <div class="ident">r</div><div class="operator">,</div> <div class="operator">&amp;</div><div class="ident">image</div><div class="operator">.</div><div class="ident">Uniform</div><div class="operator">{</div><div class="ident">palette</div><div class="operator">[</div><div class="ident">col</div><div class="operator">]</div><div class="operator">}</div><div class="operator">,</div> <div class="ident">image</div><div class="operator">.</div><div class="ident">ZP</div><div class="operator">,</div> <div class="ident">draw</div><div class="operator">.</div><div class="ident">Src</div><div class="operator">)</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>drawMarchingAnts functions draws all &quot;marching&quot; ants into the frame
+represented by <code>img</code> parameter. Currently marching ants are placed on four
+lines (two horizontal ones and two vertical ones).</p>
+
+<p>TODO: make this part completely configurable</p>
+</td>
+	<td class="code"><pre><code><div class="keyword">func</div> <div class="ident">drawMarchingAnts</div><div class="operator">(</div><div class="ident">img</div> <div class="operator">*</div><div class="ident">image</div><div class="operator">.</div><div class="ident">Paletted</div><div class="operator">,</div> <div class="ident">step</div> <div class="ident">int</div><div class="operator">)</div> <div class="operator">{</div>
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>vertical line</p>
+</td>
+	<td class="code"><pre><code>	<div class="keyword">for</div> <div class="ident">y</div> <div class="operator">:=</div> <div class="literal">388</div><div class="operator">;</div> <div class="ident">y</div> <div class="operator">&lt;</div> <div class="literal">510</div><div class="operator">;</div> <div class="ident">y</div> <div class="operator">&#43;=</div> <div class="literal">20</div> <div class="operator">{</div>
+		<div class="ident">drawAnt</div><div class="operator">(</div><div class="ident">img</div><div class="operator">,</div> <div class="literal">904</div><div class="operator">,</div> <div class="ident">y</div><div class="operator">&#43;</div><div class="ident">step</div><div class="operator">,</div> <div class="literal">0</div><div class="operator">)</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>horizontal line</p>
+</td>
+	<td class="code"><pre><code>	<div class="keyword">for</div> <div class="ident">x</div> <div class="operator">:=</div> <div class="literal">904</div><div class="operator">;</div> <div class="ident">x</div> <div class="operator">&gt;</div> <div class="literal">798</div><div class="operator">;</div> <div class="ident">x</div> <div class="operator">-=</div> <div class="literal">20</div> <div class="operator">{</div>
+		<div class="ident">drawAnt</div><div class="operator">(</div><div class="ident">img</div><div class="operator">,</div> <div class="ident">x</div><div class="operator">-</div><div class="ident">step</div><div class="operator">,</div> <div class="literal">530</div><div class="operator">,</div> <div class="literal">0</div><div class="operator">)</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>vertical line</p>
+</td>
+	<td class="code"><pre><code>	<div class="keyword">for</div> <div class="ident">y</div> <div class="operator">:=</div> <div class="literal">561</div><div class="operator">;</div> <div class="ident">y</div> <div class="operator">&lt;</div> <div class="literal">604</div><div class="operator">;</div> <div class="ident">y</div> <div class="operator">&#43;=</div> <div class="literal">20</div> <div class="operator">{</div>
+		<div class="ident">drawAnt</div><div class="operator">(</div><div class="ident">img</div><div class="operator">,</div> <div class="literal">760</div><div class="operator">,</div> <div class="ident">y</div><div class="operator">&#43;</div><div class="ident">step</div><div class="operator">,</div> <div class="literal">1</div><div class="operator">)</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>horizontal line</p>
+</td>
+	<td class="code"><pre><code>	<div class="keyword">for</div> <div class="ident">x</div> <div class="operator">:=</div> <div class="literal">760</div><div class="operator">;</div> <div class="ident">x</div> <div class="operator">&gt;</div> <div class="literal">694</div><div class="operator">;</div> <div class="ident">x</div> <div class="operator">-=</div> <div class="literal">20</div> <div class="operator">{</div>
+		<div class="ident">drawAnt</div><div class="operator">(</div><div class="ident">img</div><div class="operator">,</div> <div class="ident">x</div><div class="operator">-</div><div class="ident">step</div><div class="operator">,</div> <div class="literal">624</div><div class="operator">,</div> <div class="literal">1</div><div class="operator">)</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>special unmovable blocks</p>
+</td>
+	<td class="code"><pre><code>	<div class="ident">drawAnt</div><div class="operator">(</div><div class="ident">img</div><div class="operator">,</div> <div class="literal">664</div><div class="operator">&#43;</div><div class="literal">27</div><div class="operator">-</div><div class="literal">10</div><div class="operator">,</div> <div class="literal">616</div><div class="operator">&#43;</div><div class="literal">20</div><div class="operator">-</div><div class="literal">12</div><div class="operator">,</div> <div class="literal">2</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">drawAnt</div><div class="operator">(</div><div class="ident">img</div><div class="operator">,</div> <div class="literal">785</div><div class="operator">,</div> <div class="literal">529</div><div class="operator">,</div> <div class="literal">3</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">drawAnt</div><div class="operator">(</div><div class="ident">img</div><div class="operator">,</div> <div class="literal">786</div><div class="operator">,</div> <div class="literal">530</div><div class="operator">,</div> <div class="literal">3</div><div class="operator">)</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>main function is called by runtime after the tool has been started.</p>
+</td>
+	<td class="code"><pre><code><div class="keyword">func</div> <div class="ident">main</div><div class="operator">(</div><div class="operator">)</div> <div class="operator">{</div>
+	<div class="keyword">var</div> <div class="ident">images</div> <div class="operator">[</div><div class="operator">]</div><div class="operator">*</div><div class="ident">image</div><div class="operator">.</div><div class="ident">Paletted</div><div class="operator"></div>
+	<div class="keyword">var</div> <div class="ident">delays</div> <div class="operator">[</div><div class="operator">]</div><div class="ident">int</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>only 20 frames needs to be created</p>
+</td>
+	<td class="code"><pre><code>	<div class="ident">steps</div> <div class="operator">:=</div> <div class="literal">20</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>create frames</p>
+</td>
+	<td class="code"><pre><code>	<div class="keyword">for</div> <div class="ident">step</div> <div class="operator">:=</div> <div class="literal">0</div><div class="operator">;</div> <div class="ident">step</div> <div class="operator">&lt;</div> <div class="ident">steps</div><div class="operator">;</div> <div class="ident">step</div><div class="operator">&#43;&#43;</div> <div class="operator">{</div>
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>read original image
+TODO: make the file name configurable</p>
+</td>
+	<td class="code"><pre><code>		<div class="ident">img</div> <div class="operator">:=</div> <div class="ident">readOriginal</div><div class="operator">(</div><div class="literal">&#34;1.gif&#34;</div><div class="operator">)</div><div class="operator"></div>
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>draw new frame based on original image</p>
+</td>
+	<td class="code"><pre><code>		<div class="ident">drawMarchingAnts</div><div class="operator">(</div><div class="ident">img</div><div class="operator">,</div> <div class="ident">step</div><div class="operator">)</div><div class="operator"></div>
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>and add the frame into animation</p>
+</td>
+	<td class="code"><pre><code>		<div class="ident">images</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">images</div><div class="operator">,</div> <div class="ident">img</div><div class="operator">)</div><div class="operator"></div>
+		<div class="ident">delays</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">delays</div><div class="operator">,</div> <div class="literal">10</div><div class="operator">)</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>write resulting animation (set of frames) into GIF file
+TODO: make the file name configurable</p>
+</td>
+	<td class="code"><pre><code>	<div class="ident">writeAnimation</div><div class="operator">(</div><div class="literal">&#34;2.gif&#34;</div><div class="operator">,</div> <div class="ident">images</div><div class="operator">,</div> <div class="ident">delays</div><div class="operator">)</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+    </tbody>
+  </table>
+</div>
+</body>
+</html>
