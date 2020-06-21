@@ -1,4 +1,5 @@
 # insights-results-aggregator-utils
+
 Utilities for Insights Results Aggregator
 
 ## Utilitites for handling messages to be consumed by aggregator
@@ -252,3 +253,21 @@ These utilities are stored in `anim` subdirectory.
 ### `anim_aggregator_consumer.go`
 
 Specialized utility used just to create https://github.com/RedHatInsights/insights-results-aggregator/blob/master/doc/anim_aggregator_consumer.gif
+
+## Go packages
+
+Go packages to use in aggregator-* microservices
+
+### types
+
+`"github.com/RedHatInsights/insights-results-aggregator-utils/types"` defines shared types such as UserID, OrgID and so on
+
+### tests/helpers
+
+`import "github.com/RedHatInsights/insights-results-aggregator-utils/tests/helpers"` 
+defines helpers functions and structs to use in testing
+
+### http
+
+`import httputils "github.com/RedHatInsights/insights-results-aggregator-utils/http"` 
+defines shared http related functions to use in aggregator-* microservices
