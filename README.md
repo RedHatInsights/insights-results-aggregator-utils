@@ -1,6 +1,8 @@
 # insights-results-aggregator-utils
 Utilities for Insights Results Aggregator
 
+[![GitHub Pages](https://img.shields.io/badge/%20-GitHub%20Pages-informational)](https://redhatinsights.github.io/insights-results-aggregator-utils/)
+
 ## Utilitites for handling messages to be consumed by aggregator
 
 These utilities are stored in `input` subdirectory.
