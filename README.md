@@ -18,6 +18,12 @@ sensitive data. Output file names are in format 's_number.json', ie.
 the original file name is not preserved as it also might contain
 sensitive data.
 
+#### Generated documentation
+
+* https://redhatinsights.github.io/insights-results-aggregator-utils/packages/anonymize.html
+
+
+
 ### `2report.py`
 
 Converts outputs from OCP rule engine into proper reports.
@@ -32,6 +38,12 @@ that can be:
 It is done by inserting organization ID, clusterName and lastChecked
 attributes and by rearanging output structure. Output files will
 have following names: 'r_\*.json'.
+
+#### Generated documentation
+
+* https://redhatinsights.github.io/insights-results-aggregator-utils/packages/2report.html
+
+
 
 ### `fill_in_results.sh`
 
@@ -64,6 +76,12 @@ Types of input message mutation:
 * new items with random key and content can be added
 * any item can be replaced by new random content
 
+#### Generated documentation
+
+* https://redhatinsights.github.io/insights-results-aggregator-utils/packages/gen_broken_messages.html
+
+
+
 ### `gen_broken_jsons.py`
 
 This script read input message (that should be correct) and generates bunch of new messages. Each generated message is broken - it does not contain proper JSON object - to test how broken messages are handled on aggregator (ie. consumer) side.
@@ -72,6 +90,10 @@ Types of input message mutation:
 * any item (identified by its key) can be removed
 * new items with random key and content can be added
 * any item can be replaced by new random content
+
+#### Generated documentation
+
+* https://redhatinsights.github.io/insights-results-aggregator-utils/packages/gen_broken_jsons.html
 
 #### Usage
 
@@ -112,6 +134,12 @@ These utilities are stored in `reports` subdirectory.
 
 This script can be used to display statistic about rules that really 'hit' problems on clusters. Can be used against test data or production data if needed.
 
+#### Generated documentation
+
+* https://redhatinsights.github.io/insights-results-aggregator-utils/packages/stat.html
+
+
+
 ### `affected_clusters.py`
 
 This script can be used to analyze data exported from `report` table by
@@ -123,6 +151,11 @@ Script displays two tables:
     1. org id + cluster name (list of affected clusters)
     2. org id + number of affected clusters (usually the only information reguired by management)
 
+#### Generated documentation
+
+* https://redhatinsights.github.io/insights-results-aggregator-utils/packages/affected_clusters.html
+
+
 
 ## Utilitites for working with objects stored in AWS S3 bucket
 
@@ -131,6 +164,10 @@ These utilities are stored in `s3` subdirectory.
 ### `upload_timestamps.py`
 
 Script to retrieve timestamp of all objects stored in AWS S3 bucket and export them to CSV.
+
+#### Generated documentation
+
+* https://redhatinsights.github.io/insights-results-aggregator-utils/packages/upload_timestamps.html
 
 #### Usage
 
@@ -161,6 +198,10 @@ These utilities are stored in `monitoring` subdirectory.
 ### `go_metrics.py`
 
 Script to retrieve memory and GC statistic from the standard Go metrics. Memory and GC statistic is being exported into CSV file to be further processed.
+
+#### Generated documentation
+
+* https://redhatinsights.github.io/insights-results-aggregator-utils/packages/go_metrics.html
 
 #### Usage
 
@@ -199,6 +240,12 @@ optional arguments:
                         directory with JSON files to check
 ```
 
+#### Generated documentation
+
+* https://redhatinsights.github.io/insights-results-aggregator-utils/packages/json_check.html
+
+
+
 ## Utilities for logs handling
 
 ### `anonymize_aggregator_log.py`
@@ -206,6 +253,9 @@ optional arguments:
 Anonymize aggregator log files by hashing organization ID and cluster ID.
 This tool works as a standard Unix filter.
 
+#### Generated documentation
+
+* https://redhatinsights.github.io/insights-results-aggregator-utils/packages/anonymize_aggregator_log.html
 
 #### Usage:
 
@@ -228,6 +278,10 @@ This tool works as a standard Unix filter.
 
 Anonymize CCX data pipeline log files by hashing organization ID and cluster ID.
 This tool works as a standard Unix filter.
+
+#### Generated documentation
+
+* https://redhatinsights.github.io/insights-results-aggregator-utils/packages/anonymize_ccx_pipeline_log.html
 
 #### Usage:
 
@@ -254,3 +308,7 @@ These utilities are stored in `anim` subdirectory.
 ### `anim_aggregator_consumer.go`
 
 Specialized utility used just to create https://github.com/RedHatInsights/insights-results-aggregator/blob/master/doc/anim_aggregator_consumer.gif
+
+#### Generated documentation
+
+* https://redhatinsights.github.io/insights-results-aggregator-utils/packages/anim_aggregator_consumer.html
