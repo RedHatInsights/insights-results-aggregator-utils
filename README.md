@@ -227,6 +227,9 @@ These utilities are stored in `checks` subdirectory.
 
 Simple checker if all JSONs have the correct syntax (not scheme).
 
+#### Usage
+
+```
 Usage:
 
 ```text
@@ -243,6 +246,29 @@ optional arguments:
 #### Generated documentation
 
 * https://redhatinsights.github.io/insights-results-aggregator-utils/packages/json_check.html
+
+
+
+### `open_api_check.py`
+
+Simple checker for OpenAPI specification files.
+
+#### Usage
+
+```
+usage: open_api_check.py [-h] [-v] [-n] [-d DIRECTORY]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -v, --verbose         make it verbose
+  -n, --no-colors       disable color output
+  -d DIRECTORY, --directory DIRECTORY
+                        directory OpenAPI JSON file to check
+```
+
+#### Generated documentation
+
+* https://redhatinsights.github.io/insights-results-aggregator-utils/packages/open_api_check.html
 
 
 
