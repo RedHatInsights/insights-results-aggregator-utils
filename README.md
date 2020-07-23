@@ -11,6 +11,8 @@ These utilities are stored in `input` subdirectory.
 
 Anonymize input data produced by OCP rules engine.
 
+#### Description
+
 All input files that ends with '.json' are read by this script and
 if they contain 'info' key, the value stored under this key is
 replaced by empty list, because these informations might contain
@@ -21,6 +23,14 @@ sensitive data.
 #### Generated documentation
 
 * https://redhatinsights.github.io/insights-results-aggregator-utils/packages/anonymize.html
+
+#### Usage
+
+```
+python3 anonymize.py
+```
+
+------------------------------------------------------------------------------
 
 
 
