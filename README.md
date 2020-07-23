@@ -156,6 +156,34 @@ Script displays two tables:
 * https://redhatinsights.github.io/insights-results-aggregator-utils/packages/affected_clusters.html
 
 
+### `reports.py`
+
+List all rules and other interesting informations found in reports.csv. Data
+are exported into CSV format so it will be possible to include them in
+spreadsheets.
+
+#### Usage
+
+```
+
+This script can be used to analyze data exported from `report` table by
+the following command typed into PSQL console:
+
+    \copy report to 'reports.csv' csv
+
+Howto connect to PSQL console:
+    psql -h host
+
+Password can be retrieved from OpenShift console, for example from:
+ccx-data-pipeline-qa/browse/secrets/ccx-data-pipeline-db
+ccx-data-pipeline-prod/browse/secrets/ccx-data-pipeline-db
+```
+
+#### Generated documentatin
+
+N/A
+
+
 
 ## Utilitites for working with objects stored in AWS S3 bucket
 
