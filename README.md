@@ -100,12 +100,29 @@ The script performs several operations:
 
 ### `gen_broken_messages.py`
 
-This script read input message (that should be correct) and generates bunch of new messages. Each generated message is broken in some way so it is possible to use such messages to test how broken messages are handled on aggregator (ie. consumer) side.
+This script read input message (that should be correct) and generates bunch of new messages.
+
+#### Description
+
+Each generated message is broken in some way so it is possible to use such messages to test how broken messages are handled on aggregator (ie. consumer) side.
 
 Types of input message mutation:
 * any item (identified by its key) can be removed
 * new items with random key and content can be added
 * any item can be replaced by new random content
+
+#### Generated documentation
+
+* https://redhatinsights.github.io/insights-results-aggregator-utils/packages/gen_broken_messages.html
+
+#### Usage
+
+```
+python gen_broken_messages.py input_file.json
+```
+
+
+------------------------------------------------------------------------------
 
 
 
