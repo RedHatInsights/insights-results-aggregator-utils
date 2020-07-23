@@ -38,6 +38,8 @@ python3 anonymize.py
 
 Converts outputs from OCP rule engine into proper reports.
 
+#### Description
+
 All input files that with filename 's_\*.json' (usually anonymized
 outputs from OCP rule engine' are converted into proper 'report'
 that can be:
@@ -52,6 +54,14 @@ have following names: 'r_\*.json'.
 #### Generated documentation
 
 * https://redhatinsights.github.io/insights-results-aggregator-utils/packages/2report.html
+
+#### Usage
+
+```
+python3 2report.py
+```
+
+------------------------------------------------------------------------------
 
 
 
