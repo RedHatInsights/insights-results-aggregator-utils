@@ -6,7 +6,9 @@ Utilities for Insights Results Aggregator
 ## Utilitites for handling messages to be consumed by aggregator
 
 These utilities are stored in `input` subdirectory.
-
+ 
+ 
+ 
 ### `anonymize.py`
 
 Anonymize input data produced by OCP rules engine.
@@ -121,14 +123,17 @@ Types of input message mutation:
 python gen_broken_messages.py input_file.json
 ```
 
-
 ------------------------------------------------------------------------------
 
 
 
 ### `gen_broken_jsons.py`
 
-This script read input message (that should be correct) and generates bunch of new messages. Each generated message is broken - it does not contain proper JSON object - to test how broken messages are handled on aggregator (ie. consumer) side.
+This script read input message (that should be correct) and generates bunch of new messages.
+
+#### Description
+
+Each generated message is broken - it does not contain proper JSON object - to test how broken messages are handled on aggregator (ie. consumer) side.
 
 Types of input message mutation:
 * any item (identified by its key) can be removed
@@ -169,18 +174,37 @@ optional arguments:
                         probability of line to be mutate (0-100)
 ```
 
+------------------------------------------------------------------------------
+
+
 
 ## Utilitites for generating reports etc.
 
 These utilities are stored in `reports` subdirectory.
 
+
+
 ### `stat.py`
+
+Display statistic about rules that really 'hit' problems on clusters.
+
+#### Description
 
 This script can be used to display statistic about rules that really 'hit' problems on clusters. Can be used against test data or production data if needed.
 
 #### Generated documentation
 
 * https://redhatinsights.github.io/insights-results-aggregator-utils/packages/stat.html
+
+#### Usage
+
+To run this tool against all files in current directory that contains test data or production data:
+
+```
+python3 stat.py
+```
+
+------------------------------------------------------------------------------
 
 
 
