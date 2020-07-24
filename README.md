@@ -489,6 +489,8 @@ These utilities are stored in `anim` subdirectory.
 
 ### `anim_aggregator_consumer.go`
 
+Creates animation from static GIF image + set of programmed rules.
+
 #### Description
 
 Specialized utility used just to create https://github.com/RedHatInsights/insights-results-aggregator/blob/master/docs/assets/anim_aggregator_consumer.gif
@@ -505,6 +507,28 @@ go run anim_aggregator_consumer.go
 
 ------------------------------------------------------------------------------
 
+
+
+
+### `anim_smart_proxy.go`
+
+Creates animation from static GIF image + set of programmed rules.
+
+#### Description
+
+Specialized utility used just to create https://redhatinsights.github.io/insights-content-service/architecture/architecture.gif
+
+#### Generated documentation
+
+* https://redhatinsights.github.io/insights-results-aggregator-utils/packages/anim_smart_proxy.html
+
+#### Usage
+
+```
+go run anim_smart_proxy.go
+```
+
+------------------------------------------------------------------------------
 
 
 
