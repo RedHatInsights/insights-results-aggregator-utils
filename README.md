@@ -490,3 +490,34 @@ Specialized utility used just to create https://github.com/RedHatInsights/insigh
 #### Generated documentation
 
 * https://redhatinsights.github.io/insights-results-aggregator-utils/packages/anim_aggregator_consumer.html
+
+------------------------------------------------------------------------------
+
+
+
+## Other utilities
+
+### `run_pycodestyle.py`
+
+Simple checker of all Python sources in the given directory (usually repository).
+
+#### Description
+
+This script tries to find all files in current directory and subdirectories
+with '\*.py' extension.  Then it checks all those files for any style
+violations. Each violation is printed and then total errors is displayed as
+well.
+
+#### Generated documentation
+
+* https://redhatinsights.github.io/insights-results-aggregator-utils/packages/run_pycodestyle.html
+
+#### Usage
+
+To check all files in current directory and all subdirectories:
+
+```
+python3 run_pycodestyle.py
+```
+
+------------------------------------------------------------------------------
