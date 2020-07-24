@@ -210,6 +210,8 @@ python3 stat.py
 
 ### `affected_clusters.py`
 
+#### Description
+
 This script can be used to analyze data exported from `report` table by
 the following command typed into PSQL console:
 
@@ -222,6 +224,19 @@ Script displays two tables:
 #### Generated documentation
 
 * https://redhatinsights.github.io/insights-results-aggregator-utils/packages/affected_clusters.html
+
+#### Usage
+
+
+```
+Usage:
+  affected_clusters.py rule_name input_file.csv
+Example:
+  affected_clusters.py ccx_rules_ocp.external.bug_rules.bug_12345678.report report.csv
+```
+
+------------------------------------------------------------------------------
+
 
 
 ### `reports.py`
