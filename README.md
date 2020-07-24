@@ -210,6 +210,8 @@ python3 stat.py
 
 ### `affected_clusters.py`
 
+Analyze data exported from `db-writer` database.
+
 #### Description
 
 This script can be used to analyze data exported from `report` table by
@@ -241,9 +243,18 @@ Example:
 
 ### `reports.py`
 
+Analyze data exported from `db-writer` database.
+
+#### Description
+
 List all rules and other interesting informations found in reports.csv. Data
 are exported into CSV format so it will be possible to include them in
 spreadsheets.
+
+
+#### Generated documentatin
+
+* https://redhatinsights.github.io/insights-results-aggregator-utils/packages/reports.html
 
 #### Usage
 
@@ -262,15 +273,15 @@ ccx-data-pipeline-qa/browse/secrets/ccx-data-pipeline-db
 ccx-data-pipeline-prod/browse/secrets/ccx-data-pipeline-db
 ```
 
-#### Generated documentatin
-
-N/A
+------------------------------------------------------------------------------
 
 
 
 ## Utilitites for working with objects stored in AWS S3 bucket
 
 These utilities are stored in `s3` subdirectory.
+
+
 
 ### `upload_timestamps.py`
 
