@@ -287,6 +287,11 @@ These utilities are stored in `s3` subdirectory.
 
 Script to retrieve timestamp of all objects stored in AWS S3 bucket and export them to CSV.
 
+#### Description
+
+This script retrieves timestamps of all objects that are stored in AWS S3 bucket and export these timestamps to CSV file.
+It is possible to specify region (in S3), access key, and secret key.
+
 #### Generated documentation
 
 * https://redhatinsights.github.io/insights-results-aggregator-utils/packages/upload_timestamps.html
@@ -313,9 +318,15 @@ optional arguments:
                         max records to export (default=all)
 ```
 
+------------------------------------------------------------------------------
+
+
+
 ## Monitoring tools
 
 These utilities are stored in `monitoring` subdirectory.
+
+
 
 ### `go_metrics.py`
 
