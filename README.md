@@ -177,6 +177,25 @@ optional arguments:
 ------------------------------------------------------------------------------
 
 
+### `random_payload_generator.py`
+
+Generator of random payload for testing REST API, message consumers, test frameworks etc.
+
+#### Description
+
+This source file contains class named `RandomPayloadGenerator` that can be reused by other scripts and tools to generate random payloed, useful for testing, implementing fuzzers etc.
+
+#### Generated documentation
+
+* https://redhatinsights.github.io/insights-results-aggregator-utils/packages/random_payload_generator.html
+
+#### Usage
+
+This is a helper class that can't be started directly from the command line. Internally it is used by script `gen_broken_messages.py`.
+
+------------------------------------------------------------------------------
+
+
 
 ## Utilitites for generating reports etc.
 
