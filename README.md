@@ -477,21 +477,34 @@ This tool works as a standard Unix filter.
  anonymize_ccx_pipeline_log.py -s foobar < original.log > anonymized.log
 ```
 
+------------------------------------------------------------------------------
 
 
-## Animation etc.
+
+## Animations etc.
 
 These utilities are stored in `anim` subdirectory.
 
+
+
 ### `anim_aggregator_consumer.go`
 
-Specialized utility used just to create https://github.com/RedHatInsights/insights-results-aggregator/blob/master/doc/anim_aggregator_consumer.gif
+#### Description
+
+Specialized utility used just to create https://github.com/RedHatInsights/insights-results-aggregator/blob/master/docs/assets/anim_aggregator_consumer.gif
 
 #### Generated documentation
 
 * https://redhatinsights.github.io/insights-results-aggregator-utils/packages/anim_aggregator_consumer.html
 
+#### Usage
+
+```
+go run anim_aggregator_consumer.go
+```
+
 ------------------------------------------------------------------------------
+
 
 
 
