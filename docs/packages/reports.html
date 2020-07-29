@@ -75,11 +75,12 @@ ccx-data-pipeline-prod/browse/secrets/ccx-data-pipeline-db</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-3'>#</a>
       </div>
-      <p>not supported unless we get the real organization list
-import organizations</p>
+      <p>not supported unless we get the real organization list</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre></pre></div>
+      <div class="highlight"><pre><span class="kn">import</span> <span class="nn">organizations</span>
+
+<span class="n">MOST_USED_ORGS</span> <span class="o">=</span> <span class="mi">50</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -183,10 +184,10 @@ of clusters hit by the rule.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-11'>#</a>
       </div>
-      <p>Read organization for the provided organization ID.</p>
+      <p>Number of hits per cluster</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">def</span> <span class="nf">readOrganization</span><span class="p">(</span><span class="n">org_id</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre><span class="n">hits</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">Counter</span><span class="p">()</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -195,12 +196,10 @@ of clusters hit by the rule.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-12'>#</a>
       </div>
-      
+      <p>Read organization for the provided organization ID.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">for</span> <span class="nb">id</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">organizations</span><span class="o">.</span><span class="n">orgs</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">id</span> <span class="o">==</span> <span class="n">org_id</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">name</span></pre></div>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">readOrganization</span><span class="p">(</span><span class="n">org_id</span><span class="p">):</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -209,10 +208,12 @@ of clusters hit by the rule.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-13'>#</a>
       </div>
-      <p>default value</p>
+      
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">return</span> <span class="s2">&quot;***unknown***&quot;</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">if</span> <span class="n">org_id</span> <span class="ow">in</span> <span class="n">organizations</span><span class="o">.</span><span class="n">orgs</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">organizations</span><span class="o">.</span><span class="n">orgs</span><span class="p">[</span><span class="n">org_id</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -221,10 +222,10 @@ of clusters hit by the rule.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-14'>#</a>
       </div>
-      <p>Try to open the CSV file specified.</p>
+      <p>default value</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">input_csv</span><span class="p">)</span> <span class="k">as</span> <span class="n">csv_input</span><span class="p">:</span></pre></div>
+      <div class="highlight"><pre>        <span class="k">return</span> <span class="s2">&quot;***unknown***&quot;</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -232,6 +233,18 @@ of clusters hit by the rule.</p>
     <div class='docs'>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      <p>Try to open the CSV file specified.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">input_csv</span><span class="p">)</span> <span class="k">as</span> <span class="n">csv_input</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-16'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-16'>#</a>
       </div>
       <p>And open this file as CSV</p>
     </div>
@@ -241,10 +254,10 @@ of clusters hit by the rule.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-16'>
+  <div class='section' id='section-17'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-16'>#</a>
+        <a class='octothorpe' href='#section-17'>#</a>
       </div>
       <p>Read all rows from the provided CSV file.</p>
     </div>
@@ -260,10 +273,10 @@ of clusters hit by the rule.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-17'>
+  <div class='section' id='section-18'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-17'>#</a>
+        <a class='octothorpe' href='#section-18'>#</a>
       </div>
       <p>Try to load JSON file with name found in the CSV file.</p>
     </div>
@@ -272,10 +285,10 @@ of clusters hit by the rule.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-18'>
+  <div class='section' id='section-19'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-18'>#</a>
+        <a class='octothorpe' href='#section-19'>#</a>
       </div>
       <p>Content of JSON file is a bit complicated, but we need to process
 only several attributes.</p>
@@ -289,6 +302,7 @@ only several attributes.</p>
                     <span class="n">cluster</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;details&quot;</span><span class="p">][</span><span class="s2">&quot;cluster_id&quot;</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">cluster</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
                 <span class="k">if</span> <span class="s2">&quot;reports&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+                    <span class="n">hits</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;reports&quot;</span><span class="p">])]</span> <span class="o">+=</span> <span class="mi">1</span>
                     <span class="n">clusters_hits</span><span class="p">[</span><span class="n">org_id</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
                     <span class="n">reports</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;reports&quot;</span><span class="p">]</span>
                     <span class="n">realRuleFound</span> <span class="o">=</span> <span class="bp">False</span>
@@ -302,10 +316,10 @@ only several attributes.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-19'>
+  <div class='section' id='section-20'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-19'>#</a>
+        <a class='octothorpe' href='#section-20'>#</a>
       </div>
       <p>Try to generate report with CSV format</p>
     </div>
@@ -314,10 +328,10 @@ only several attributes.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-20'>
+  <div class='section' id='section-21'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-20'>#</a>
+        <a class='octothorpe' href='#section-21'>#</a>
       </div>
       <p>Basic statistic</p>
     </div>
@@ -331,25 +345,51 @@ only several attributes.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-21'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-21'>#</a>
-      </div>
-      <p>Info about organizations</p>
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="s2">&quot;Organization&quot;</span><span class="p">,</span> <span class="s2">&quot;Clusters&quot;</span><span class="p">,</span> <span class="s2">&quot;Hit&quot;</span><span class="p">,</span> <span class="s2">&quot;Hit/no tutorial&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">org</span> <span class="ow">in</span> <span class="n">orgs</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">20</span><span class="p">):</span>
-    <span class="k">print</span><span class="p">(</span><span class="n">org</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">org</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">clusters_hits</span><span class="p">[</span><span class="n">org</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">clusters_hits_no_tutorial</span><span class="p">[</span><span class="n">org</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
   <div class='section' id='section-22'>
     <div class='docs'>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-22'>#</a>
+      </div>
+      <p>Info about organizations</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="s2">&quot;Top &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">MOST_USED_ORGS</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; organizations&quot;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Organization ID&quot;</span><span class="p">,</span> <span class="s2">&quot;Domain&quot;</span><span class="p">,</span> <span class="s2">&quot;Clusters&quot;</span><span class="p">,</span> <span class="s2">&quot;Hit&quot;</span><span class="p">,</span> <span class="s2">&quot;Hit/no tutorial&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">org</span> <span class="ow">in</span> <span class="n">orgs</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="n">MOST_USED_ORGS</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">org</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">readOrganization</span><span class="p">(</span><span class="n">org</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">org</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">clusters_hits</span><span class="p">[</span><span class="n">org</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
+          <span class="n">clusters_hits_no_tutorial</span><span class="p">[</span><span class="n">org</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-23'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-23'>#</a>
+      </div>
+      <p>Info about organizations w/o Red Hat</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">print</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Top &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">MOST_USED_ORGS</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; known organizations w/o Red Hat&quot;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Organization ID&quot;</span><span class="p">,</span> <span class="s2">&quot;Domain&quot;</span><span class="p">,</span> <span class="s2">&quot;Clusters&quot;</span><span class="p">,</span> <span class="s2">&quot;Hit&quot;</span><span class="p">,</span> <span class="s2">&quot;Hit/no tutorial&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+
+<span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">org</span> <span class="ow">in</span> <span class="n">orgs</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">1000000000000</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">readOrganization</span><span class="p">(</span><span class="n">org</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="o">!=</span> <span class="s2">&quot;***unknown***&quot;</span> <span class="ow">and</span> <span class="n">name</span> <span class="o">!=</span> <span class="s2">&quot;redhat.com&quot;</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">org</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">readOrganization</span><span class="p">(</span><span class="n">org</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">org</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">clusters_hits</span><span class="p">[</span><span class="n">org</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
+              <span class="n">clusters_hits_no_tutorial</span><span class="p">[</span><span class="n">org</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">MOST_USED_ORGS</span><span class="p">:</span>
+        <span class="k">break</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-24'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-24'>#</a>
       </div>
       <p>Info about rules</p>
     </div>
@@ -362,10 +402,25 @@ only several attributes.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-23'>
+  <div class='section' id='section-25'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-23'>#</a>
+        <a class='octothorpe' href='#section-25'>#</a>
+      </div>
+      <p>Info about hits</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">print</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Hits&quot;</span><span class="p">,</span> <span class="s2">&quot;# of clusters&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">hits</span><span class="p">[</span><span class="n">h</span><span class="p">],</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-26'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-26'>#</a>
       </div>
       <p>Info about records per cluster</p>
     </div>
