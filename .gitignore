@@ -1,2 +1,4 @@
 issue.py
 *.csv
+reports/organizations.py
+reports/clusters.json
