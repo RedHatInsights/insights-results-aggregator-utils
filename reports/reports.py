@@ -36,7 +36,9 @@ import csv
 import collections
 
 # not supported unless we get the real organization list
-# import organizations
+import organizations
+
+MOST_USED_ORGS = 50
 
 # Check if command line argument is specified (it is mandatory).
 if len(sys.argv) < 2:
@@ -70,15 +72,17 @@ clusters_hits_no_tutorial = collections.Counter()
 # of clusters hit by the rule.
 rules = collections.Counter()
 
+# Number of hits per cluster
+hits = collections.Counter()
+
 
 def readOrganization(org_id):
     """Read organization for the provided organization ID."""
-    for id, name in organizations.orgs:
-        if id == org_id:
-            return name
-
-    # default value
-    return "***unknown***"
+    if org_id in organizations.orgs:
+        return organizations.orgs[org_id]
+    else:
+        # default value
+        return "***unknown***"
 
 
 # Try to open the CSV file specified.
@@ -110,6 +114,7 @@ with open(input_csv) as csv_input:
                     cluster = info["details"]["cluster_id"]
             if cluster is not None:
                 if "reports" in data:
+                    hits[len(data["reports"])] += 1
                     clusters_hits[org_id] += 1
                     reports = data["reports"]
                     realRuleFound = False
@@ -133,10 +138,28 @@ print("Clusters", len(clusters), sep=",")
 print()
 
 # Info about organizations
-print("Organization", "Clusters", "Hit", "Hit/no tutorial", sep=",")
+print("Top " + str(MOST_USED_ORGS) + " organizations")
+print("Organization ID", "Domain", "Clusters", "Hit", "Hit/no tutorial", sep=",")
 
-for org in orgs.most_common(20):
-    print(org[0], org[1], clusters_hits[org[0]], clusters_hits_no_tutorial[org[0]], sep=",")
+for org in orgs.most_common(MOST_USED_ORGS):
+    print(org[0], readOrganization(org[0]), org[1], clusters_hits[org[0]],
+          clusters_hits_no_tutorial[org[0]], sep=",")
+
+# Info about organizations w/o Red Hat
+print()
+print("Top " + str(MOST_USED_ORGS) + " known organizations w/o Red Hat")
+print("Organization ID", "Domain", "Clusters", "Hit", "Hit/no tutorial", sep=",")
+
+i = 0
+for org in orgs.most_common(1000000000000):
+    name = readOrganization(org[0])
+    if name != "***unknown***" and name != "redhat.com":
+        print(org[0], readOrganization(org[0]), org[1], clusters_hits[org[0]],
+              clusters_hits_no_tutorial[org[0]], sep=",")
+        i += 1
+    if i > MOST_USED_ORGS:
+        break
+
 
 # Info about rules
 print()
@@ -144,6 +167,12 @@ print("Rule", "Hits", sep=",")
 
 for rule in rules.most_common(10000):
     print(rule[0], rule[1], sep=",")
+
+# Info about hits
+print()
+print("Hits", "# of clusters", sep=",")
+for h in range(0, 11):
+    print(h, hits[h], sep=",")
 
 # Info about records per cluster
 print()
