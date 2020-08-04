@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Converts structured data from JSON format into EDN format.
 import sys
 import json
 import edn_format
