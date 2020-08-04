@@ -558,3 +558,30 @@ python3 run_pycodestyle.py
 ```
 
 ------------------------------------------------------------------------------
+## Converters
+
+These utilities are stored in `converters` subdirectory.
+ 
+ 
+ 
+### `json2edn.py`
+
+Converts structured data from JSON format into EDN format.
+
+#### Description
+
+Converts structured data from JSON format into EDN format. This script is based
+on `edn_format` Python package, that needs to be installed by using `pip` or
+`pip3`.
+
+#### Generated documentation
+
+* https://redhatinsights.github.io/insights-results-aggregator-utils/packages/json2edn.html
+
+#### Usage
+
+```
+python3 json2edn.py input.json > output.edn
+```
+
+------------------------------------------------------------------------------
