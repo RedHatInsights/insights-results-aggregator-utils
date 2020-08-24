@@ -118,6 +118,15 @@ limitations under the License.
 */</div>
 <div class="keyword">package</div> <div class="ident">main</div><div class="operator"></div>
 
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>Creates animation based on static GIF image + set of programmed rules. That
+animation displays data flow between Insights Results Smart Proxy and other
+services (internal and external ones).</p>
+</td>
+	<td class="code"><pre><code>
 <div class="keyword">import</div> <div class="operator">(</div>
 	<div class="literal">&#34;bufio&#34;</div><div class="operator"></div>
 	<div class="literal">&#34;fmt&#34;</div><div class="operator"></div>
@@ -140,7 +149,7 @@ input image. Animation to be created are based on this source image.</p>
       </tr>
       
       <tr class="section">
-	<td class="doc"><p>try to open the file</p>
+	<td class="doc"><p>try to open the file specified by its name and check for any error</p>
 </td>
 	<td class="code"><pre><code>	<div class="ident">fin</div><div class="operator">,</div> <div class="ident">err</div> <div class="operator">:=</div> <div class="ident">os</div><div class="operator">.</div><div class="ident">Open</div><div class="operator">(</div><div class="ident">filename</div><div class="operator">)</div><div class="operator"></div>
 	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
@@ -151,10 +160,17 @@ input image. Animation to be created are based on this source image.</p>
       </tr>
       
       <tr class="section">
-	<td class="doc"><p>file needs to be closed properly</p>
+	<td class="doc"><p>file needs to be closed properly before that function ends</p>
 </td>
 	<td class="code"><pre><code>	<div class="keyword">defer</div> <div class="keyword">func</div><div class="operator">(</div><div class="operator">)</div> <div class="operator">{</div>
-		<div class="ident">err</div> <div class="operator">:=</div> <div class="ident">fin</div><div class="operator">.</div><div class="ident">Close</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>try to close the file and check for any error that might
+happened</p>
+</td>
+	<td class="code"><pre><code>		<div class="ident">err</div> <div class="operator">:=</div> <div class="ident">fin</div><div class="operator">.</div><div class="ident">Close</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
 		<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
 			<div class="ident">panic</div><div class="operator">(</div><div class="ident">err</div><div class="operator">)</div><div class="operator"></div>
 		<div class="operator">}</div><div class="operator"></div>
@@ -177,7 +193,8 @@ input image. Animation to be created are based on this source image.</p>
       </tr>
       
       <tr class="section">
-	<td class="doc"><p>we have to use image.Paletted, so it is needed to convert image</p>
+	<td class="doc"><p>we have to use image.Paletted, so it is needed to convert the image
+into desired format</p>
 </td>
 	<td class="code"><pre><code>	<div class="keyword">return</div> <div class="ident">img</div><div class="operator">.</div><div class="operator">(</div><div class="operator">*</div><div class="ident">image</div><div class="operator">.</div><div class="ident">Paletted</div><div class="operator">)</div><div class="operator"></div>
 <div class="operator">}</div><div class="operator"></div>
@@ -189,14 +206,15 @@ input image. Animation to be created are based on this source image.</p>
 	<td class="doc"><p>writeAnimation function stores all images into GIF file. Each image (from
 <code>images</code> parameter) is stored as a GIF frame and delays between frames are
 provided by <code>delays</code> parameter. Please note that it would be possible to
-create smaller GIF image by using external tool like <code>gifsicle</code>.</p>
+create smaller GIF image by applying external tool like <code>gifsicle</code> to the
+generated GIF file.</p>
 </td>
 	<td class="code"><pre><code><div class="keyword">func</div> <div class="ident">writeAnimation</div><div class="operator">(</div><div class="ident">filename</div> <div class="ident">string</div><div class="operator">,</div> <div class="ident">images</div> <div class="operator">[</div><div class="operator">]</div><div class="operator">*</div><div class="ident">image</div><div class="operator">.</div><div class="ident">Paletted</div><div class="operator">,</div> <div class="ident">delays</div> <div class="operator">[</div><div class="operator">]</div><div class="ident">int</div><div class="operator">)</div> <div class="operator">{</div>
 </code></pre></td>
       </tr>
       
       <tr class="section">
-	<td class="doc"><p>try to open the file</p>
+	<td class="doc"><p>try to open the file specified by its name and check for any error</p>
 </td>
 	<td class="code"><pre><code>	<div class="ident">outfile</div><div class="operator">,</div> <div class="ident">err</div> <div class="operator">:=</div> <div class="ident">os</div><div class="operator">.</div><div class="ident">Create</div><div class="operator">(</div><div class="ident">filename</div><div class="operator">)</div><div class="operator"></div>
 	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
@@ -207,10 +225,17 @@ create smaller GIF image by using external tool like <code>gifsicle</code>.</p>
       </tr>
       
       <tr class="section">
-	<td class="doc"><p>file needs to be closed properly</p>
+	<td class="doc"><p>file needs to be closed properly before that function ends</p>
 </td>
 	<td class="code"><pre><code>	<div class="keyword">defer</div> <div class="keyword">func</div><div class="operator">(</div><div class="operator">)</div> <div class="operator">{</div>
-		<div class="ident">err</div> <div class="operator">:=</div> <div class="ident">outfile</div><div class="operator">.</div><div class="ident">Close</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>try to close the file and check for any error that might
+happened</p>
+</td>
+	<td class="code"><pre><code>		<div class="ident">err</div> <div class="operator">:=</div> <div class="ident">outfile</div><div class="operator">.</div><div class="ident">Close</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
 		<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
 			<div class="ident">panic</div><div class="operator">(</div><div class="ident">err</div><div class="operator">)</div><div class="operator"></div>
 		<div class="operator">}</div><div class="operator"></div>
@@ -226,7 +251,14 @@ create smaller GIF image by using external tool like <code>gifsicle</code>.</p>
 		<div class="ident">Image</div><div class="operator">:</div> <div class="ident">images</div><div class="operator">,</div>
 		<div class="ident">Delay</div><div class="operator">:</div> <div class="ident">delays</div><div class="operator">,</div>
 	<div class="operator">}</div><div class="operator">)</div><div class="operator"></div>
-	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>check if any error occured during EncodeAll operation</p>
+</td>
+	<td class="code"><pre><code>	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
 		<div class="ident">panic</div><div class="operator">(</div><div class="ident">err</div><div class="operator">)</div><div class="operator"></div>
 	<div class="operator">}</div><div class="operator"></div>
 <div class="operator">}</div><div class="operator"></div>
@@ -243,8 +275,21 @@ colors that can be used.</p>
 <p>TODO: make color palette completely configurable</p>
 </td>
 	<td class="code"><pre><code><div class="keyword">func</div> <div class="ident">drawAnt</div><div class="operator">(</div><div class="ident">img</div> <div class="operator">*</div><div class="ident">image</div><div class="operator">.</div><div class="ident">Paletted</div><div class="operator">,</div> <div class="ident">x0</div> <div class="ident">int</div><div class="operator">,</div> <div class="ident">y0</div> <div class="ident">int</div><div class="operator">,</div> <div class="ident">col</div> <div class="ident">int</div><div class="operator">)</div> <div class="operator">{</div>
-	<div class="ident">palette</div> <div class="operator">:=</div> <div class="ident">make</div><div class="operator">(</div><div class="keyword">map</div><div class="operator">[</div><div class="ident">int</div><div class="operator">]</div><div class="ident">color</div><div class="operator">.</div><div class="ident">RGBA</div><div class="operator">,</div> <div class="literal">4</div><div class="operator">)</div><div class="operator"></div>
-	<div class="ident">palette</div><div class="operator">[</div><div class="literal">0</div><div class="operator">]</div> <div class="operator">=</div> <div class="ident">color</div><div class="operator">.</div><div class="ident">RGBA</div><div class="operator">{</div><div class="literal">0</div><div class="operator">,</div> <div class="literal">0</div><div class="operator">,</div> <div class="literal">0</div><div class="operator">,</div> <div class="literal">255</div><div class="operator">}</div><div class="operator"></div>
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>standard color palette with three colors</p>
+</td>
+	<td class="code"><pre><code>	<div class="ident">palette</div> <div class="operator">:=</div> <div class="ident">make</div><div class="operator">(</div><div class="keyword">map</div><div class="operator">[</div><div class="ident">int</div><div class="operator">]</div><div class="ident">color</div><div class="operator">.</div><div class="ident">RGBA</div><div class="operator">,</div> <div class="literal">4</div><div class="operator">)</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>initialize color palette</p>
+</td>
+	<td class="code"><pre><code>	<div class="ident">palette</div><div class="operator">[</div><div class="literal">0</div><div class="operator">]</div> <div class="operator">=</div> <div class="ident">color</div><div class="operator">.</div><div class="ident">RGBA</div><div class="operator">{</div><div class="literal">0</div><div class="operator">,</div> <div class="literal">0</div><div class="operator">,</div> <div class="literal">0</div><div class="operator">,</div> <div class="literal">255</div><div class="operator">}</div><div class="operator"></div>
 	<div class="ident">palette</div><div class="operator">[</div><div class="literal">1</div><div class="operator">]</div> <div class="operator">=</div> <div class="ident">color</div><div class="operator">.</div><div class="ident">RGBA</div><div class="operator">{</div><div class="literal">0</div><div class="operator">,</div> <div class="literal">146</div><div class="operator">,</div> <div class="literal">0</div><div class="operator">,</div> <div class="literal">255</div><div class="operator">}</div><div class="operator"></div>
 	<div class="ident">palette</div><div class="operator">[</div><div class="literal">2</div><div class="operator">]</div> <div class="operator">=</div> <div class="ident">color</div><div class="operator">.</div><div class="ident">RGBA</div><div class="operator">{</div><div class="literal">182</div><div class="operator">,</div> <div class="literal">0</div><div class="operator">,</div> <div class="literal">0</div><div class="operator">,</div> <div class="literal">255</div><div class="operator">}</div><div class="operator"></div>
 
@@ -295,7 +340,7 @@ colors that can be used.</p>
       </tr>
       
       <tr class="section">
-	<td class="doc"><p>frames in GIF file</p>
+	<td class="doc"><p>frames representing the whole animation stored in GIF file</p>
 </td>
 	<td class="code"><pre><code>	<div class="keyword">var</div> <div class="ident">images</div> <div class="operator">[</div><div class="operator">]</div><div class="operator">*</div><div class="ident">image</div><div class="operator">.</div><div class="ident">Paletted</div><div class="operator"></div>
 
