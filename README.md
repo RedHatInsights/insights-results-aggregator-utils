@@ -485,6 +485,11 @@ This tool works as a standard Unix filter.
 
 These utilities are stored in `anim` subdirectory.
 
+That subdirectory contains tools to generate various animations with Insights
+Results Aggregator, Insights Content Service, and Insights Results Smart proxy
+architecture and data or command flows. Theese tools are invoked from command
+line and don't not accept any command line argument (yet).
+
 
 
 ### `anim_aggregator_consumer.go`

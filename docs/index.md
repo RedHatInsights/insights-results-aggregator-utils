@@ -23,6 +23,7 @@ Utilities for Insights Results Aggregator
 
 ### Tools that creates GIF animations
 
+* [anim.go](packages/anim.html)
 * [anim_smart_proxy.go](packages/anim_smart_proxy.html)
 * [anim_aggregator_consumer.go](packages/anim_aggregator_consumer.html)
 * [insights_operator_prometheus.go](packages/insights_operator_prometheus.html)
