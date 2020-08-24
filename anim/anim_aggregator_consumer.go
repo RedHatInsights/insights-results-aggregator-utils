@@ -15,6 +15,10 @@ limitations under the License.
 */
 package main
 
+// Creates animation based on static GIF image + set of programmed rules. That
+// animation displays the data flow for Insights Results Agregator consumer
+// service.
+
 import (
 	"bufio"
 	"image"
@@ -27,14 +31,16 @@ import (
 // readOriginal function tries to read the GIF file that contains the static
 // input image. Animation to be created are based on this source image.
 func readOriginal(filename string) *image.Paletted {
-	// try to open the file
+	// try to open the file specified by its name and check for any error
 	fin, err := os.Open(filename)
 	if err != nil {
 		panic(err)
 	}
 
-	// file needs to be closed properly
+	// file needs to be closed properly before that function ends
 	defer func() {
+		// try to close the file and check for any error that might
+		// happened
 		err := fin.Close()
 		if err != nil {
 			panic(err)
@@ -49,23 +55,27 @@ func readOriginal(filename string) *image.Paletted {
 		panic(err)
 	}
 
-	// we have to use image.Paletted, so it is needed to convert image
+	// we have to use image.Paletted, so it is needed to convert the image
+	// into desired format
 	return img.(*image.Paletted)
 }
 
 // writeAnimation function stores all images into GIF file. Each image (from
 // `images` parameter) is stored as a GIF frame and delays between frames are
 // provided by `delays` parameter. Please note that it would be possible to
-// create smaller GIF image by using external tool like `gifsicle`.
+// create smaller GIF image by applying external tool like `gifsicle` to the
+// generated GIF file.
 func writeAnimation(filename string, images []*image.Paletted, delays []int) {
-	// try to open the file
+	// try to open the file specified by its name and check for any error
 	outfile, err := os.Create(filename)
 	if err != nil {
 		panic(err)
 	}
 
-	// file needs to be closed properly
+	// file needs to be closed properly before that function ends
 	defer func() {
+		// try to close the file and check for any error that might
+		// happened
 		err := outfile.Close()
 		if err != nil {
 			panic(err)
@@ -77,6 +87,8 @@ func writeAnimation(filename string, images []*image.Paletted, delays []int) {
 		Image: images,
 		Delay: delays,
 	})
+
+	//  check if any error occured during EncodeAll operation
 	if err != nil {
 		panic(err)
 	}
@@ -84,12 +96,15 @@ func writeAnimation(filename string, images []*image.Paletted, delays []int) {
 
 // drawAnt function draws one "marching" ant into the frame represented by
 // `img` parameter. Position (center of ant) of marching ant is specified by
-// `x0` and `y0`, and the color is selected by `col` parameter. There are four
-// colors that can be used.
+// `x0` and `y0`, and the color is selected by `col` parameter. There exists
+// four colors that can be used.
 //
 // TODO: make color palette completely configurable
 func drawAnt(img *image.Paletted, x0 int, y0 int, col int) {
+	// standard color palette with four colors
 	palette := make(map[int]color.RGBA, 4)
+
+	// initialize color palette
 	palette[0] = color.RGBA{200, 100, 100, 255}
 	palette[1] = color.RGBA{00, 200, 00, 255}
 	palette[2] = color.RGBA{255, 255, 255, 255}
@@ -108,22 +123,22 @@ func drawAnt(img *image.Paletted, x0 int, y0 int, col int) {
 //
 // TODO: make this part completely configurable
 func drawMarchingAnts(img *image.Paletted, step int) {
-	// vertical line
+	// first vertical line
 	for y := 388; y < 510; y += 20 {
 		drawAnt(img, 904, y+step, 0)
 	}
 
-	// horizontal line
+	// first horizontal line
 	for x := 904; x > 798; x -= 20 {
 		drawAnt(img, x-step, 530, 0)
 	}
 
-	// vertical line
+	// second vertical line
 	for y := 561; y < 604; y += 20 {
 		drawAnt(img, 760, y+step, 1)
 	}
 
-	// horizontal line
+	// second horizontal line
 	for x := 760; x > 694; x -= 20 {
 		drawAnt(img, x-step, 624, 1)
 	}
@@ -134,22 +149,29 @@ func drawMarchingAnts(img *image.Paletted, step int) {
 	drawAnt(img, 786, 530, 3)
 }
 
-// main function is called by runtime after the tool has been started.
+// main function is called by runtime after the tool has been started
+// from command line.
 func main() {
+	// frames representing the whole animation stored in GIF file
 	var images []*image.Paletted
+
+	// delays between frames
 	var delays []int
 
 	// only 20 frames needs to be created
 	steps := 20
 
-	// create frames
+	// create all frames to generate final animation
 	for step := 0; step < steps; step++ {
 		// read original image
 		// TODO: make the file name configurable
 		img := readOriginal("1.gif")
+
 		// draw new frame based on original image
 		drawMarchingAnts(img, step)
+
 		// and add the frame into animation
+		// TODO: make the delay configurable
 		images = append(images, img)
 		delays = append(delays, 10)
 	}
