@@ -519,7 +519,9 @@ go run anim_aggregator_consumer.go
 
 ### `anim_smart_proxy.go`
 
-Creates animation from static GIF image + set of programmed rules.
+Creates animation based on static GIF image + set of programmed rules. That
+animation displays data flow between Insights Results Smart Proxy and other
+services (internal and external ones).
 
 #### Description
 

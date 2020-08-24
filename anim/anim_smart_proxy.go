@@ -15,6 +15,10 @@ limitations under the License.
 */
 package main
 
+// Creates animation based on static GIF image + set of programmed rules. That
+// animation displays data flow between Insights Results Smart Proxy and other
+// services (internal and external ones).
+
 import (
 	"bufio"
 	"fmt"
@@ -28,14 +32,16 @@ import (
 // readOriginal function tries to read the GIF file that contains the static
 // input image. Animation to be created are based on this source image.
 func readOriginal(filename string) *image.Paletted {
-	// try to open the file
+	// try to open the file specified by its name and check for any error
 	fin, err := os.Open(filename)
 	if err != nil {
 		panic(err)
 	}
 
-	// file needs to be closed properly
+	// file needs to be closed properly before that function ends
 	defer func() {
+		// try to close the file and check for any error that might
+		// happened
 		err := fin.Close()
 		if err != nil {
 			panic(err)
@@ -50,23 +56,27 @@ func readOriginal(filename string) *image.Paletted {
 		panic(err)
 	}
 
-	// we have to use image.Paletted, so it is needed to convert image
+	// we have to use image.Paletted, so it is needed to convert the image
+	// into desired format
 	return img.(*image.Paletted)
 }
 
 // writeAnimation function stores all images into GIF file. Each image (from
 // `images` parameter) is stored as a GIF frame and delays between frames are
 // provided by `delays` parameter. Please note that it would be possible to
-// create smaller GIF image by using external tool like `gifsicle`.
+// create smaller GIF image by applying external tool like `gifsicle` to the
+// generated GIF file.
 func writeAnimation(filename string, images []*image.Paletted, delays []int) {
-	// try to open the file
+	// try to open the file specified by its name and check for any error
 	outfile, err := os.Create(filename)
 	if err != nil {
 		panic(err)
 	}
 
-	// file needs to be closed properly
+	// file needs to be closed properly before that function ends
 	defer func() {
+		// try to close the file and check for any error that might
+		// happened
 		err := outfile.Close()
 		if err != nil {
 			panic(err)
@@ -78,6 +88,8 @@ func writeAnimation(filename string, images []*image.Paletted, delays []int) {
 		Image: images,
 		Delay: delays,
 	})
+
+	//  check if any error occured during EncodeAll operation
 	if err != nil {
 		panic(err)
 	}
@@ -90,7 +102,10 @@ func writeAnimation(filename string, images []*image.Paletted, delays []int) {
 //
 // TODO: make color palette completely configurable
 func drawAnt(img *image.Paletted, x0 int, y0 int, col int) {
+	// standard color palette with three colors
 	palette := make(map[int]color.RGBA, 4)
+
+	// initialize color palette
 	palette[0] = color.RGBA{0, 0, 0, 255}
 	palette[1] = color.RGBA{0, 146, 0, 255}
 	palette[2] = color.RGBA{182, 0, 0, 255}
@@ -113,7 +128,7 @@ const Delay = 5
 
 // main function is called by runtime after the tool has been started.
 func main() {
-	// frames in GIF file
+	// frames representing the whole animation stored in GIF file
 	var images []*image.Paletted
 
 	// delays between frames
