@@ -494,7 +494,9 @@ line and don't not accept any command line argument (yet).
 
 ### `anim_aggregator_consumer.go`
 
-Creates animation from static GIF image + set of programmed rules.
+Creates animation based on static GIF image + set of programmed rules. That
+animation displays the data flow for Insights Results Aggregator consumer
+service.
 
 #### Description
 
