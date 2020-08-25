@@ -541,6 +541,28 @@ go run anim_smart_proxy.go
 
 
 
+### `insights_operator_pull_only.go`
+
+Creates animation from static GIF image + set of programmed rules.
+
+#### Description
+
+Specialized utility used just to create https://redhatinsights.github.io/insights-results-smart-proxy/io-pulling-only.gif animation
+
+#### Generated documentation
+
+* https://redhatinsights.github.io/insights-results-aggregator-utils/packages/insights_operator_pull_only.html
+
+#### Usage
+
+```
+go run insights_operator_pull_only.go
+```
+
+------------------------------------------------------------------------------
+
+
+
 ### `insights_operator_prometheus.go`
 
 Creates animation from static GIF image + set of programmed rules.
