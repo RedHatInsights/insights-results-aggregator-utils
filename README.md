@@ -565,7 +565,9 @@ go run insights_operator_pull_only.go
 
 ### `insights_operator_prometheus.go`
 
-Creates animation from static GIF image + set of programmed rules.
+Creates animation based on static GIF image + set of programmed rules. That
+animation displays the data flow from Insights Operator to OCP WebConsole
+via Prometheus metrics.
 
 #### Description
 
