@@ -28,3 +28,4 @@ Utilities for Insights Results Aggregator
 * [anim_aggregator_consumer.go](packages/anim_aggregator_consumer.html)
 * [insights_operator_prometheus.go](packages/insights_operator_prometheus.html)
 * [insights_operator_to_web_console.go](packages/insights_operator_to_web_console.html)
+* [insights_operator_pull_only.go](packages/insights_operator_pull_only.html)
