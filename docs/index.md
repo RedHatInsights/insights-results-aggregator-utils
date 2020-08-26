@@ -6,7 +6,6 @@ Utilities for Insights Results Aggregator
 * [stat.py](packages/stat.html)
 * [affected_clusters.py](packages/affected_clusters.html)
 * [issue.py](packages/issue.html)
-* [json_check.py](packages/json_check.html)
 * [anonymize.py](packages/anonymize.html)
 * [random_payload_generator.py](packages/random_payload_generator.html)
 * [gen_broken_jsons.py](packages/gen_broken_jsons.html)
@@ -18,11 +17,16 @@ Utilities for Insights Results Aggregator
 * [2report.py](packages/2report.html)
 * [anonymize_ccx_pipeline_log.py](packages/anonymize_ccx_pipeline_log.html)
 * [json2edn.py](packages/json2edn.html)
-* [cluster_results_age](packages/cluster_results_age.html)
+* [cluster_results_age.py](packages/cluster_results_age.html)
 
 
+### Checkers
 
-### Tools that creates GIF animations
+* [json_check.py](packages/json_check.html)
+* [open_api_check.py](packages/open_api_check.html)
+
+
+### Tools that create GIF animations
 
 * [anim.go](packages/anim.html)
 * [anim_smart_proxy.go](packages/anim_smart_proxy.html)
