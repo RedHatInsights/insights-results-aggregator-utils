@@ -296,7 +296,31 @@ ccx-data-pipeline-prod/browse/secrets/ccx-data-pipeline-db
 
 
 
-## Utilitites for working with objects stored in AWS S3 bucket
+### `cluster_results_age.py`
+
+Creates plot (graph) displaying statistic about the age of rule results.
+
+#### Description
+
+Creates plot (graph) displaying statistic about the age of rule results.
+
+
+#### Generated documentatin
+
+* https://redhatinsights.github.io/insights-results-aggregator-utils/packages/cluster_results_age.html
+
+#### Usage
+
+```
+
+python3 cluster_results_age.py input.csv
+```
+
+------------------------------------------------------------------------------
+
+
+
+## Utilities for working with objects stored in AWS S3 bucket
 
 These utilities are stored in `s3` subdirectory.
 
