@@ -5,13 +5,11 @@ Utilities for Insights Results Aggregator
 
 * [stat.py](packages/stat.html)
 * [affected_clusters.py](packages/affected_clusters.html)
-* [issue.py](packages/issue.html)
 * [anonymize.py](packages/anonymize.html)
 * [random_payload_generator.py](packages/random_payload_generator.html)
 * [gen_broken_jsons.py](packages/gen_broken_jsons.html)
 * [go_metrics.py](packages/go_metrics.html)
 * [gen_broken_messages.py](packages/gen_broken_messages.html)
-* [run_pycodestyle.py](packages/run_pycodestyle.html)
 * [anonymize_aggregator_log.py](packages/anonymize_aggregator_log.html)
 * [upload_timestamps.py](packages/upload_timestamps.html)
 * [2report.py](packages/2report.html)
@@ -22,9 +20,14 @@ Utilities for Insights Results Aggregator
 
 ### Checkers
 
+* [run_pycodestyle.py](packages/run_pycodestyle.html)
 * [json_check.py](packages/json_check.html)
 * [open_api_check.py](packages/open_api_check.html)
 
+
+### CI-related tools
+
+* [issue.py](packages/issue.html)
 
 ### Tools that create GIF animations
 
