@@ -6,14 +6,9 @@ Utilities for Insights Results Aggregator
 * [stat.py](packages/stat.html)
 * [affected_clusters.py](packages/affected_clusters.html)
 * [anonymize.py](packages/anonymize.html)
-* [random_payload_generator.py](packages/random_payload_generator.html)
-* [gen_broken_jsons.py](packages/gen_broken_jsons.html)
 * [go_metrics.py](packages/go_metrics.html)
-* [gen_broken_messages.py](packages/gen_broken_messages.html)
 * [anonymize_aggregator_log.py](packages/anonymize_aggregator_log.html)
 * [upload_timestamps.py](packages/upload_timestamps.html)
-* [2report.py](packages/2report.html)
-* [anonymize_ccx_pipeline_log.py](packages/anonymize_ccx_pipeline_log.html)
 * [json2edn.py](packages/json2edn.html)
 * [cluster_results_age.py](packages/cluster_results_age.html)
 
@@ -28,6 +23,16 @@ Utilities for Insights Results Aggregator
 ### CI-related tools
 
 * [issue.py](packages/issue.html)
+* [2report.py](packages/2report.html)
+
+
+### Utilities for handling messages to be consumed by aggregator
+
+* [anonymize_ccx_pipeline_log.py](packages/anonymize_ccx_pipeline_log.html)
+* [gen_broken_messages.py](packages/gen_broken_messages.html)
+* [gen_broken_jsons.py](packages/gen_broken_jsons.html)
+* [random_payload_generator.py](packages/random_payload_generator.html)
+
 
 ### Tools that create GIF animations
 
