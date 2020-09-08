@@ -48,112 +48,119 @@ def check_info_node(obj, verbose):
     if verbose is not None:
         print("    checking info node")
 
-    # make sure we have the object (payload) deserialized
+    # Make sure we have the object (payload) deserialized.
     if obj is None:
         print("Empty object has been deserialized")
         return 1
 
-    # info node (with all attributes) are expected to be part of OpenAPI JSON file
+    # Info node (with all attributes) are expected to be part of OpenAPI JSON file.
     if "info" not in obj:
         print("Info node can't be found")
+        # Value to be added into error accumulator (new error has been found).
         return 1
 
-    # now it is possible to read info node
+    # Now it is possible to read info node.
     info = obj["info"]
 
-    # check if description attribute exists
+    # Check if description attribute exists.
     if "description" not in info:
         print("No description provided for the whole file")
-        # value to be added into error accumulator (new error has been found)
+        # Value to be added into error accumulator (new error has been found).
         return 1
 
-    # check if description attribute contains any text
+    # Check if description attribute contains any text.
     if empty_attribute(info, "description"):
         print("Empty description provided for the whole file")
-        # value to be added into error accumulator (new error has been found)
+        # Value to be added into error accumulator (new error has been found).
         return 1
 
-    # value to be added into error accumulator (no new errors)
+    # Value to be added into error accumulator (no new errors).
     return 0
 
 
 def check_description_for_method(path, method, m):
     """Check if description is provided for a method (endpoint + HTTP method)."""
-    # check if description attribute exists
+    # Check if description attribute exists.
     if "description" not in m:
         print("            No description found for endpoint `" +
               path + "` and method `" + method + "`")
-        # value to be added into error accumulator (new error has been found)
+        # Value to be added into error accumulator (new error has been found).
         return 1
 
-    # check if description attribute contains any text
+    # Check if description attribute contains any text.
     elif empty_attribute(m, "description"):
         print("            Empty description found for endpoint `" +
               path + "` and method `" + method + "`")
-        # value to be added into error accumulator (new error has been found)
+        # Value to be added into error accumulator (new error has been found).
         return 1
 
-    # value to be added into error accumulator (no new errors)
+    # Value to be added into error accumulator (no new errors).
     return 0
 
 
 def check_description_for_method_parameters(path, method, m):
     """Check if description is provided for all method parameters."""
-    # error accumulator
+    # Error accumulator.
     failures = 0
 
     if "parameters" in m:
         parameters = m["parameters"]
 
-        # check all parameters
+        # Check all parameters.
         for parameter in parameters:
 
-            # check if description attribute exists
+            # Check if description attribute exists.
             if "description" not in parameter:
                 print("            No description found for endpoint `" +
                       path + "` method `" + method + "` and parameter `" +
                       parameter["name"] + "`")
+                # Increase number of errors found.
                 failures += 1
-            # check if description attribute contains any text
+            # Check if description attribute contains any text.
             elif empty_attribute(parameter, "description"):
                 print("            Empty description found for endpoint `" +
                       path + "` method `" + method + "` and parameter `" +
                       parameter["name"] + "`")
+                # Increase number of errors found.
                 failures += 1
 
+    # Return errors count for this particular check.
     return failures
 
 
 def check_description_for_method_responses(path, method, m):
     """Check if description is provided for all method responses."""
-    # error accumulator
+    # Error accumulator.
     failures = 0
 
     if "responses" in m:
         responses = m["responses"]
 
-        # check all responses
+        # Check all responses.
         for response in responses:
             r = responses[response]
-            # check if description attribute exists
+            # Check if description attribute exists.
             if "description" not in r:
                 print("            No description found for endpoint `" +
                       path + "` method `" + method +
                       "` and response `" + response + "`")
+                # Increase number of errors found.
                 failures += 1
-            # check if description attribute contains any text
+            # Check if description attribute contains any text.
             elif empty_attribute(r, "description"):
                 print("            Empty description found for endpoint `" +
                       path + "` method `" + method +
                       "` and response `" + response + "`")
+                # Increase number of errors found.
                 failures += 1
 
+    # Return errors count for this particular check.
     return failures
 
 
 def check_method(path, method, methods, verbose):
     """Check the content of HTTP method description."""
-    # error accumulator
+    # Error accumulator.
     failures = 0
 
     if verbose is not None:
@@ -161,40 +168,48 @@ def check_method(path, method, methods, verbose):
 
     m = methods[method]
 
+    # Perform particular error checks.
     failures += check_description_for_method(path, method, m)
     failures += check_description_for_method_parameters(path, method, m)
     failures += check_description_for_method_responses(path, method, m)
 
+    # Return errors count for this particular check.
     return failures
 
 
 def check_path(path, methods, verbose):
     """Check descriptions etc. for given path in OpenAPI file."""
-    # error accumulator
+    # Error accumulator.
     failures = 0
 
     if verbose is not None:
         print("    checking path " + path)
 
+    # Perform error checks for all methods found in the OpenAPI file.
     for method in methods:
+        # Increase number of errors found.
         failures += check_method(path, method, methods, verbose)
 
+    # Return errors count for this particular check.
     return failures
 
 
 def check_all_paths(obj, verbose):
     """Check all paths for given path in OpenAPI file."""
-    # error accumulator
+    # Error accumulator.
     failures = 0
 
     if verbose is not None:
         print("    checking all paths found in OpenAPI file")
 
     paths = obj["paths"]
+    # Perform error checks for all paths found in the OpenAPI file.
     for path in paths:
         methods = paths[path]
+        # Increase number of errors found.
         failures += check_path(path, methods, verbose)
 
+    # Return errors count for this particular check.
     return failures
 
 
@@ -209,7 +224,10 @@ def check_openapi_json(verbose, directory):
     # If the file can be opened and loaded as JSON, everything is fine.
     with open(filename, 'r') as fin:
         try:
+            # Try to load and parse the content of JSON file.
             obj = load(fin)
+
+            # At this point the JSON has been loaded and parsed correctly.
             if verbose is not None:
                 print("{} has valid JSON format".format(filename))
 
@@ -220,13 +238,14 @@ def check_openapi_json(verbose, directory):
                 passes += 1
 
         except ValueError as e:
-            # There are several reasons and possibilities why the file can'b be
-            # read as JSON.
+            # There are several reasons and possibilities why the file can not
+            # be read as JSON, so we just print the error message taken from
+            # exception object.
             print("{} has invalid JSON format".format(filename))
             failures += 1
             print(e)
 
-    # Just the counters needs to be returned because all other informations
+    # Just the counters need to be returned because all other informations
     # about problems have been displayed already.
     return passes, failures
 
@@ -234,9 +253,9 @@ def check_openapi_json(verbose, directory):
 def display_report(passes, failures, nocolors):
     """Display report about number of passes and failures."""
     # First of all, we need to setup colors to be displayed on terminal. Colors
-    # are displayed by using terminal escape control codes. When colors are not
-    # enabled on command line, simply we can simply use empty strings instead
-    # of real color escape codes.
+    # are displayed by using terminal escape control codes. When color output
+    # are not enabled on command line, we can simply use empty strings in
+    # output instead of real color escape codes.
     red_background = green_background = magenta_background = no_color = ""
 
     # If colors are enabled by command line parameter, use control sequence
@@ -247,7 +266,7 @@ def display_report(passes, failures, nocolors):
         magenta_background = read_control_code("setab 5")
         no_color = read_control_code("sgr0")
 
-    # There are four possible outcomes:
+    # There are four possible outcomes OpenAPI check:
     # 1. no JSON files has been found
     # 2. all files are ok
     # 3. none of JSON files can be read and parsed
@@ -296,8 +315,8 @@ def main():
         exit(1)
 
 
-# If this script is started from command line, run the `main` function which is
-# entry point to the processing.
+# If this script is started from command line, run the `main` function
+# which represents entry point to the processing.
 if __name__ == "__main__":
     """Entry point to this tool."""
     main()
