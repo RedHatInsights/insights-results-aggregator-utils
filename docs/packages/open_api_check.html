@@ -136,7 +136,7 @@ limitations under the License.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-8'>#</a>
       </div>
-      <p>make sure we have the object (payload) deserialized</p>
+      <p>Make sure we have the object (payload) deserialized.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
@@ -150,12 +150,11 @@ limitations under the License.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-9'>#</a>
       </div>
-      <p>info node (with all attributes) are expected to be part of OpenAPI JSON file</p>
+      <p>Info node (with all attributes) are expected to be part of OpenAPI JSON file.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">if</span> <span class="s2">&quot;info&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Info node can&#39;t be found&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="mi">1</span></pre></div>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Info node can&#39;t be found&quot;</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -164,10 +163,10 @@ limitations under the License.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-10'>#</a>
       </div>
-      <p>now it is possible to read info node</p>
+      <p>Value to be added into error accumulator (new error has been found).</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">info</span> <span class="o">=</span> <span class="n">obj</span><span class="p">[</span><span class="s2">&quot;info&quot;</span><span class="p">]</span></pre></div>
+      <div class="highlight"><pre>        <span class="k">return</span> <span class="mi">1</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -176,11 +175,10 @@ limitations under the License.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-11'>#</a>
       </div>
-      <p>check if description attribute exists</p>
+      <p>Now it is possible to read info node.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">if</span> <span class="s2">&quot;description&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">info</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;No description provided for the whole file&quot;</span><span class="p">)</span></pre></div>
+      <div class="highlight"><pre>    <span class="n">info</span> <span class="o">=</span> <span class="n">obj</span><span class="p">[</span><span class="s2">&quot;info&quot;</span><span class="p">]</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -189,10 +187,11 @@ limitations under the License.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-12'>#</a>
       </div>
-      <p>value to be added into error accumulator (new error has been found)</p>
+      <p>Check if description attribute exists.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="k">return</span> <span class="mi">1</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">if</span> <span class="s2">&quot;description&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">info</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;No description provided for the whole file&quot;</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -201,11 +200,10 @@ limitations under the License.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-13'>#</a>
       </div>
-      <p>check if description attribute contains any text</p>
+      <p>Value to be added into error accumulator (new error has been found).</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">if</span> <span class="n">empty_attribute</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Empty description provided for the whole file&quot;</span><span class="p">)</span></pre></div>
+      <div class="highlight"><pre>        <span class="k">return</span> <span class="mi">1</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -214,10 +212,11 @@ limitations under the License.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-14'>#</a>
       </div>
-      <p>value to be added into error accumulator (new error has been found)</p>
+      <p>Check if description attribute contains any text.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="k">return</span> <span class="mi">1</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">if</span> <span class="n">empty_attribute</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Empty description provided for the whole file&quot;</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -226,10 +225,10 @@ limitations under the License.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-15'>#</a>
       </div>
-      <p>value to be added into error accumulator (no new errors)</p>
+      <p>Value to be added into error accumulator (new error has been found).</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">return</span> <span class="mi">0</span></pre></div>
+      <div class="highlight"><pre>        <span class="k">return</span> <span class="mi">1</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -238,10 +237,10 @@ limitations under the License.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-16'>#</a>
       </div>
-      <p>Check if description is provided for a method (endpoint + HTTP method).</p>
+      <p>Value to be added into error accumulator (no new errors).</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">def</span> <span class="nf">check_description_for_method</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="mi">0</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -250,12 +249,10 @@ limitations under the License.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-17'>#</a>
       </div>
-      <p>check if description attribute exists</p>
+      <p>Check if description is provided for a method (endpoint + HTTP method).</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">if</span> <span class="s2">&quot;description&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">m</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;            No description found for endpoint `&quot;</span> <span class="o">+</span>
-              <span class="n">path</span> <span class="o">+</span> <span class="s2">&quot;` and method `&quot;</span> <span class="o">+</span> <span class="n">method</span> <span class="o">+</span> <span class="s2">&quot;`&quot;</span><span class="p">)</span></pre></div>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">check_description_for_method</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -264,10 +261,12 @@ limitations under the License.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-18'>#</a>
       </div>
-      <p>value to be added into error accumulator (new error has been found)</p>
+      <p>Check if description attribute exists.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="k">return</span> <span class="mi">1</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">if</span> <span class="s2">&quot;description&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">m</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;            No description found for endpoint `&quot;</span> <span class="o">+</span>
+              <span class="n">path</span> <span class="o">+</span> <span class="s2">&quot;` and method `&quot;</span> <span class="o">+</span> <span class="n">method</span> <span class="o">+</span> <span class="s2">&quot;`&quot;</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -276,12 +275,10 @@ limitations under the License.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-19'>#</a>
       </div>
-      <p>check if description attribute contains any text</p>
+      <p>Value to be added into error accumulator (new error has been found).</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">elif</span> <span class="n">empty_attribute</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;            Empty description found for endpoint `&quot;</span> <span class="o">+</span>
-              <span class="n">path</span> <span class="o">+</span> <span class="s2">&quot;` and method `&quot;</span> <span class="o">+</span> <span class="n">method</span> <span class="o">+</span> <span class="s2">&quot;`&quot;</span><span class="p">)</span></pre></div>
+      <div class="highlight"><pre>        <span class="k">return</span> <span class="mi">1</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -290,10 +287,12 @@ limitations under the License.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-20'>#</a>
       </div>
-      <p>value to be added into error accumulator (new error has been found)</p>
+      <p>Check if description attribute contains any text.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="k">return</span> <span class="mi">1</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">elif</span> <span class="n">empty_attribute</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;            Empty description found for endpoint `&quot;</span> <span class="o">+</span>
+              <span class="n">path</span> <span class="o">+</span> <span class="s2">&quot;` and method `&quot;</span> <span class="o">+</span> <span class="n">method</span> <span class="o">+</span> <span class="s2">&quot;`&quot;</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -302,10 +301,10 @@ limitations under the License.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-21'>#</a>
       </div>
-      <p>value to be added into error accumulator (no new errors)</p>
+      <p>Value to be added into error accumulator (new error has been found).</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">return</span> <span class="mi">0</span></pre></div>
+      <div class="highlight"><pre>        <span class="k">return</span> <span class="mi">1</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -314,10 +313,10 @@ limitations under the License.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-22'>#</a>
       </div>
-      <p>Check if description is provided for all method parameters.</p>
+      <p>Value to be added into error accumulator (no new errors).</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">def</span> <span class="nf">check_description_for_method_parameters</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="mi">0</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -326,7 +325,19 @@ limitations under the License.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-23'>#</a>
       </div>
-      <p>error accumulator</p>
+      <p>Check if description is provided for all method parameters.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">check_description_for_method_parameters</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-24'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-24'>#</a>
+      </div>
+      <p>Error accumulator.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">failures</span> <span class="o">=</span> <span class="mi">0</span>
@@ -336,31 +347,15 @@ limitations under the License.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-24'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-24'>#</a>
-      </div>
-      <p>check all parameters</p>
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>        <span class="k">for</span> <span class="n">parameter</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">:</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
   <div class='section' id='section-25'>
     <div class='docs'>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-25'>#</a>
       </div>
-      <p>check if description attribute exists</p>
+      <p>Check all parameters.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>            <span class="k">if</span> <span class="s2">&quot;description&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">parameter</span><span class="p">:</span>
-                <span class="k">print</span><span class="p">(</span><span class="s2">&quot;            No description found for endpoint `&quot;</span> <span class="o">+</span>
-                      <span class="n">path</span> <span class="o">+</span> <span class="s2">&quot;` method `&quot;</span> <span class="o">+</span> <span class="n">method</span> <span class="o">+</span> <span class="s2">&quot;` and parameter `&quot;</span> <span class="o">+</span>
-                      <span class="n">parameter</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;`&quot;</span><span class="p">)</span>
-                <span class="n">failures</span> <span class="o">+=</span> <span class="mi">1</span></pre></div>
+      <div class="highlight"><pre>        <span class="k">for</span> <span class="n">parameter</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">:</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -369,16 +364,13 @@ limitations under the License.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-26'>#</a>
       </div>
-      <p>check if description attribute contains any text</p>
+      <p>Check if description attribute exists.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>            <span class="k">elif</span> <span class="n">empty_attribute</span><span class="p">(</span><span class="n">parameter</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">):</span>
-                <span class="k">print</span><span class="p">(</span><span class="s2">&quot;            Empty description found for endpoint `&quot;</span> <span class="o">+</span>
+      <div class="highlight"><pre>            <span class="k">if</span> <span class="s2">&quot;description&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">parameter</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="s2">&quot;            No description found for endpoint `&quot;</span> <span class="o">+</span>
                       <span class="n">path</span> <span class="o">+</span> <span class="s2">&quot;` method `&quot;</span> <span class="o">+</span> <span class="n">method</span> <span class="o">+</span> <span class="s2">&quot;` and parameter `&quot;</span> <span class="o">+</span>
-                      <span class="n">parameter</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;`&quot;</span><span class="p">)</span>
-                <span class="n">failures</span> <span class="o">+=</span> <span class="mi">1</span>
-
-    <span class="k">return</span> <span class="n">failures</span></pre></div>
+                      <span class="n">parameter</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;`&quot;</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -387,10 +379,10 @@ limitations under the License.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-27'>#</a>
       </div>
-      <p>Check if description is provided for all method responses.</p>
+      <p>Increase number of errors found.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">def</span> <span class="nf">check_description_for_method_responses</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre>                <span class="n">failures</span> <span class="o">+=</span> <span class="mi">1</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -399,7 +391,58 @@ limitations under the License.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-28'>#</a>
       </div>
-      <p>error accumulator</p>
+      <p>Check if description attribute contains any text.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">elif</span> <span class="n">empty_attribute</span><span class="p">(</span><span class="n">parameter</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">):</span>
+                <span class="k">print</span><span class="p">(</span><span class="s2">&quot;            Empty description found for endpoint `&quot;</span> <span class="o">+</span>
+                      <span class="n">path</span> <span class="o">+</span> <span class="s2">&quot;` method `&quot;</span> <span class="o">+</span> <span class="n">method</span> <span class="o">+</span> <span class="s2">&quot;` and parameter `&quot;</span> <span class="o">+</span>
+                      <span class="n">parameter</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;`&quot;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-29'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-29'>#</a>
+      </div>
+      <p>Increase number of errors found.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                <span class="n">failures</span> <span class="o">+=</span> <span class="mi">1</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-30'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-30'>#</a>
+      </div>
+      <p>Return errors count for this particular check.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">failures</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-31'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-31'>#</a>
+      </div>
+      <p>Check if description is provided for all method responses.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">check_description_for_method_responses</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-32'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-32'>#</a>
+      </div>
+      <p>Error accumulator.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">failures</span> <span class="o">=</span> <span class="mi">0</span>
@@ -409,85 +452,16 @@ limitations under the License.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-29'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-29'>#</a>
-      </div>
-      <p>check all responses</p>
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>        <span class="k">for</span> <span class="n">response</span> <span class="ow">in</span> <span class="n">responses</span><span class="p">:</span>
-            <span class="n">r</span> <span class="o">=</span> <span class="n">responses</span><span class="p">[</span><span class="n">response</span><span class="p">]</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-30'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-30'>#</a>
-      </div>
-      <p>check if description attribute exists</p>
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>            <span class="k">if</span> <span class="s2">&quot;description&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">r</span><span class="p">:</span>
-                <span class="k">print</span><span class="p">(</span><span class="s2">&quot;            No description found for endpoint `&quot;</span> <span class="o">+</span>
-                      <span class="n">path</span> <span class="o">+</span> <span class="s2">&quot;` method `&quot;</span> <span class="o">+</span> <span class="n">method</span> <span class="o">+</span>
-                      <span class="s2">&quot;` and response `&quot;</span> <span class="o">+</span> <span class="n">response</span> <span class="o">+</span> <span class="s2">&quot;`&quot;</span><span class="p">)</span>
-                <span class="n">failures</span> <span class="o">+=</span> <span class="mi">1</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-31'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-31'>#</a>
-      </div>
-      <p>check if description attribute contains any text</p>
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>            <span class="k">elif</span> <span class="n">empty_attribute</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">):</span>
-                <span class="k">print</span><span class="p">(</span><span class="s2">&quot;            Empty description found for endpoint `&quot;</span> <span class="o">+</span>
-                      <span class="n">path</span> <span class="o">+</span> <span class="s2">&quot;` method `&quot;</span> <span class="o">+</span> <span class="n">method</span> <span class="o">+</span>
-                      <span class="s2">&quot;` and response `&quot;</span> <span class="o">+</span> <span class="n">response</span> <span class="o">+</span> <span class="s2">&quot;`&quot;</span><span class="p">)</span>
-                <span class="n">failures</span> <span class="o">+=</span> <span class="mi">1</span>
-
-    <span class="k">return</span> <span class="n">failures</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-32'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-32'>#</a>
-      </div>
-      <p>Check the content of HTTP method description.</p>
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre><span class="k">def</span> <span class="nf">check_method</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">methods</span><span class="p">,</span> <span class="n">verbose</span><span class="p">):</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
   <div class='section' id='section-33'>
     <div class='docs'>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-33'>#</a>
       </div>
-      <p>error accumulator</p>
+      <p>Check all responses.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">failures</span> <span class="o">=</span> <span class="mi">0</span>
-
-    <span class="k">if</span> <span class="n">verbose</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;        checking method &quot;</span> <span class="o">+</span> <span class="n">method</span><span class="p">)</span>
-
-    <span class="n">m</span> <span class="o">=</span> <span class="n">methods</span><span class="p">[</span><span class="n">method</span><span class="p">]</span>
-
-    <span class="n">failures</span> <span class="o">+=</span> <span class="n">check_description_for_method</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
-    <span class="n">failures</span> <span class="o">+=</span> <span class="n">check_description_for_method_parameters</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
-    <span class="n">failures</span> <span class="o">+=</span> <span class="n">check_description_for_method_responses</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">failures</span></pre></div>
+      <div class="highlight"><pre>        <span class="k">for</span> <span class="n">response</span> <span class="ow">in</span> <span class="n">responses</span><span class="p">:</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">responses</span><span class="p">[</span><span class="n">response</span><span class="p">]</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -496,10 +470,13 @@ limitations under the License.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-34'>#</a>
       </div>
-      <p>Check descriptions etc. for given path in OpenAPI file.</p>
+      <p>Check if description attribute exists.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">def</span> <span class="nf">check_path</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">methods</span><span class="p">,</span> <span class="n">verbose</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre>            <span class="k">if</span> <span class="s2">&quot;description&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">r</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="s2">&quot;            No description found for endpoint `&quot;</span> <span class="o">+</span>
+                      <span class="n">path</span> <span class="o">+</span> <span class="s2">&quot;` method `&quot;</span> <span class="o">+</span> <span class="n">method</span> <span class="o">+</span>
+                      <span class="s2">&quot;` and response `&quot;</span> <span class="o">+</span> <span class="n">response</span> <span class="o">+</span> <span class="s2">&quot;`&quot;</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -508,18 +485,10 @@ limitations under the License.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-35'>#</a>
       </div>
-      <p>error accumulator</p>
+      <p>Increase number of errors found.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">failures</span> <span class="o">=</span> <span class="mi">0</span>
-
-    <span class="k">if</span> <span class="n">verbose</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;    checking path &quot;</span> <span class="o">+</span> <span class="n">path</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">methods</span><span class="p">:</span>
-        <span class="n">failures</span> <span class="o">+=</span> <span class="n">check_method</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">methods</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">failures</span></pre></div>
+      <div class="highlight"><pre>                <span class="n">failures</span> <span class="o">+=</span> <span class="mi">1</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -528,10 +497,13 @@ limitations under the License.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-36'>#</a>
       </div>
-      <p>Check all paths for given path in OpenAPI file.</p>
+      <p>Check if description attribute contains any text.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">def</span> <span class="nf">check_all_paths</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">verbose</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre>            <span class="k">elif</span> <span class="n">empty_attribute</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">):</span>
+                <span class="k">print</span><span class="p">(</span><span class="s2">&quot;            Empty description found for endpoint `&quot;</span> <span class="o">+</span>
+                      <span class="n">path</span> <span class="o">+</span> <span class="s2">&quot;` method `&quot;</span> <span class="o">+</span> <span class="n">method</span> <span class="o">+</span>
+                      <span class="s2">&quot;` and response `&quot;</span> <span class="o">+</span> <span class="n">response</span> <span class="o">+</span> <span class="s2">&quot;`&quot;</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -540,20 +512,10 @@ limitations under the License.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-37'>#</a>
       </div>
-      <p>error accumulator</p>
+      <p>Increase number of errors found.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">failures</span> <span class="o">=</span> <span class="mi">0</span>
-
-    <span class="k">if</span> <span class="n">verbose</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;    checking all paths found in OpenAPI file&quot;</span><span class="p">)</span>
-
-    <span class="n">paths</span> <span class="o">=</span> <span class="n">obj</span><span class="p">[</span><span class="s2">&quot;paths&quot;</span><span class="p">]</span>
-    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
-        <span class="n">methods</span> <span class="o">=</span> <span class="n">paths</span><span class="p">[</span><span class="n">path</span><span class="p">]</span>
-        <span class="n">failures</span> <span class="o">+=</span> <span class="n">check_path</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">methods</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">failures</span></pre></div>
+      <div class="highlight"><pre>                <span class="n">failures</span> <span class="o">+=</span> <span class="mi">1</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -562,10 +524,10 @@ limitations under the License.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-38'>#</a>
       </div>
-      <p>Check the content of OpenAPI JSON file.</p>
+      <p>Return errors count for this particular check.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">def</span> <span class="nf">check_openapi_json</span><span class="p">(</span><span class="n">verbose</span><span class="p">,</span> <span class="n">directory</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">failures</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -573,6 +535,202 @@ limitations under the License.</p>
     <div class='docs'>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-39'>#</a>
+      </div>
+      <p>Check the content of HTTP method description.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">check_method</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">methods</span><span class="p">,</span> <span class="n">verbose</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-40'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-40'>#</a>
+      </div>
+      <p>Error accumulator.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">failures</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">if</span> <span class="n">verbose</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;        checking method &quot;</span> <span class="o">+</span> <span class="n">method</span><span class="p">)</span>
+
+    <span class="n">m</span> <span class="o">=</span> <span class="n">methods</span><span class="p">[</span><span class="n">method</span><span class="p">]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-41'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-41'>#</a>
+      </div>
+      <p>Perform particular error checks.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">failures</span> <span class="o">+=</span> <span class="n">check_description_for_method</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
+    <span class="n">failures</span> <span class="o">+=</span> <span class="n">check_description_for_method_parameters</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
+    <span class="n">failures</span> <span class="o">+=</span> <span class="n">check_description_for_method_responses</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-42'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-42'>#</a>
+      </div>
+      <p>Return errors count for this particular check.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">failures</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-43'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-43'>#</a>
+      </div>
+      <p>Check descriptions etc. for given path in OpenAPI file.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">check_path</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">methods</span><span class="p">,</span> <span class="n">verbose</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-44'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-44'>#</a>
+      </div>
+      <p>Error accumulator.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">failures</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">if</span> <span class="n">verbose</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;    checking path &quot;</span> <span class="o">+</span> <span class="n">path</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-45'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-45'>#</a>
+      </div>
+      <p>Perform error checks for all methods found in the OpenAPI file.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">methods</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-46'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-46'>#</a>
+      </div>
+      <p>Increase number of errors found.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">failures</span> <span class="o">+=</span> <span class="n">check_method</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">methods</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-47'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-47'>#</a>
+      </div>
+      <p>Return errors count for this particular check.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">failures</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-48'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-48'>#</a>
+      </div>
+      <p>Check all paths for given path in OpenAPI file.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">check_all_paths</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">verbose</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-49'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-49'>#</a>
+      </div>
+      <p>Error accumulator.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">failures</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">if</span> <span class="n">verbose</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;    checking all paths found in OpenAPI file&quot;</span><span class="p">)</span>
+
+    <span class="n">paths</span> <span class="o">=</span> <span class="n">obj</span><span class="p">[</span><span class="s2">&quot;paths&quot;</span><span class="p">]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-50'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-50'>#</a>
+      </div>
+      <p>Perform error checks for all paths found in the OpenAPI file.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
+        <span class="n">methods</span> <span class="o">=</span> <span class="n">paths</span><span class="p">[</span><span class="n">path</span><span class="p">]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-51'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-51'>#</a>
+      </div>
+      <p>Increase number of errors found.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">failures</span> <span class="o">+=</span> <span class="n">check_path</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">methods</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-52'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-52'>#</a>
+      </div>
+      <p>Return errors count for this particular check.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">failures</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-53'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-53'>#</a>
+      </div>
+      <p>Check the content of OpenAPI JSON file.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">check_openapi_json</span><span class="p">(</span><span class="n">verbose</span><span class="p">,</span> <span class="n">directory</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-54'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-54'>#</a>
       </div>
       <p>Reset counters with number of passes and number of failures.</p>
     </div>
@@ -584,18 +742,40 @@ limitations under the License.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-40'>
+  <div class='section' id='section-55'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-40'>#</a>
+        <a class='octothorpe' href='#section-55'>#</a>
       </div>
       <p>If the file can be opened and loaded as JSON, everything is fine.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fin</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">obj</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="n">fin</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">verbose</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-56'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-56'>#</a>
+      </div>
+      <p>Try to load and parse the content of JSON file.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">obj</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="n">fin</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-57'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-57'>#</a>
+      </div>
+      <p>At this point the JSON has been loaded and parsed correctly.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">if</span> <span class="n">verbose</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
                 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;{} has valid JSON format&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
 
             <span class="n">failures</span> <span class="o">+=</span> <span class="n">check_info_node</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
@@ -608,13 +788,14 @@ limitations under the License.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-41'>
+  <div class='section' id='section-58'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-41'>#</a>
+        <a class='octothorpe' href='#section-58'>#</a>
       </div>
-      <p>There are several reasons and possibilities why the file can&rsquo;b be
-read as JSON.</p>
+      <p>There are several reasons and possibilities why the file can not
+be read as JSON, so we just print the error message taken from
+exception object.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>            <span class="k">print</span><span class="p">(</span><span class="s2">&quot;{} has invalid JSON format&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
@@ -623,12 +804,12 @@ read as JSON.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-42'>
+  <div class='section' id='section-59'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-42'>#</a>
+        <a class='octothorpe' href='#section-59'>#</a>
       </div>
-      <p>Just the counters needs to be returned because all other informations
+      <p>Just the counters need to be returned because all other informations
 about problems have been displayed already.</p>
     </div>
     <div class='code'>
@@ -636,10 +817,10 @@ about problems have been displayed already.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-43'>
+  <div class='section' id='section-60'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-43'>#</a>
+        <a class='octothorpe' href='#section-60'>#</a>
       </div>
       <p>Display report about number of passes and failures.</p>
     </div>
@@ -648,25 +829,25 @@ about problems have been displayed already.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-44'>
+  <div class='section' id='section-61'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-44'>#</a>
+        <a class='octothorpe' href='#section-61'>#</a>
       </div>
       <p>First of all, we need to setup colors to be displayed on terminal. Colors
-are displayed by using terminal escape control codes. When colors are not
-enabled on command line, simply we can simply use empty strings instead
-of real color escape codes.</p>
+are displayed by using terminal escape control codes. When color output
+are not enabled on command line, we can simply use empty strings in
+output instead of real color escape codes.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">red_background</span> <span class="o">=</span> <span class="n">green_background</span> <span class="o">=</span> <span class="n">magenta_background</span> <span class="o">=</span> <span class="n">no_color</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-45'>
+  <div class='section' id='section-62'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-45'>#</a>
+        <a class='octothorpe' href='#section-62'>#</a>
       </div>
       <p>If colors are enabled by command line parameter, use control sequence
 returned by <code>tput</code> command.</p>
@@ -680,12 +861,12 @@ returned by <code>tput</code> command.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-46'>
+  <div class='section' id='section-63'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-46'>#</a>
+        <a class='octothorpe' href='#section-63'>#</a>
       </div>
-      <p>There are four possible outcomes:
+      <p>There are four possible outcomes OpenAPI check:
 1. no JSON files has been found
 2. all files are ok
 3. none of JSON files can be read and parsed
@@ -705,10 +886,10 @@ returned by <code>tput</code> command.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-47'>
+  <div class='section' id='section-64'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-47'>#</a>
+        <a class='octothorpe' href='#section-64'>#</a>
       </div>
       <p>Print just number of passes and failures at the end, as this information
 can be processed on CI.</p>
@@ -719,10 +900,10 @@ can be processed on CI.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-48'>
+  <div class='section' id='section-65'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-48'>#</a>
+        <a class='octothorpe' href='#section-65'>#</a>
       </div>
       <p>Entry point to this tool.</p>
     </div>
@@ -731,10 +912,10 @@ can be processed on CI.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-49'>
+  <div class='section' id='section-66'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-49'>#</a>
+        <a class='octothorpe' href='#section-66'>#</a>
       </div>
       <p>First of all, we need to specify all command line flags that are
 recognized by this tool.</p>
@@ -751,10 +932,10 @@ recognized by this tool.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-50'>
+  <div class='section' id='section-67'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-50'>#</a>
+        <a class='octothorpe' href='#section-67'>#</a>
       </div>
       <p>Now it is time to parse flags, check the actual content of command line
 and fill in the object named <code>args</code>.</p>
@@ -764,10 +945,10 @@ and fill in the object named <code>args</code>.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-51'>
+  <div class='section' id='section-68'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-51'>#</a>
+        <a class='octothorpe' href='#section-68'>#</a>
       </div>
       <p>Check JSON file containing OpenAPI specification.</p>
     </div>
@@ -776,10 +957,10 @@ and fill in the object named <code>args</code>.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-52'>
+  <div class='section' id='section-69'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-52'>#</a>
+        <a class='octothorpe' href='#section-69'>#</a>
       </div>
       <p>Display detailed report and summary as well.</p>
     </div>
@@ -788,10 +969,10 @@ and fill in the object named <code>args</code>.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-53'>
+  <div class='section' id='section-70'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-53'>#</a>
+        <a class='octothorpe' href='#section-70'>#</a>
       </div>
       <p>If any error is found, return with exit code check to non-zero value.</p>
     </div>
@@ -801,13 +982,13 @@ and fill in the object named <code>args</code>.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-54'>
+  <div class='section' id='section-71'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-54'>#</a>
+        <a class='octothorpe' href='#section-71'>#</a>
       </div>
-      <p>If this script is started from command line, run the <code>main</code> function which is
-entry point to the processing.
+      <p>If this script is started from command line, run the <code>main</code> function
+which represents entry point to the processing.
 Entry point to this tool.</p>
     </div>
     <div class='code'>
@@ -815,10 +996,10 @@ Entry point to this tool.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-55'>
+  <div class='section' id='section-72'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-55'>#</a>
+        <a class='octothorpe' href='#section-72'>#</a>
       </div>
       
     </div>
