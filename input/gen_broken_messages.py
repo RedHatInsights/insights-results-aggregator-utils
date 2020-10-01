@@ -28,6 +28,9 @@ Types of input message mutation:
 * any item can be replaced by new random content
 """
 
+# Link to generated documentation for this script:
+# https://redhatinsights.github.io/insights-results-aggregator-utils/packages/gen_broken_messages.html
+
 import json
 import os
 import sys
