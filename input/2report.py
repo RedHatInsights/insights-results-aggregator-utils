@@ -29,6 +29,9 @@ attributes and by rearranging output structure. Output files will
 have following names: 'r_*.json'.
 """
 
+# Link to generated documentation for this script:
+# https://redhatinsights.github.io/insights-results-aggregator-utils/packages/2report.html
+
 import json
 import sys
 import datetime
