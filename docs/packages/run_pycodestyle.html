@@ -43,9 +43,7 @@ Simple checker of all Python sources in the given directory (usually repository)
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="nb">exit</span>
-<span class="kn">import</span> <span class="nn">pycodestyle</span></pre></div>
+      <div class="highlight"><pre></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -54,10 +52,13 @@ Simple checker of all Python sources in the given directory (usually repository)
       <div class='octowrap'>
         <a class='octothorpe' href='#section-2'>#</a>
       </div>
-      <p>Run pydocstyle checker against all Python sources in the given directory.</p>
+      <p>Link to generated documentation for this script:
+https://redhatinsights.github.io/insights-results-aggregator-utils/packages/run_pycodestyle.html</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">def</span> <span class="nf">main</span><span class="p">():</span></pre></div>
+      <div class="highlight"><pre><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="nb">exit</span>
+<span class="kn">import</span> <span class="nn">pycodestyle</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -65,6 +66,18 @@ Simple checker of all Python sources in the given directory (usually repository)
     <div class='docs'>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>Run pydocstyle checker against all Python sources in the given directory.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">main</span><span class="p">():</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
       </div>
       <p>Find all files in current directory and subdirectories with &lsquo;*.py&rsquo; extension.
 Files are found recursivelly in all subdirectories as well.</p>
@@ -74,10 +87,10 @@ Files are found recursivelly in all subdirectories as well.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-4'>
+  <div class='section' id='section-5'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-4'>#</a>
+        <a class='octothorpe' href='#section-5'>#</a>
       </div>
       <p>Setup the module to check style of Python sources. We (usually) already
 have global configuration file &lsquo;setup.cfg&rsquo; that can be used. Also verbose
@@ -89,10 +102,10 @@ enable verbose output.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-5'>
+  <div class='section' id='section-6'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-5'>#</a>
+        <a class='octothorpe' href='#section-6'>#</a>
       </div>
       <p>Check the style for all Python sources found in current directory and all
 subdirectories too. All detected issues are displayed in the meantime.</p>
@@ -102,10 +115,10 @@ subdirectories too. All detected issues are displayed in the meantime.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-6'>
+  <div class='section' id='section-7'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-6'>#</a>
+        <a class='octothorpe' href='#section-7'>#</a>
       </div>
       <p>Print number of errors found at the end of check.</p>
     </div>
@@ -114,10 +127,10 @@ subdirectories too. All detected issues are displayed in the meantime.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-7'>
+  <div class='section' id='section-8'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-7'>#</a>
+        <a class='octothorpe' href='#section-8'>#</a>
       </div>
       <p>If any error is found, return with exit code check to non-zero value.</p>
     </div>
@@ -127,10 +140,10 @@ subdirectories too. All detected issues are displayed in the meantime.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-8'>
+  <div class='section' id='section-9'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-8'>#</a>
+        <a class='octothorpe' href='#section-9'>#</a>
       </div>
       <p>Default exit code is 0 == success</p>
     </div>
@@ -139,10 +152,10 @@ subdirectories too. All detected issues are displayed in the meantime.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-9'>
+  <div class='section' id='section-10'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-9'>#</a>
+        <a class='octothorpe' href='#section-10'>#</a>
       </div>
       <p>If this script is started from command line, run the <code>main</code> function which
 represents entry point to the processing.</p>
