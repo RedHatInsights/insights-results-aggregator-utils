@@ -14,15 +14,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Anonymize CCX data pipeline log files by hashing organization ID and cluster ID."""
+"""
+Anonymize CCX data pipeline log files by hashing organization ID and cluster ID.
 
-# Usage:
-# anonymize_ccx_pipeline_log.py [-h] -s SALT < input.log > output.log
-#
-# optional arguments:
-#   -h, --help            show this help message and exit
-#   -s SALT, --salt SALT  salt for hashing algorithm
+Usage:
+anonymize_ccx_pipeline_log.py [-h] -s SALT < input.log > output.log
 
+optional arguments:
+  -h, --help            show this help message and exit
+  -s SALT, --salt SALT  salt for hashing algorithm
+"""
+
+# Link to generated documentation for this script:
+# https://redhatinsights.github.io/insights-results-aggregator-utils/packages/anonymize_ccx_pipeline_log.html
 
 from hashlib import blake2b
 from argparse import ArgumentParser
