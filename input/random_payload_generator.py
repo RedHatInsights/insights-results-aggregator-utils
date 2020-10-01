@@ -14,6 +14,9 @@
 
 """Generator of random payload for testing REST API, message consumers, test frameworks etc."""
 
+# Link to generated documentation for this script:
+# https://redhatinsights.github.io/insights-results-aggregator-utils/packages/random_payload_generator.html
+
 import string
 import random
 
