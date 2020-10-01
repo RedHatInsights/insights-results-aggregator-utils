@@ -14,17 +14,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Anonymize aggregator log files by hashing organization ID and cluster ID."""
+"""
+Anonymize aggregator log files by hashing organization ID and cluster ID.
 
-# Usage:
-# anonymize_aggregator_log.py [-h] -s SALT < input.log > output.log
-#
-# optional arguments:
-#   -h, --help            show this help message and exit
-#   -s SALT, --salt SALT  salt for hashing algorithm
+Usage:
+-----
+anonymize_aggregator_log.py [-h] -s SALT < input.log > output.log
 
-# Example:
-# anonymize_aggregator_log.py -s foobar < original.log > anonymized.log
+optional arguments:
+   -h, --help            show this help message and exit
+   -s SALT, --salt SALT  salt for hashing algorithm
+
+Example:
+-------
+anonymize_aggregator_log.py -s foobar < original.log > anonymized.log
+
+"""
+
+# Link to generated documentation for this script:
+# https://redhatinsights.github.io/insights-results-aggregator-utils/packages/anonymize_ccx_pipeline_log.html
 
 from hashlib import blake2b
 from argparse import ArgumentParser
