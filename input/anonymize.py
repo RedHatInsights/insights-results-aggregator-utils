@@ -24,6 +24,9 @@ the original file name is not preserved as it also migth contain
 sensitive data.
 """
 
+# Link to generated documentation for this script:
+# https://redhatinsights.github.io/insights-results-aggregator-utils/packages/anonymize.html
+
 import json
 from os import listdir
 from os.path import isfile, join
