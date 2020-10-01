@@ -14,6 +14,9 @@
 
 """Simple checker of all Python sources in the given directory (usually repository)."""
 
+# Link to generated documentation for this script:
+# https://redhatinsights.github.io/insights-results-aggregator-utils/packages/run_pycodestyle.html
+
 from pathlib import Path
 from sys import exit
 import pycodestyle
