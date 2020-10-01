@@ -39,8 +39,7 @@ You may obtain a copy of the License at</p>
 distributed under the License is distributed on an &ldquo;AS IS&rdquo; BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
-limitations under the License.
-Anonymize CCX data pipeline log files by hashing organization ID and cluster ID.</p>
+limitations under the License.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre></pre></div>
@@ -52,7 +51,12 @@ Anonymize CCX data pipeline log files by hashing organization ID and cluster ID.
       <div class='octowrap'>
         <a class='octothorpe' href='#section-2'>#</a>
       </div>
-      
+      <p>Anonymize CCX data pipeline log files by hashing organization ID and cluster ID.</p>
+<p>Usage:
+anonymize_ccx_pipeline_log.py [-h] -s SALT &lt; input.log &gt; output.log</p>
+<p>optional arguments:
+  -h, &ndash;help            show this help message and exit
+  -s SALT, &ndash;salt SALT  salt for hashing algorithm</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre></pre></div>
@@ -64,11 +68,8 @@ Anonymize CCX data pipeline log files by hashing organization ID and cluster ID.
       <div class='octowrap'>
         <a class='octothorpe' href='#section-3'>#</a>
       </div>
-      <p>Usage:
-anonymize_ccx_pipeline_log.py [-h] -s SALT &lt; input.log &gt; output.log</p>
-<p>optional arguments:
-  -h, &ndash;help            show this help message and exit
-  -s SALT, &ndash;salt SALT  salt for hashing algorithm</p>
+      <p>Link to generated documentation for this script:
+https://redhatinsights.github.io/insights-results-aggregator-utils/packages/anonymize_ccx_pipeline_log.html</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre><span class="kn">from</span> <span class="nn">hashlib</span> <span class="kn">import</span> <span class="n">blake2b</span>
