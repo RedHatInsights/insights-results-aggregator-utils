@@ -25,6 +25,9 @@ optional arguments:
                         directory with JSON files to check
 """
 
+# Link to generated documentation for this script:
+# https://redhatinsights.github.io/insights-results-aggregator-utils/packages/json_check.html
+
 from pathlib import Path
 from json import load
 from sys import exit
