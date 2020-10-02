@@ -15,6 +15,9 @@ limitations under the License.
 */
 package main
 
+// Link to generated documentation for this script:
+// https://redhatinsights.github.io/insights-results-aggregator-utils/packages/insights_operator_pull_only.html
+
 import (
 	"bufio"
 	"image"
