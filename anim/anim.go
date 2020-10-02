@@ -19,3 +19,6 @@ limitations under the License.
 // proxy architecture and data or command flows. Theese tools are started from
 // command line and don't not accept any command line argument (yet).
 package main
+
+// Link to generated documentation for this script:
+// https://redhatinsights.github.io/insights-results-aggregator-utils/packages/anim.html
