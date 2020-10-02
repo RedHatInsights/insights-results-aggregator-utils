@@ -13,11 +13,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
 package main
 
 // Creates animation from static GIF image + set of programmed rules. That
 // animation displays the data flow from Insights Operator to OCP WebConsole
 // via Prometheus metrics.
+
+// Link to generated documentation for this script:
+// https://redhatinsights.github.io/insights-results-aggregator-utils/packages/insights_operator_prometheus.html
 
 import (
 	"bufio"
