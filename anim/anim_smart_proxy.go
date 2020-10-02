@@ -19,6 +19,9 @@ package main
 // animation displays data flow between Insights Results Smart Proxy and other
 // services (internal and external ones).
 
+// Link to generated documentation for this script:
+// https://redhatinsights.github.io/insights-results-aggregator-utils/packages/anim_smart_proxy.html
+
 import (
 	"bufio"
 	"fmt"
