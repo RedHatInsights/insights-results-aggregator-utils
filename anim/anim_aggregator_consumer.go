@@ -19,6 +19,9 @@ package main
 // animation displays the data flow for Insights Results Agregator consumer
 // service.
 
+// Link to generated documentation for this script:
+// https://redhatinsights.github.io/insights-results-aggregator-utils/packages/anim_aggregator_consumer.html
+
 import (
 	"bufio"
 	"image"
