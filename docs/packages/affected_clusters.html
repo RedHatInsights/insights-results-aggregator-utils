@@ -54,11 +54,29 @@ limitations under the License.</p>
       <p>Prints all clusters that are affected by selected rule.</p>
 <p>This script can be used to analyze data exported from <code>report</code> table by
 the following command typed into PSQL console:</p>
-<pre><code>\copy report to 'reports.csv csv
+<pre><code>\copy report to 'reports.csv' csv
 </code></pre>
 <p>Script displays two tables:
     1. org_id + cluster_name (list of affected clusters)
     2. org_id + number of affected clusters (usually the only information reguired by management)</p>
+<p>Howto connect to PSQL console:
+    psql -h host</p>
+<p>Password can be retrieved from OpenShift console, for example from:
+ccx-data-pipeline-qa/browse/secrets/ccx-data-pipeline-db
+ccx-data-pipeline-prod/browse/secrets/ccx-data-pipeline-db</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>Link to generated documentation for this script:
+https://redhatinsights.github.io/insights-results-aggregator-utils/packages/affected_clusters.html</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre><span class="kn">import</span> <span class="nn">json</span>
@@ -68,10 +86,10 @@ the following command typed into PSQL console:</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-3'>
+  <div class='section' id='section-4'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-3'>#</a>
+        <a class='octothorpe' href='#section-4'>#</a>
       </div>
       <p>Check if both command line arguments are specified (they are mandatory).</p>
     </div>
@@ -85,10 +103,10 @@ the following command typed into PSQL console:</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-4'>
+  <div class='section' id='section-5'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-4'>#</a>
+        <a class='octothorpe' href='#section-5'>#</a>
       </div>
       <p>First command line argument should contain rule name.</p>
     </div>
@@ -97,10 +115,10 @@ the following command typed into PSQL console:</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-5'>
+  <div class='section' id='section-6'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-5'>#</a>
+        <a class='octothorpe' href='#section-6'>#</a>
       </div>
       <p>Second command line argument should contain name of input CSV.</p>
     </div>
@@ -111,10 +129,10 @@ the following command typed into PSQL console:</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-6'>
+  <div class='section' id='section-7'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-6'>#</a>
+        <a class='octothorpe' href='#section-7'>#</a>
       </div>
       <p>Try to open the CSV file specified.</p>
     </div>
@@ -123,10 +141,10 @@ the following command typed into PSQL console:</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-7'>
+  <div class='section' id='section-8'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-7'>#</a>
+        <a class='octothorpe' href='#section-8'>#</a>
       </div>
       <p>And open this file as CSV</p>
     </div>
@@ -136,10 +154,10 @@ the following command typed into PSQL console:</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-8'>
+  <div class='section' id='section-9'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-8'>#</a>
+        <a class='octothorpe' href='#section-9'>#</a>
       </div>
       <p>Read all rows from the provided CSV file.</p>
     </div>
@@ -151,10 +169,10 @@ the following command typed into PSQL console:</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-9'>
+  <div class='section' id='section-10'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-9'>#</a>
+        <a class='octothorpe' href='#section-10'>#</a>
       </div>
       <p>Try to load JSON file with name found in the CSV file.</p>
     </div>
@@ -163,10 +181,10 @@ the following command typed into PSQL console:</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-10'>
+  <div class='section' id='section-11'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-10'>#</a>
+        <a class='octothorpe' href='#section-11'>#</a>
       </div>
       <p>Content of JSON file is a bit complicated, but we need to process
 only several attributes.</p>
@@ -194,10 +212,10 @@ only several attributes.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-11'>
+  <div class='section' id='section-12'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-11'>#</a>
+        <a class='octothorpe' href='#section-12'>#</a>
       </div>
       <p>not important for this report ATM
 print(&ldquo;skipped&rdquo;)</p>
@@ -213,10 +231,10 @@ print(&ldquo;skipped&rdquo;)</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-12'>
+  <div class='section' id='section-13'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-12'>#</a>
+        <a class='octothorpe' href='#section-13'>#</a>
       </div>
       <p>Start the processing.</p>
     </div>
@@ -226,10 +244,10 @@ print(&ldquo;skipped&rdquo;)</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-13'>
+  <div class='section' id='section-14'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-13'>#</a>
+        <a class='octothorpe' href='#section-14'>#</a>
       </div>
       <p>Process all organizations.</p>
     </div>
@@ -240,10 +258,10 @@ print(&ldquo;skipped&rdquo;)</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-14'>
+  <div class='section' id='section-15'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-14'>#</a>
+        <a class='octothorpe' href='#section-15'>#</a>
       </div>
       <p>Display total number of organizations.</p>
     </div>
