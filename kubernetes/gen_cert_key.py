@@ -1,11 +1,5 @@
 #!/usr/bin/env python3
 
-"""Script to generate certificate and user key from provided Kubernetes configuration file.
-
-Generated files k8s.crt and k8s.key might be used to access Insights Operator
-REST API endpoints and Prometheus metrics as well.
-"""
-
 # Copyright © 2020 Red Hat
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,6 +13,16 @@ REST API endpoints and Prometheus metrics as well.
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+"""
+Script to generate certificate and user key from provided Kubernetes configuration file.
+
+Generated files k8s.crt and k8s.key might be used to access Insights Operator
+REST API endpoints and Prometheus metrics as well.
+"""
+
+# Link to generated documentation for this script:
+# https://redhatinsights.github.io/insights-results-aggregator-utils/packages/gen_cert_key.html
 
 import yaml
 import base64
