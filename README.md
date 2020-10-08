@@ -686,3 +686,44 @@ python3 json2edn.py input.json > output.edn
 ```
 
 ------------------------------------------------------------------------------
+
+## Database related tools
+
+### `cleanup_old_results.py`
+
+Prepares script to cleanup old results from database.
+
+#### Description
+
+This script can be used to analyze data exported from `report` table by
+the following command typed into PSQL console:
+
+    \copy report to 'reports.csv' csv
+
+Script retrieves all reports older than the specified amount of time represented as days.
+Then it creates an SQL script that can be run by administrator against selected database.
+
+#### Generated documentation
+
+* https://redhatinsights.github.io/insights-results-aggregator-utils/packages/cleanup_old_results.html
+
+#### Database connection
+
+Howto connect to PSQL console:
+
+    psql -h host
+
+Password can be retrieved from OpenShift console, for example from:
+ccx-data-pipeline-qa/browse/secrets/ccx-data-pipeline-db
+ccx-data-pipeline-prod/browse/secrets/ccx-data-pipeline-db
+
+#### Usage
+
+    cleanup_old_results.py offset_in_days input_file.csv > cleanup.sql
+
+#### Example
+
+create a script to cleanup all records older than 90 days
+
+    cleanup_old_results.py 90 report.csv > cleanup.sql
+

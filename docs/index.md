@@ -34,6 +34,10 @@ Utilities for Insights Results Aggregator
 * [random_payload_generator.py](packages/random_payload_generator.html)
 
 
+### Database related tools
+
+* [cleanup_old_results.py](packages/cleanup_old_results.html)
+
 ### Tools that create GIF animations
 
 * [anim.go](packages/anim.html)
