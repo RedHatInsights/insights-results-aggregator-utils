@@ -3,7 +3,37 @@ Utilities for Insights Results Aggregator
 
 [![GitHub Pages](https://img.shields.io/badge/%20-GitHub%20Pages-informational)](https://redhatinsights.github.io/insights-results-aggregator-utils/)
 
-## Utilitites for handling messages to be consumed by aggregator
+## Utilities for accessing REST API endpoints for selected services
+
+These utilities are stored in `api_access` subdirectory.
+
+### `aggregator/check_cluster_list_1.sh`
+
+#### Description
+
+BASH script to retrieve results for multiple clusters (specified in URL) from the Insights Results Aggregator service.
+
+#### Remark
+
+It is needed to provide the correct value for variable `ADDRESS` that should points to running Insights Result Aggregator service instance.
+
+
+
+### `aggregator/check_cluster_list_2.sh`
+
+#### Description
+
+BASH script to retrieve results for multiple clusters (specified in request payload) from the Insights Results Aggregator service.
+
+#### Remark
+
+It is needed to provide the correct value for variable `ADDRESS` that should points to running Insights Result Aggregator service instance.
+
+
+
+------------------------------------------------------------------------------
+
+## Utilities for handling messages to be consumed by aggregator
 
 These utilities are stored in `input` subdirectory.
  
