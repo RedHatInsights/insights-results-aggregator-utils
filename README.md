@@ -31,6 +31,30 @@ It is needed to provide the correct value for variable `ADDRESS` that should poi
 
 
 
+### `smart_proxy/check_cluster_list_1.sh`
+
+#### Description
+
+BASH script to retrieve results for multiple clusters (specified in URL) from the Smart Proxy service.
+
+#### Remark
+
+It is needed to provide the correct value for variable `ADDRESS` that should points to running Smart Proxy service instance.
+
+
+
+### `smart_proxy/check_cluster_list_2.sh`
+
+#### Description
+
+BASH script to retrieve results for multiple clusters (specified in request payload) from the Smart Proxy service.
+
+#### Remark
+
+It is needed to provide the correct value for variable `ADDRESS` that should points to running Smart Proxy service instance.
+
+
+
 ------------------------------------------------------------------------------
 
 ## Utilities for handling messages to be consumed by aggregator
