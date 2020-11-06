@@ -26,7 +26,7 @@ optional arguments:
 """
 
 # Link to generated documentation for this script:
-# https://redhatinsights.github.io/insights-results-aggregator-utils/packages/anonymize_ccx_pipeline_log.html
+# <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/anonymize_ccx_pipeline_log.html>
 
 from hashlib import blake2b
 from argparse import ArgumentParser
