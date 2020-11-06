@@ -16,6 +16,9 @@
 
 """Creates plot (graph) displaying statistic about the age of rule results."""
 
+# Link to generated documentation for this script:
+# <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/cluster_results_age.html>
+
 import sys
 import csv
 import collections
