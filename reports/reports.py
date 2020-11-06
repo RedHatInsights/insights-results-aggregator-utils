@@ -30,6 +30,9 @@ ccx-data-pipeline-qa/browse/secrets/ccx-data-pipeline-db
 ccx-data-pipeline-prod/browse/secrets/ccx-data-pipeline-db
 """
 
+# Link to generated documentation for this script:
+# <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/reports.html>
+
 import json
 import sys
 import csv
