@@ -16,6 +16,9 @@
 
 """Display statistic about rules that really 'hit' problems on clusters."""
 
+# Link to generated documentation for this script:
+# <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/stat.html>
+
 import collections
 import json
 from os import listdir
