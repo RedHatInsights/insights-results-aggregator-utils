@@ -17,7 +17,7 @@
 # Converts structured data from JSON format into EDN format.
 
 # Link to generated documentation for this script:
-# https://redhatinsights.github.io/insights-results-aggregator-utils/packages/json2edn.html
+# <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/json2edn.html>
 
 import sys
 import json
