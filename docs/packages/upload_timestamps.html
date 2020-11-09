@@ -55,11 +55,7 @@ Script to retrieve timestamp of all objects stored in AWS S3 bucket and export t
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="kn">import</span> <span class="nn">boto3</span>
-<span class="kn">import</span> <span class="nn">botocore</span>
-<span class="kn">import</span> <span class="nn">csv</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">from</span> <span class="nn">argparse</span> <span class="kn">import</span> <span class="n">ArgumentParser</span></pre></div>
+      <div class="highlight"><pre></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -68,10 +64,15 @@ Script to retrieve timestamp of all objects stored in AWS S3 bucket and export t
       <div class='octowrap'>
         <a class='octothorpe' href='#section-3'>#</a>
       </div>
-      <p>Try to connect into AWS S3 and initialize new session.</p>
+      <p>Link to generated documentation for this script:
+<a href="https://redhatinsights.github.io/insights-results-aggregator-utils/packages/upload_timestamps.html">https://redhatinsights.github.io/insights-results-aggregator-utils/packages/upload_timestamps.html</a></p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">def</span> <span class="nf">connect_to_s3</span><span class="p">(</span><span class="n">aws_access_key_id</span><span class="p">,</span> <span class="n">aws_secret_access_key</span><span class="p">,</span> <span class="n">region_name</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre><span class="kn">import</span> <span class="nn">boto3</span>
+<span class="kn">import</span> <span class="nn">botocore</span>
+<span class="kn">import</span> <span class="nn">csv</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">argparse</span> <span class="kn">import</span> <span class="n">ArgumentParser</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -79,6 +80,18 @@ Script to retrieve timestamp of all objects stored in AWS S3 bucket and export t
     <div class='docs'>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <p>Try to connect into AWS S3 and initialize new session.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">connect_to_s3</span><span class="p">(</span><span class="n">aws_access_key_id</span><span class="p">,</span> <span class="n">aws_secret_access_key</span><span class="p">,</span> <span class="n">region_name</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
       </div>
       <p>Construction and initialization of session into AWS S3.</p>
     </div>
@@ -89,10 +102,10 @@ Script to retrieve timestamp of all objects stored in AWS S3 bucket and export t
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-5'>
+  <div class='section' id='section-6'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-5'>#</a>
+        <a class='octothorpe' href='#section-6'>#</a>
       </div>
       <p>These two configuration options are set to constants, but it might be
 possible that it will be configurable later.</p>
@@ -103,10 +116,10 @@ possible that it will be configurable later.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-6'>
+  <div class='section' id='section-7'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-6'>#</a>
+        <a class='octothorpe' href='#section-7'>#</a>
       </div>
       <p>Retrieve the &lsquo;s3&rsquo; resource which represents the real session object.</p>
     </div>
@@ -117,10 +130,10 @@ possible that it will be configurable later.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-7'>
+  <div class='section' id='section-8'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-7'>#</a>
+        <a class='octothorpe' href='#section-8'>#</a>
       </div>
       <p>Get a list of timestamps for all objects in selected S3 bucket.</p>
     </div>
@@ -129,10 +142,10 @@ possible that it will be configurable later.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-8'>
+  <div class='section' id='section-9'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-8'>#</a>
+        <a class='octothorpe' href='#section-9'>#</a>
       </div>
       <p>Construct object that represents the bucket in S3.</p>
     </div>
@@ -144,10 +157,10 @@ possible that it will be configurable later.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-9'>
+  <div class='section' id='section-10'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-9'>#</a>
+        <a class='octothorpe' href='#section-10'>#</a>
       </div>
       <p>Iterate over all objects found in given bucket. Please be avare that this
 operation might be time and/or memory consuming.</p>
@@ -158,10 +171,10 @@ operation might be time and/or memory consuming.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-10'>
+  <div class='section' id='section-11'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-10'>#</a>
+        <a class='octothorpe' href='#section-11'>#</a>
       </div>
       <p>It is possible to limit number of records. If <code>max_records</code> is set to
 <code>None</code>, limits are not used.</p>
@@ -176,10 +189,10 @@ operation might be time and/or memory consuming.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-11'>
+  <div class='section' id='section-12'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-11'>#</a>
+        <a class='octothorpe' href='#section-12'>#</a>
       </div>
       <p>Export timestamps into CSV file.</p>
     </div>
@@ -188,10 +201,10 @@ operation might be time and/or memory consuming.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-12'>
+  <div class='section' id='section-13'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-12'>#</a>
+        <a class='octothorpe' href='#section-13'>#</a>
       </div>
       <p>Try to open new file for writing.</p>
     </div>
@@ -200,10 +213,10 @@ operation might be time and/or memory consuming.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-13'>
+  <div class='section' id='section-14'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-13'>#</a>
+        <a class='octothorpe' href='#section-14'>#</a>
       </div>
       <p>Initialize CSV writer.</p>
     </div>
@@ -212,10 +225,10 @@ operation might be time and/or memory consuming.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-14'>
+  <div class='section' id='section-15'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-14'>#</a>
+        <a class='octothorpe' href='#section-15'>#</a>
       </div>
       <p>First row with header.</p>
     </div>
@@ -224,10 +237,10 @@ operation might be time and/or memory consuming.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-15'>
+  <div class='section' id='section-16'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-15'>#</a>
+        <a class='octothorpe' href='#section-16'>#</a>
       </div>
       <p>And write all timestamps into the CSV file.</p>
     </div>
@@ -237,10 +250,10 @@ operation might be time and/or memory consuming.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-16'>
+  <div class='section' id='section-17'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-16'>#</a>
+        <a class='octothorpe' href='#section-17'>#</a>
       </div>
       <p>Retrieve all CLI arguments.</p>
     </div>
@@ -249,10 +262,10 @@ operation might be time and/or memory consuming.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-17'>
+  <div class='section' id='section-18'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-17'>#</a>
+        <a class='octothorpe' href='#section-18'>#</a>
       </div>
       <p>First of all, we need to specify all command line flags that are
 recognized by this tool.</p>
@@ -272,10 +285,10 @@ recognized by this tool.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-18'>
+  <div class='section' id='section-19'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-18'>#</a>
+        <a class='octothorpe' href='#section-19'>#</a>
       </div>
       <p>Now it is time to parse flags, check the actual content of command line
 and fill in the object named <code>args</code>.</p>
@@ -285,10 +298,10 @@ and fill in the object named <code>args</code>.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-19'>
+  <div class='section' id='section-20'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-19'>#</a>
+        <a class='octothorpe' href='#section-20'>#</a>
       </div>
       <p>Entry point to this script.</p>
     </div>
@@ -297,10 +310,10 @@ and fill in the object named <code>args</code>.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-20'>
+  <div class='section' id='section-21'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-20'>#</a>
+        <a class='octothorpe' href='#section-21'>#</a>
       </div>
       <p>Parse and process and command line arguments.</p>
     </div>
@@ -309,10 +322,10 @@ and fill in the object named <code>args</code>.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-21'>
+  <div class='section' id='section-22'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-21'>#</a>
+        <a class='octothorpe' href='#section-22'>#</a>
       </div>
       <p>Initialize S3 session and read all timestamps.</p>
     </div>
@@ -322,10 +335,10 @@ and fill in the object named <code>args</code>.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-22'>
+  <div class='section' id='section-23'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-22'>#</a>
+        <a class='octothorpe' href='#section-23'>#</a>
       </div>
       <p>Timestamps are usually not sorted, so we need to sort them explicitly.</p>
     </div>
@@ -334,10 +347,10 @@ and fill in the object named <code>args</code>.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-23'>
+  <div class='section' id='section-24'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-23'>#</a>
+        <a class='octothorpe' href='#section-24'>#</a>
       </div>
       <p>Finally, export all timestamps into specified file.</p>
     </div>
@@ -346,10 +359,10 @@ and fill in the object named <code>args</code>.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-24'>
+  <div class='section' id='section-25'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-24'>#</a>
+        <a class='octothorpe' href='#section-25'>#</a>
       </div>
       <p>If this script is started from command line, run the <code>main</code> function which is
 entry point to the processing.</p>

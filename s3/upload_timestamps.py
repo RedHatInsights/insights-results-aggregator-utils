@@ -16,6 +16,9 @@
 
 """Script to retrieve timestamp of all objects stored in AWS S3 bucket and export them to CSV."""
 
+# Link to generated documentation for this script:
+# <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/upload_timestamps.html>
+
 import boto3
 import botocore
 import csv
