@@ -22,7 +22,7 @@ REST API endpoints and Prometheus metrics as well.
 """
 
 # Link to generated documentation for this script:
-# https://redhatinsights.github.io/insights-results-aggregator-utils/packages/gen_cert_key.html
+# <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/gen_cert_key.html>
 
 import yaml
 import base64
