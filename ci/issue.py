@@ -1,5 +1,8 @@
 """Create an issue on github.com using the given parameters."""
 
+# Link to generated documentation for this script:
+# <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/issue.html>
+
 import os
 import sys
 import requests
