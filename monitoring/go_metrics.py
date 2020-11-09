@@ -21,7 +21,7 @@ Memory and GC statistic is being exported into CSV file to be further processed.
 """
 
 # Link to generated documentation for this script:
-# https://redhatinsights.github.io/insights-results-aggregator-utils/packages/go_metrics.html
+# <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/go_metrics.html>
 
 import csv
 import requests
