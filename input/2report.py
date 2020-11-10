@@ -30,7 +30,7 @@ have following names: 'r_*.json'.
 """
 
 # Link to generated documentation for this script:
-# https://redhatinsights.github.io/insights-results-aggregator-utils/packages/2report.html
+# <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/2report.html>
 
 import json
 import sys
