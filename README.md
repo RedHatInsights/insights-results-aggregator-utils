@@ -449,6 +449,33 @@ optional arguments:
                         max records to export (default=all)
 ```
 
+
+
+### `kafka_lags.py`
+
+Plot graph with Kafka lags with linear regression line added into plot.
+
+Source CSV file is to be retrieved from Grafana.
+
+#### Generated documentation
+
+* https://redhatinsights.github.io/insights-results-aggregator-utils/packages/kafka_lags.html
+
+#### Usage
+
+```
+kafka_lags.py input_file.csv
+```
+
+#### Example
+
+```
+kafka_lags.py overall.csv
+```
+
+
+------------------------------------------------------------------------------
+
 ## Checking tools
 
 These utilities are stored in `checks` subdirectory.
