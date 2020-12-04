@@ -6,11 +6,16 @@ Utilities for Insights Results Aggregator
 * [stat.py](packages/stat.html)
 * [affected_clusters.py](packages/affected_clusters.html)
 * [anonymize.py](packages/anonymize.html)
-* [go_metrics.py](packages/go_metrics.html)
 * [anonymize_aggregator_log.py](packages/anonymize_aggregator_log.html)
 * [upload_timestamps.py](packages/upload_timestamps.html)
 * [json2edn.py](packages/json2edn.html)
 * [cluster_results_age.py](packages/cluster_results_age.html)
+
+
+### Monitoring
+
+* [go_metrics.py](packages/go_metrics.html)
+* [kafka_lags.py](packages/kafka_lags.html)
 
 
 ### Checkers
