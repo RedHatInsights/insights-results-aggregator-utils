@@ -47,6 +47,7 @@ Utilities for Insights Results Aggregator
 
 * [anim.go](packages/anim.html)
 * [anim_smart_proxy.go](packages/anim_smart_proxy.html)
+* [anim_external_data_pipeline.go](packages/anim_external_data_pipeline.html)
 * [anim_aggregator_consumer.go](packages/anim_aggregator_consumer.html)
 * [insights_operator_prometheus.go](packages/insights_operator_prometheus.html)
 * [insights_operator_to_web_console.go](packages/insights_operator_to_web_console.html)

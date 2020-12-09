@@ -596,6 +596,24 @@ architecture and data or command flows. Theese tools are invoked from command
 line and don't not accept any command line argument (yet).
 
 
+### `anim_external_data_pipeline.go`
+
+Creates animation based on static GIF image + set of programmed rules. That
+animation displays the data flow for the whole external data pipeline.
+
+#### Description
+
+Specialized utility used just to create data flow for the whole external data pipeline.
+
+#### Generated documentation
+
+* https://redhatinsights.github.io/insights-results-aggregator-utils/packages/anim_external_data_pipeline.html
+
+#### Usage
+
+```
+go run anim_external_data_pipeline.go
+```
 
 ### `anim_aggregator_consumer.go`
 
