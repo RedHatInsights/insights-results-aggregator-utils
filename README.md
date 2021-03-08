@@ -609,6 +609,14 @@ Specialized utility used just to create data flow for the whole external data pi
 
 * https://redhatinsights.github.io/insights-results-aggregator-utils/packages/anim_external_data_pipeline.html
 
+#### Build
+
+Go version 1.14 or newer is required to build this tool.
+
+```
+go build anim_external_data_pipeline.go
+```
+
 #### Usage
 
 ```
@@ -628,6 +636,14 @@ Specialized utility used just to create https://github.com/RedHatInsights/insigh
 #### Generated documentation
 
 * https://redhatinsights.github.io/insights-results-aggregator-utils/packages/anim_aggregator_consumer.html
+
+#### Build
+
+Go version 1.14 or newer is required to build this tool.
+
+```
+go build anim_aggregator_consumer.go
+```
 
 #### Usage
 
@@ -654,6 +670,14 @@ Specialized utility used just to create https://redhatinsights.github.io/insight
 
 * https://redhatinsights.github.io/insights-results-aggregator-utils/packages/anim_smart_proxy.html
 
+#### Build
+
+Go version 1.14 or newer is required to build this tool.
+
+```
+go build anim_smart_proxy.go
+```
+
 #### Usage
 
 ```
@@ -675,6 +699,14 @@ Specialized utility used just to create https://redhatinsights.github.io/insight
 #### Generated documentation
 
 * https://redhatinsights.github.io/insights-results-aggregator-utils/packages/insights_operator_pull_only.html
+
+#### Build
+
+Go version 1.14 or newer is required to build this tool.
+
+```
+go build insights_operator_pull_only.go
+```
 
 #### Usage
 
@@ -700,6 +732,14 @@ Specialized utility used just to create https://redhatinsights.github.io/insight
 
 * https://redhatinsights.github.io/insights-results-aggregator-utils/packages/insights_operator_prometheus.html
 
+#### Build
+
+Go version 1.14 or newer is required to build this tool.
+
+```
+go build insights_operator_prometheus.go
+```
+
 #### Usage
 
 ```
@@ -721,6 +761,14 @@ Specialized utility used just to create https://redhatinsights.github.io/insight
 #### Generated documentation
 
 * https://redhatinsights.github.io/insights-results-aggregator-utils/packages/insights_operator_to_web_console.html
+
+#### Build
+
+Go version 1.14 or newer is required to build this tool.
+
+```
+go build insights_operator_to_web_console.go
+```
 
 #### Usage
 
