@@ -2,6 +2,7 @@
 Utilities for Insights Results Aggregator
 
 [![GitHub Pages](https://img.shields.io/badge/%20-GitHub%20Pages-informational)](https://redhatinsights.github.io/insights-results-aggregator-utils/)
+[![License](https://img.shields.io/badge/license-Apache-blue)](https://github.com/RedHatInsights/insights-results-aggregator-utils/blob/master/LICENSE)
 
 ## Utilities for accessing REST API endpoints for selected services
 
