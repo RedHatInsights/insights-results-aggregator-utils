@@ -98,7 +98,7 @@ limitations under the License.</p>
       <p>First command line argument should contain name of input JSON file.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="n">input_json</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></pre></div>
+      <div class="highlight"><pre><span class="n">filename</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -110,7 +110,7 @@ limitations under the License.</p>
       <p>Try to open the JSON file specified.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">input_json</span><span class="p">)</span> <span class="k">as</span> <span class="n">json_input</span><span class="p">:</span></pre></div>
+      <div class="highlight"><pre><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">json_input</span><span class="p">:</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
