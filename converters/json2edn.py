@@ -32,10 +32,10 @@ if len(sys.argv) < 2:
     sys.exit(1)
 
 # First command line argument should contain name of input JSON file.
-input_json = sys.argv[1]
+filename = sys.argv[1]
 
 # Try to open the JSON file specified.
-with open(input_json) as json_input:
+with open(filename, "r") as json_input:
     # open the JSON file and parse it
     payload = json.load(json_input)
     # dump the parsed data structure into EDN format
