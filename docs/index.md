@@ -8,8 +8,13 @@ Utilities for Insights Results Aggregator
 * [anonymize.py](packages/anonymize.html)
 * [anonymize_aggregator_log.py](packages/anonymize_aggregator_log.html)
 * [upload_timestamps.py](packages/upload_timestamps.html)
-* [json2edn.py](packages/json2edn.html)
 * [cluster_results_age.py](packages/cluster_results_age.html)
+
+
+### Converters
+
+* [json2edn.py](packages/json2edn.html)
+* [edn2json.py](packages/edn2json.html)
 
 
 ### Monitoring
@@ -42,6 +47,7 @@ Utilities for Insights Results Aggregator
 ### Database related tools
 
 * [cleanup_old_results.py](packages/cleanup_old_results.html)
+
 
 ### Tools that create GIF animations
 
