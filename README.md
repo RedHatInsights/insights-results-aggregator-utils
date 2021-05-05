@@ -833,6 +833,27 @@ on `edn_format` Python package, that needs to be installed by using `pip` or
 python3 json2edn.py input.json > output.edn
 ```
 
+ 
+### `edn2json.py`
+
+Converts structured data from EDN format into JSON format.
+
+#### Description
+
+Converts structured data from EDN format into JSON format. This script is based
+on `edn_format` Python package, that needs to be installed by using `pip` or
+`pip3`.
+
+#### Generated documentation
+
+* https://redhatinsights.github.io/insights-results-aggregator-utils/packages/edn2json.html
+
+#### Usage
+
+```
+python3 edn2json.py input.edn > output.json
+```
+
 ------------------------------------------------------------------------------
 
 ## Database related tools
