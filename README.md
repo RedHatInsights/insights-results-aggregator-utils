@@ -896,3 +896,7 @@ create a script to cleanup all records older than 90 days
 
     cleanup_old_results.py 90 report.csv > cleanup.sql
 
+
+## Package manifest
+
+Package manifest is available at [docs/manifest.txt](docs/manifest.txt).
