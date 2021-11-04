@@ -865,10 +865,9 @@ python3 edn2json.py input.edn > output.json
 This script can be used to perform several operations with external data
 pipeline usually deployed on Stage environment.
 
-First operation retrieves list of clusters from the external data
-pipeline through the standard REST API. Organization ID (a.k.a. account number)
-needs to be provided via CLI option, because list of clusters is filtered by
-organization.
+First operation retrieves list of clusters from the external data pipeline
+through the standard REST API. Organization ID needs to be provided via CLI
+option, because list of clusters is filtered by organization.
 
 Second operation retrieves results from the external data pipeline for several
 clusters. List of clusters needs to be stored in a text file. Name of this text
