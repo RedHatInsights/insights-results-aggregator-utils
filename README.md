@@ -856,6 +856,26 @@ python3 edn2json.py input.edn > output.json
 
 ------------------------------------------------------------------------------
 
+## Testing tools
+
+### `st.py` (Stage Tester)
+
+#### Description
+
+This script can be used to retrieve list of clusters from the external data
+pipeline through the standard REST API. Organization ID (a.k.a. account number)
+needs to be provided via CLI option, because list of clusters is filtered by
+organization.
+
+REST API on Stage environment is accessed through proxy. Proxy name should be
+provided via CLI together with user name and password used for basic auth.
+
+#### Generated documentation
+
+* https://redhatinsights.github.io/insights-results-aggregator-utils/packages/st.html
+
+------------------------------------------------------------------------------
+
 ## Database related tools
 
 ### `cleanup_old_results.py`
