@@ -1,0 +1,19 @@
+language: python
+python:
+  - "3.6"      # current default Python on Travis CI
+  - "3.7"
+  - "3.8"
+  - "nightly"  # nightly build
+addons:
+  apt:
+    packages:
+    - libsnappy-dev
+# Pycodestyle part
+# needed to work correctly with Python 3 shebang
+env: SKIP_INTERPRETER=true
+before_install:
+  - git clone https://github.com/TravisToolbox/pycodestyle.git
+install:
+  - ./pycodestyle/install.sh
+script:
+  - ./pycodestyle/scan.sh
