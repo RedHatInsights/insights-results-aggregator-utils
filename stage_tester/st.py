@@ -19,10 +19,34 @@
 Description
 -----
 
+This script can be used to retrieve list of clusters from the external data
+pipeline through the standard REST API. Organization ID (a.k.a. account number)
+needs to be provided via CLI option, because list of clusters is filtered by
+organization.
+
+REST API on Stage environment is accessed through proxy. Proxy name should be
+provided via CLI together with user name and password used for basic auth.
+
 Usage
 -----
 
+```
+st.py [-h] -a ADDRESS -r PROXY -u USER -p PASSWORD -o ORGANIZATION [-l] [-v]
 
+optional arguments:
+  -h, --help            show this help message and exit
+  -a ADDRESS, --address ADDRESS
+                        Address of REST API for external data pipeline
+  -x PROXY, --proxy PROXY
+                        Proxy to be used to access REST API
+  -u USER, --user USER  User name for basic authentication
+  -p PASSWORD, --password PASSWORD
+                        Password for basic authentication
+  -o ORGANIZATION, --organization ORGANIZATION
+                        Organization ID/account number
+  -l, --cluster-list    Operation to retrieve list of clusters via REST API
+  -v, --verbose         Make messages verbose
+```
 
 Generated documentation
 -----
