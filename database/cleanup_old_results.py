@@ -23,7 +23,7 @@ Description:
 This script can be used to analyze data exported from `report` table by
 the following command typed into PSQL console:
 
-    \copy report to 'reports.csv' csv
+    \\copy report to 'reports.csv' csv
 
 Script retrieves all reports older than the specified amount of time represented as days.
 Then it creates an SQL script that can be run by administrator against selected database.

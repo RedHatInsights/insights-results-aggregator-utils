@@ -20,7 +20,7 @@ List all rules and other interesting informations found in reports.csv.
 This script can be used to analyze data exported from `report` table by
 the following command typed into PSQL console:
 
-    \copy report to 'reports.csv' csv
+    \\copy report to 'reports.csv' csv
 
 Howto connect to PSQL console:
     psql -h host
