@@ -153,8 +153,8 @@ def retrieve_cluster_list(organization, address, proxies, auth, verbose):
 
     # elementary check for response content
     assert response is not None, "Proper response expected"
-    assert response.status_code == 200, "Unexpected HTTP code returned: {}".format(
-            response.status_code)
+    assert response.status_code == requests.codes.ok, \
+            f"Unexpected HTTP code returned: {response.status_code}"
 
     # response should be in JSON format, time to parse it
     payload = response.json()
@@ -220,8 +220,8 @@ def retrieve_results_for_cluster(url, proxies, auth, cluster, verbose):
 
     # elementary check for response content
     assert response is not None, "Proper response expected"
-    assert response.status_code == 200, "Unexpected HTTP code returned: {}".format(
-            response.status_code)
+    assert response.status_code == requests.codes.ok, \
+            f"Unexpected HTTP code returned: {response.status_code}"
 
     # response should be in JSON format, time to parse it
     payload = response.json()
