@@ -143,7 +143,7 @@ def main():
 def retrieve_cluster_list(organization, address, proxies, auth, verbose):
     """Retrieve list of clusters from the external data pipeline REST API endpoint."""
     # construct URL to get list of clusters for given organization ID/account number
-    url = '{}/v1/organizations/{}/clusters'.format(address, organization)
+    url = f'{address}/v1/organizations/{organization}/clusters'
 
     if verbose:
         print("URL to access:", url)
@@ -184,7 +184,7 @@ def retrieve_results(address, proxies, auth, input_file, verbose):
                 print("Cluster: ", cluster)
 
             # construct URL to get report for one specified cluster
-            url = '{}/v1/clusters/{}/report'.format(address, cluster)
+            url = f'{address}/v1/clusters/{cluster}/report'
 
             if verbose:
                 print("URL to access:", url)
