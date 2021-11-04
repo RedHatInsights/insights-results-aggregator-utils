@@ -100,6 +100,53 @@ def main():
     args = cli_arguments()
     verbose = args.verbose
 
+    # setup proxy or proxies
+    proxies = {
+       'https': args.proxy
+    }
+
+    if verbose:
+        print("Proxy settings:", proxies)
+
+    # tuple with items needed to be filled for basic authentication
+    auth = (args.user, args.password)
+
+    if verbose:
+        print("Auth settings:", auth)
+
+    if args.cluster_list:
+        retrieve_cluster_list(args.organization, args.address, proxies, auth, verbose)
+
+
+def retrieve_cluster_list(organization, address, proxies, auth, verbose):
+    """Retrieve list of clusters from the external data pipeline REST API endpoint."""
+    # construct URL to get list of clusters for given organization ID/account number
+    url = '{}/v1/organizations/{}/clusters'.format(address, organization)
+
+    if verbose:
+        print("URL to access:", url)
+
+    # send request to REST API
+    response = requests.get(url, proxies=proxies, auth=auth)
+
+    # elementary check for response content
+    assert response is not None, "Proper response expected"
+    assert response.status_code == 200, "Unexpected HTTP code returned: {}".format(
+            response.status_code)
+
+    # response should be in JSON format, time to parse it
+    payload = response.json()
+    assert payload is not None, "JSON response expected"
+
+    # check the payload content
+    assert "status" in payload, "'status' field needs to be present in the payload"
+    assert "clusters" in payload, "'clusters' field needs to be present in the payload"
+
+    # print list of clusters to standard output
+    clusters = sorted(payload["clusters"])
+    for cluster in clusters:
+        print(cluster)
+
 
 # If this script is started from command line, run the `main` function which is
 # entry point to the processing.
