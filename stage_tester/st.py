@@ -154,7 +154,7 @@ def retrieve_cluster_list(organization, address, proxies, auth, verbose):
     # elementary check for response content
     assert response is not None, "Proper response expected"
     assert response.status_code == requests.codes.ok, \
-            f"Unexpected HTTP code returned: {response.status_code}"
+        f"Unexpected HTTP code returned: {response.status_code}"
 
     # response should be in JSON format, time to parse it
     payload = response.json()
@@ -172,7 +172,7 @@ def retrieve_cluster_list(organization, address, proxies, auth, verbose):
 
 def retrieve_results(address, proxies, auth, input_file, verbose):
     """Retrieve results from the external data pipeline REST API endpoint."""
-    errors={}
+    errors = {}
 
     # input file containing list of clusters
     with open(input_file, "r") as input_file:
@@ -221,7 +221,7 @@ def retrieve_results_for_cluster(url, proxies, auth, cluster, verbose):
     # elementary check for response content
     assert response is not None, "Proper response expected"
     assert response.status_code == requests.codes.ok, \
-            f"Unexpected HTTP code returned: {response.status_code}"
+        f"Unexpected HTTP code returned: {response.status_code}"
 
     # response should be in JSON format, time to parse it
     payload = response.json()

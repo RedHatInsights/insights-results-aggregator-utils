@@ -20,7 +20,7 @@ Prints all clusters that are affected by selected rule.
 This script can be used to analyze data exported from `report` table by
 the following command typed into PSQL console:
 
-    \copy report to 'reports.csv' csv
+    \\copy report to 'reports.csv' csv
 
 Script displays two tables:
     1. org_id + cluster_name (list of affected clusters)
