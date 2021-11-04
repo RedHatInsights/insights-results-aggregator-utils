@@ -19,10 +19,16 @@
 Description
 -----
 
-This script can be used to retrieve list of clusters from the external data
-pipeline through the standard REST API. Organization ID (a.k.a. account number)
-needs to be provided via CLI option, because list of clusters is filtered by
-organization.
+This script can be used to perform several operations with external data
+pipeline usually deployed on Stage environment.
+
+First operation retrieves list of clusters from the external data pipeline
+through the standard REST API. Organization ID needs to be provided via CLI
+option, because list of clusters is filtered by organization.
+
+Second operation retrieves results from the external data pipeline for several
+clusters. List of clusters needs to be stored in a text file. Name of this text
+file is to be provided by `-i` command line option.
 
 REST API on Stage environment is accessed through proxy. Proxy name should be
 provided via CLI together with user name and password used for basic auth.
@@ -45,6 +51,12 @@ optional arguments:
   -o ORGANIZATION, --organization ORGANIZATION
                         Organization ID/account number
   -l, --cluster-list    Operation to retrieve list of clusters via REST API
+  -r, --retrieve-results
+                        Retrieve results for given list of clusters via REST
+                        API
+  -i INPUT, --input INPUT
+                        Specification of input file (with list of clusters,
+                        for example)
   -v, --verbose         Make messages verbose
 ```
 
@@ -61,7 +73,7 @@ from argparse import ArgumentParser
 
 
 def cli_arguments():
-    """Retrieve all CLI arguments."""
+    """Retrieve all CLI arguments provided by user."""
     # First of all, we need to specify all command line flags that are
     # recognized by this tool.
     parser = ArgumentParser()
@@ -85,6 +97,13 @@ def cli_arguments():
     parser.add_argument("-l", "--cluster-list", dest="cluster_list", action="store_true",
                         help="Operation to retrieve list of clusters via REST API",
                         default=None)
+
+    parser.add_argument("-r", "--retrieve-results", dest="retrieve_results", action="store_true",
+                        help="Retrieve results for given list of clusters via REST API",
+                        default=None)
+
+    parser.add_argument("-i", "--input", dest="input", default=None, required=False,
+                        help="Specification of input file (with list of clusters, for example)")
 
     parser.add_argument("-v", "--verbose", dest="verbose", action="store_true", default=None,
                         help="Make messages verbose")
@@ -117,11 +136,14 @@ def main():
     if args.cluster_list:
         retrieve_cluster_list(args.organization, args.address, proxies, auth, verbose)
 
+    if args.retrieve_results:
+        retrieve_results(args.address, proxies, auth, args.input, verbose)
+
 
 def retrieve_cluster_list(organization, address, proxies, auth, verbose):
     """Retrieve list of clusters from the external data pipeline REST API endpoint."""
     # construct URL to get list of clusters for given organization ID/account number
-    url = '{}/v1/organizations/{}/clusters'.format(address, organization)
+    url = f'{address}/v1/organizations/{organization}/clusters'
 
     if verbose:
         print("URL to access:", url)
@@ -131,8 +153,8 @@ def retrieve_cluster_list(organization, address, proxies, auth, verbose):
 
     # elementary check for response content
     assert response is not None, "Proper response expected"
-    assert response.status_code == 200, "Unexpected HTTP code returned: {}".format(
-            response.status_code)
+    assert response.status_code == requests.codes.ok, \
+            f"Unexpected HTTP code returned: {response.status_code}"
 
     # response should be in JSON format, time to parse it
     payload = response.json()
@@ -146,6 +168,76 @@ def retrieve_cluster_list(organization, address, proxies, auth, verbose):
     clusters = sorted(payload["clusters"])
     for cluster in clusters:
         print(cluster)
+
+
+def retrieve_results(address, proxies, auth, input_file, verbose):
+    """Retrieve results from the external data pipeline REST API endpoint."""
+    errors={}
+
+    # input file containing list of clusters
+    with open(input_file, "r") as input_file:
+        # iterate over all cluster names
+        for line in input_file:
+            cluster = line.strip()
+
+            if verbose:
+                print("Cluster: ", cluster)
+
+            # construct URL to get report for one specified cluster
+            url = f'{address}/v1/clusters/{cluster}/report'
+
+            if verbose:
+                print("URL to access:", url)
+
+            try:
+                # try to retrieve results for given cluster
+                retrieve_results_for_cluster(url, proxies, auth, cluster, verbose)
+            except Exception as e:
+                # store error to be used later
+                errors[cluster] = e
+
+    display_errors(errors)
+
+
+def display_errors(errors):
+    """Display all errors or exceptions thrown during the selected operation."""
+    print("-"*60)
+
+    if len(errors) > 0:
+        print("Errors detected during results processing")
+        for cluster, e in errors.items():
+            print(cluster, repr(e))
+    else:
+        print("No errors found")
+
+    print("-"*60)
+
+
+def retrieve_results_for_cluster(url, proxies, auth, cluster, verbose):
+    """Retrieve results for one specified cluster and store it into the file."""
+    # send request to REST API
+    response = requests.get(url, proxies=proxies, auth=auth)
+
+    # elementary check for response content
+    assert response is not None, "Proper response expected"
+    assert response.status_code == requests.codes.ok, \
+            f"Unexpected HTTP code returned: {response.status_code}"
+
+    # response should be in JSON format, time to parse it
+    payload = response.json()
+    assert payload is not None, "JSON response expected"
+
+    # check the payload content
+    assert "status" in payload, "'status' field needs to be present in the payload"
+
+    # pretty print the output
+    results = json.dumps(payload, indent=4)
+
+    filename = "{}.json".format(cluster)
+
+    # generate output file with cluster results
+    with open(filename, "w") as json_file:
+        json_file.write(results)
 
 
 # If this script is started from command line, run the `main` function which is
