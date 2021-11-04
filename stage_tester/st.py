@@ -49,7 +49,7 @@ optional arguments:
   -p PASSWORD, --password PASSWORD
                         Password for basic authentication
   -o ORGANIZATION, --organization ORGANIZATION
-                        Organization ID/account number
+                        Organization ID
   -l, --cluster-list    Operation to retrieve list of clusters via REST API
   -r, --retrieve-results
                         Retrieve results for given list of clusters via REST
@@ -92,7 +92,7 @@ def cli_arguments():
                         help="Password for basic authentication")
 
     parser.add_argument("-o", "--organization", dest="organization", required=True,
-                        help="Organization ID/account number")
+                        help="Organization ID")
 
     parser.add_argument("-l", "--cluster-list", dest="cluster_list", action="store_true",
                         help="Operation to retrieve list of clusters via REST API",
@@ -142,7 +142,7 @@ def main():
 
 def retrieve_cluster_list(organization, address, proxies, auth, verbose):
     """Retrieve list of clusters from the external data pipeline REST API endpoint."""
-    # construct URL to get list of clusters for given organization ID/account number
+    # construct URL to get list of clusters for given organization ID
     url = f'{address}/v1/organizations/{organization}/clusters'
 
     if verbose:

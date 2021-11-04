@@ -891,7 +891,7 @@ optional arguments:
   -p PASSWORD, --password PASSWORD
                         Password for basic authentication
   -o ORGANIZATION, --organization ORGANIZATION
-                        Organization ID/account number
+                        Organization ID
   -l, --cluster-list    Operation to retrieve list of clusters via REST API
   -r, --retrieve-results
                         Retrieve results for given list of clusters via REST
