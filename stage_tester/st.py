@@ -53,8 +53,52 @@ Generated documentation
 <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/st.html>
 """
 
+
+import requests
+import json
+
+from argparse import ArgumentParser
+
+
+def cli_arguments():
+    """Retrieve all CLI arguments."""
+    # First of all, we need to specify all command line flags that are
+    # recognized by this tool.
+    parser = ArgumentParser()
+
+    # All supported command line arguments and flags
+    parser.add_argument("-a", "--address", dest="address", required=True,
+                        help="Address of REST API for external data pipeline")
+
+    parser.add_argument("-x", "--proxy", dest="proxy", required=True,
+                        help="Proxy to be used to access REST API")
+
+    parser.add_argument("-u", "--user", dest="user", required=True,
+                        help="User name for basic authentication")
+
+    parser.add_argument("-p", "--password", dest="password", required=True,
+                        help="Password for basic authentication")
+
+    parser.add_argument("-o", "--organization", dest="organization", required=True,
+                        help="Organization ID/account number")
+
+    parser.add_argument("-l", "--cluster-list", dest="cluster_list", action="store_true",
+                        help="Operation to retrieve list of clusters via REST API",
+                        default=None)
+
+    parser.add_argument("-v", "--verbose", dest="verbose", action="store_true", default=None,
+                        help="Make messages verbose")
+
+    # Now it is time to parse flags, check the actual content of command line
+    # and fill in the object named `args`.
+    return parser.parse_args()
+
+
 def main():
     """Entry point to this script."""
+    # Parse and process and command line arguments.
+    args = cli_arguments()
+    verbose = args.verbose
 
 
 # If this script is started from command line, run the `main` function which is
