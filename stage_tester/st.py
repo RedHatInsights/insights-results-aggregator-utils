@@ -43,7 +43,8 @@ Usage
 ```
 st.py [-h] [-a ADDRESS] [-x PROXY] [-u USER] [-p PASSWORD]
            [-o ORGANIZATION] [-l] [-r] [-i INPUT] [-c]
-           [-d1 DIRECTORY1] [-d2 DIRECTORY2] [-v]
+           [-d1 DIRECTORY1] [-d2 DIRECTORY2]
+           [-e EXPORT_FILE_NAME] [-d] [-v]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -71,6 +72,9 @@ optional arguments:
                         Second directory containing set of results
   -e EXPORT, --export EXPORT
                         Name of CSV file with exported comparison results
+  -d, --additional-info
+                        Add additional info about data pipeline components
+                        into CSV report
   -v, --verbose         Make messages verbose
 
 please note that at at least one operation needs to be specified:
@@ -91,6 +95,7 @@ import sys
 import os
 import csv
 
+from datetime import datetime
 from argparse import ArgumentParser
 
 
@@ -141,6 +146,10 @@ def cli_arguments():
                         default="report.csv",
                         help="Name of CSV file with exported comparison results")
 
+    parser.add_argument("-d", "--additional-info", dest="additional_info", action="store_true",
+                        default=None, required=False,
+                        help="Add additional info about data pipeline components into CSV report")
+
     parser.add_argument("-v", "--verbose", dest="verbose", action="store_true", default=None,
                         help="Make messages verbose", required=False)
 
@@ -184,7 +193,13 @@ def main():
             "-d1/--directory1 CLI option needs to be provided in order to compare results"
         assert args.directory2 is not None, \
             "-d2/--directory2 CLI option needs to be provided in order to compare results"
-        compare_results(args.directory1, args.directory2, args.export_file_name)
+
+        # retrieve and use additional info about pipeline if user depands to
+        info = None
+        if args.additional_info:
+            info = retrieve_additional_info(args.address, proxies, auth, verbose)
+
+        compare_results(args.directory1, args.directory2, args.export_file_name, info)
 
 
 def call_rest_api(url, proxies, auth):
@@ -253,6 +268,19 @@ def retrieve_results(address, proxies, auth, input_file, verbose):
     display_errors(errors)
 
 
+def retrieve_additional_info(address, proxies, auth, verbose):
+    """Retrieve additional info about the external data pipeline via REST API endpoint."""
+    # construct URL to get info from pipeline
+    url = f'{address}/v1/info'
+
+    if verbose:
+        print("URL to access:", url)
+
+    payload = call_rest_api(url, proxies, auth)
+
+    return payload
+
+
 def display_errors(errors):
     """Display all errors or exceptions thrown during the selected operation."""
     print("-"*60)
@@ -284,7 +312,7 @@ def retrieve_results_for_cluster(url, proxies, auth, cluster, verbose):
         json_file.write(results)
 
 
-def compare_results(directory1, directory2, filename):
+def compare_results(directory1, directory2, filename, info):
     """Compare results stored in two different directories."""
     files1 = set(read_list_of_clusters_from_directory(directory1))
     files2 = set(read_list_of_clusters_from_directory(directory2))
@@ -428,6 +456,7 @@ def read_list_of_clusters_from_directory(directory):
 def export_basic_info(csv_writer, directory1, directory2, files1, files2, common):
     """Export basic info into CSV file."""
     csv_writer.writerow(("Basic info about test results",))
+    csv_writer.writerow(("", "Tested on", datetime.now().isoformat().replace("T", " ")))
     csv_writer.writerow(("", "1st directory with results", directory1))
     csv_writer.writerow(("", "2nd directory with results", directory2))
     csv_writer.writerow(("", "Results in 1st directory", len(files1)))
