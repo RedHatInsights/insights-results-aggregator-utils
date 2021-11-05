@@ -30,6 +30,10 @@ Second operation retrieves results from the external data pipeline for several
 clusters. List of clusters needs to be stored in a text file. Name of this text
 file is to be provided by `-i` command line option.
 
+Third operation compares two sets of results. Each set needs to be stored in
+separate directory. CSV file with detailed comparison of such two sets is
+generated during this operation.
+
 REST API on Stage environment is accessed through proxy. Proxy name should be
 provided via CLI together with user name and password used for basic auth.
 
@@ -283,17 +287,25 @@ def compare_results(directory1, directory2, filename):
     """Compare results stored in two different directories."""
     files1 = set(read_list_of_clusters_from_directory(directory1))
     files2 = set(read_list_of_clusters_from_directory(directory2))
+
     # common cluster names in both directories
     common = files1 & files2
+
+    # reduntant results
     redundant_d1 = sorted(list(files1 - common))
     redundant_d2 = sorted(list(files2 - common))
 
+    # create a new CSV file with detailed report of differences between two
+    # sets of results
     with open(filename, "w") as csvfile:
         # create a CSV writer object
         csvwriter = csv.writer(csvfile, quotechar = '"', quoting=csv.QUOTE_ALL)
+        assert csvwriter is not None, "CSV writer can not be constructed"
 
-        export_redundant_clusters(csvwriter, redundant_d1, "Redundand clusters in dir1")
-        export_redundant_clusters(csvwriter, redundant_d2, "Redundand clusters in dir2")
+        export_basic_info(csvwriter, directory1, directory2, files1, files2, common)
+
+        export_redundant_clusters(csvwriter, redundant_d1, "Redundand clusters in 1st directory")
+        export_redundant_clusters(csvwriter, redundant_d2, "Redundand clusters in 2nd directory")
 
 
 def read_list_of_clusters_from_directory(directory):
@@ -304,12 +316,28 @@ def read_list_of_clusters_from_directory(directory):
     return [f[:-5] for f in files if f.endswith(".json")]
 
 
+def export_basic_info(csvwriter, directory1, directory2, files1, files2, common):
+    """Export basic info into CSV file."""
+    csvwriter.writerow(("Basic info about test results",))
+    csvwriter.writerow(("1st directory with results", directory1))
+    csvwriter.writerow(("2nd directory with results", directory2))
+    csvwriter.writerow(("Results in 1st directory", len(files1)))
+    csvwriter.writerow(("Results in 2nd directory", len(files2)))
+    csvwriter.writerow(("Common clusters to compare", len(common)))
+
+    # empty row
+    csvwriter.writerow(())
+
+
 def export_redundant_clusters(csvwriter, files, title):
     """Export list of redundant clusters into CSV."""
     csvwriter.writerow((title,))
     csvwriter.writerow(("n", "cluster"))
+
     for i, cluster in enumerate(files):
         csvwriter.writerow((i, cluster))
+
+    # empty row
     csvwriter.writerow(())
 
 
