@@ -169,7 +169,7 @@ def main():
     if verbose:
         print("Auth settings:", auth)
 
-    if not (args.cluster_list or args.retrieve_results or args.compare_results):
+    if not any((args.cluster_list, args.retrieve_results, args.compare_results)):
         print("No action requested, add -l, -r, or -c")
         sys.exit(1)
 
