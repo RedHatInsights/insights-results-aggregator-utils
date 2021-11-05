@@ -65,6 +65,8 @@ optional arguments:
                         First directory containing set of results
   -d2 DIRECTORY2, --directory2 DIRECTORY2
                         Second directory containing set of results
+  -e EXPORT, --export EXPORT
+                        Name of CSV file with exported comparison results
   -v, --verbose         Make messages verbose
 
 please note that at at least one operation needs to be specified:
@@ -82,6 +84,8 @@ Generated documentation
 import requests
 import json
 import sys
+import os
+import csv
 
 from argparse import ArgumentParser
 
@@ -129,6 +133,10 @@ def cli_arguments():
     parser.add_argument("-d2", "--directory2", dest="directory2", required=False, default=None,
                         help="Second directory containing set of results")
 
+    parser.add_argument("-e", "--export", dest="export_file_name", required=False,
+                        default="report.csv",
+                        help="Name of CSV file with exported comparison results")
+
     parser.add_argument("-v", "--verbose", dest="verbose", action="store_true", default=None,
                         help="Make messages verbose", required=False)
 
@@ -166,6 +174,9 @@ def main():
 
     if args.retrieve_results:
         retrieve_results(args.address, proxies, auth, args.input, verbose)
+
+    if args.compare_results:
+        compare_results(args.directory1, args.directory2, args.export_file_name)
 
 
 def retrieve_cluster_list(organization, address, proxies, auth, verbose):
@@ -266,6 +277,40 @@ def retrieve_results_for_cluster(url, proxies, auth, cluster, verbose):
     # generate output file with cluster results
     with open(filename, "w") as json_file:
         json_file.write(results)
+
+
+def compare_results(directory1, directory2, filename):
+    """Compare results stored in two different directories."""
+    files1 = set(read_list_of_clusters_from_directory(directory1))
+    files2 = set(read_list_of_clusters_from_directory(directory2))
+    # common cluster names in both directories
+    common = files1 & files2
+    redundant_d1 = sorted(list(files1 - common))
+    redundant_d2 = sorted(list(files2 - common))
+
+    with open(filename, "w") as csvfile:
+        # create a CSV writer object
+        csvwriter = csv.writer(csvfile, quotechar = '"', quoting=csv.QUOTE_ALL)
+
+        export_redundant_clusters(csvwriter, redundant_d1, "Redundand clusters in dir1")
+        export_redundant_clusters(csvwriter, redundant_d2, "Redundand clusters in dir2")
+
+
+def read_list_of_clusters_from_directory(directory):
+    """Read list of clusters (taken from file names) from given directory."""
+    # list of all files in directory
+    files = os.listdir(directory)
+    # filter just JSON files and get rid of file extension
+    return [f[:-5] for f in files if f.endswith(".json")]
+
+
+def export_redundant_clusters(csvwriter, files, title):
+    """Export list of redundant clusters into CSV."""
+    csvwriter.writerow((title,))
+    csvwriter.writerow(("n", "cluster"))
+    for i, cluster in enumerate(files):
+        csvwriter.writerow((i, cluster))
+    csvwriter.writerow(())
 
 
 # If this script is started from command line, run the `main` function which is
