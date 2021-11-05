@@ -326,9 +326,22 @@ def compare_results_sets(directory1, directory2, common):
         try:
             r1 = read_cluster_results(directory1, cluster)
             r2 = read_cluster_results(directory2, cluster)
+
+            hits1 = r1["report"]["meta"]["count"]
+            hits2 = r2["report"]["meta"]["count"]
+            diff["hits1"] = hits1
+            diff["hits2"] = hits2
+
+            if hits1 != hits2:
+                diff["same"] = "no"
+            else:
+                diff["same"] = "yes"
+
             diff["status"] = "ok"
+            diff["error"] = ""
         except Exception as e:
-            diff["status"] = "Error: " + repr(e)
+            diff["status"] = "error"
+            diff["error"] = repr(e)
 
         diff_results.append(diff)
 
@@ -357,11 +370,11 @@ def read_list_of_clusters_from_directory(directory):
 def export_basic_info(csv_writer, directory1, directory2, files1, files2, common):
     """Export basic info into CSV file."""
     csv_writer.writerow(("Basic info about test results",))
-    csv_writer.writerow(("1st directory with results", directory1))
-    csv_writer.writerow(("2nd directory with results", directory2))
-    csv_writer.writerow(("Results in 1st directory", len(files1)))
-    csv_writer.writerow(("Results in 2nd directory", len(files2)))
-    csv_writer.writerow(("Common clusters to compare", len(common)))
+    csv_writer.writerow(("", "1st directory with results", directory1))
+    csv_writer.writerow(("", "2nd directory with results", directory2))
+    csv_writer.writerow(("", "Results in 1st directory", len(files1)))
+    csv_writer.writerow(("", "Results in 2nd directory", len(files2)))
+    csv_writer.writerow(("", "Common clusters to compare", len(common)))
 
     # empty row
     csv_writer.writerow(())
@@ -382,11 +395,15 @@ def export_redundant_clusters(csv_writer, files, title):
 
 def export_comparison_results(csv_writer, comparison_results):
     csv_writer.writerow(("Comparison results",))
-    csv_writer.writerow(("n", "cluster", "status"))
+    csv_writer.writerow(("n", "cluster", "status", "same", "hits 1", "hits2", "error"))
 
     # write all cluster names preceded by counter
     for i, r in enumerate(comparison_results):
-        csv_writer.writerow((i, r["cluster"], r["status"]))
+        if r["status"] == "ok":
+            csv_writer.writerow((i, r["cluster"], r["status"], r["same"], r["hits1"], r["hits2"],
+                r["error"]))
+        else:
+            csv_writer.writerow((i, r["cluster"], r["status"], "", "", "", r["error"]))
 
 
 # If this script is started from command line, run the `main` function which is
