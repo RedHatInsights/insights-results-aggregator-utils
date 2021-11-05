@@ -463,13 +463,13 @@ def export_additional_info(csv_writer, info):
 
     csv_writer.writerow(("External data pipeline components",))
 
-    csv_writer.writerow(("","Smart Proxy"))
+    csv_writer.writerow(("", "Smart Proxy"))
     export_dictionary(csv_writer, info["SmartProxy"])
 
-    csv_writer.writerow(("","Content Service"))
+    csv_writer.writerow(("", "Content Service"))
     export_dictionary(csv_writer, info["ContentService"])
 
-    csv_writer.writerow(("","Insights Results Aggregator"))
+    csv_writer.writerow(("", "Insights Results Aggregator"))
     export_dictionary(csv_writer, info["Aggregator"])
 
     # empty row
