@@ -37,10 +37,18 @@ Usage
 -----
 
 ```
-st.py [-h] -a ADDRESS -r PROXY -u USER -p PASSWORD -o ORGANIZATION [-l] [-v]
+st.py [-h] [-a ADDRESS] [-x PROXY] [-u USER] [-p PASSWORD]
+           [-o ORGANIZATION] [-l] [-r] [-i INPUT] [-c]
+           [-d1 DIRECTORY1] [-d2 DIRECTORY2] [-v]
 
 optional arguments:
   -h, --help            show this help message and exit
+  -l, --cluster-list    Operation to retrieve list of clusters via REST API
+  -r, --retrieve-results
+                        Retrieve results for given list of clusters via REST
+                        API
+  -c, --compare-results Compare two sets of results, each set stored in its
+                        own directory
   -a ADDRESS, --address ADDRESS
                         Address of REST API for external data pipeline
   -x PROXY, --proxy PROXY
@@ -50,14 +58,19 @@ optional arguments:
                         Password for basic authentication
   -o ORGANIZATION, --organization ORGANIZATION
                         Organization ID
-  -l, --cluster-list    Operation to retrieve list of clusters via REST API
-  -r, --retrieve-results
-                        Retrieve results for given list of clusters via REST
-                        API
   -i INPUT, --input INPUT
                         Specification of input file (with list of clusters,
                         for example)
+  -d1 DIRECTORY1, --directory1 DIRECTORY1
+                        First directory containing set of results
+  -d2 DIRECTORY2, --directory2 DIRECTORY2
+                        Second directory containing set of results
   -v, --verbose         Make messages verbose
+
+please note that at at least one operation needs to be specified:
+  -l, --cluster-list
+  -r, --retrieve-results
+  -c, --compare-results
 ```
 
 Generated documentation
@@ -68,6 +81,7 @@ Generated documentation
 
 import requests
 import json
+import sys
 
 from argparse import ArgumentParser
 
@@ -79,19 +93,19 @@ def cli_arguments():
     parser = ArgumentParser()
 
     # All supported command line arguments and flags
-    parser.add_argument("-a", "--address", dest="address", required=True,
+    parser.add_argument("-a", "--address", dest="address", required=False,
                         help="Address of REST API for external data pipeline")
 
-    parser.add_argument("-x", "--proxy", dest="proxy", required=True,
+    parser.add_argument("-x", "--proxy", dest="proxy", required=False,
                         help="Proxy to be used to access REST API")
 
-    parser.add_argument("-u", "--user", dest="user", required=True,
+    parser.add_argument("-u", "--user", dest="user", required=False,
                         help="User name for basic authentication")
 
-    parser.add_argument("-p", "--password", dest="password", required=True,
+    parser.add_argument("-p", "--password", dest="password", required=False,
                         help="Password for basic authentication")
 
-    parser.add_argument("-o", "--organization", dest="organization", required=True,
+    parser.add_argument("-o", "--organization", dest="organization", required=False,
                         help="Organization ID")
 
     parser.add_argument("-l", "--cluster-list", dest="cluster_list", action="store_true",
@@ -105,8 +119,18 @@ def cli_arguments():
     parser.add_argument("-i", "--input", dest="input", default=None, required=False,
                         help="Specification of input file (with list of clusters, for example)")
 
+    parser.add_argument("-c", "--compare-results", dest="compare_results", action="store_true",
+                        default=None, required=False,
+                        help="Compare two sets of results, each set stored in its own directory")
+
+    parser.add_argument("-d1", "--directory1", dest="directory1", required=False, default=None,
+                        help="First directory containing set of results")
+
+    parser.add_argument("-d2", "--directory2", dest="directory2", required=False, default=None,
+                        help="Second directory containing set of results")
+
     parser.add_argument("-v", "--verbose", dest="verbose", action="store_true", default=None,
-                        help="Make messages verbose")
+                        help="Make messages verbose", required=False)
 
     # Now it is time to parse flags, check the actual content of command line
     # and fill in the object named `args`.
@@ -132,6 +156,10 @@ def main():
 
     if verbose:
         print("Auth settings:", auth)
+
+    if not (args.cluster_list or args.retrieve_results or args.compare_results):
+        print("No action requested, add -l, -r, or -c")
+        sys.exit(1)
 
     if args.cluster_list:
         retrieve_cluster_list(args.organization, args.address, proxies, auth, verbose)
