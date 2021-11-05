@@ -873,13 +873,19 @@ Second operation retrieves results from the external data pipeline for several
 clusters. List of clusters needs to be stored in a text file. Name of this text
 file is to be provided by `-i` command line option.
 
+Third operation compares two sets of results. Each set needs to be stored in
+separate directory. CSV file with detailed comparison of such two sets is
+generated during this operation.
+
 REST API on Stage environment is accessed through proxy. Proxy name should be
 provided via CLI together with user name and password used for basic auth.
 
 #### Usage
 
 ```
-st.py [-h] -a ADDRESS -r PROXY -u USER -p PASSWORD -o ORGANIZATION [-l] [-v]
+st.py [-h] [-a ADDRESS] [-x PROXY] [-u USER] [-p PASSWORD]
+      [-o ORGANIZATION] [-l] [-r] [-i INPUT] [-c] [-d1 DIRECTORY1]
+      [-d2 DIRECTORY2] [-e EXPORT_FILE_NAME] [-v]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -899,6 +905,15 @@ optional arguments:
   -i INPUT, --input INPUT
                         Specification of input file (with list of clusters,
                         for example)
+  -c, --compare-results
+                        Compare two sets of results, each set stored in its
+                        own directory
+  -d1 DIRECTORY1, --directory1 DIRECTORY1
+                        First directory containing set of results
+  -d2 DIRECTORY2, --directory2 DIRECTORY2
+                        Second directory containing set of results
+  -e EXPORT_FILE_NAME, --export EXPORT_FILE_NAME
+                        Name of CSV file with exported comparison results
   -v, --verbose         Make messages verbose
 ```
 

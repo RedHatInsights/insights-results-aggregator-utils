@@ -61,13 +61,24 @@ option, because list of clusters is filtered by organization.</p>
 <p>Second operation retrieves results from the external data pipeline for several
 clusters. List of clusters needs to be stored in a text file. Name of this text
 file is to be provided by <code>-i</code> command line option.</p>
+<p>Third operation compares two sets of results. Each set needs to be stored in
+separate directory. CSV file with detailed comparison of such two sets is
+generated during this operation.</p>
 <p>REST API on Stage environment is accessed through proxy. Proxy name should be
 provided via CLI together with user name and password used for basic auth.</p>
 <h2>Usage</h2>
-<pre><code>st.py [-h] -a ADDRESS -r PROXY -u USER -p PASSWORD -o ORGANIZATION [-l] [-v]
+<pre><code>st.py [-h] [-a ADDRESS] [-x PROXY] [-u USER] [-p PASSWORD]
+           [-o ORGANIZATION] [-l] [-r] [-i INPUT] [-c]
+           [-d1 DIRECTORY1] [-d2 DIRECTORY2] [-v]
 
 optional arguments:
   -h, --help            show this help message and exit
+  -l, --cluster-list    Operation to retrieve list of clusters via REST API
+  -r, --retrieve-results
+                        Retrieve results for given list of clusters via REST
+                        API
+  -c, --compare-results Compare two sets of results, each set stored in its
+                        own directory
   -a ADDRESS, --address ADDRESS
                         Address of REST API for external data pipeline
   -x PROXY, --proxy PROXY
@@ -77,14 +88,21 @@ optional arguments:
                         Password for basic authentication
   -o ORGANIZATION, --organization ORGANIZATION
                         Organization ID
-  -l, --cluster-list    Operation to retrieve list of clusters via REST API
-  -r, --retrieve-results
-                        Retrieve results for given list of clusters via REST
-                        API
   -i INPUT, --input INPUT
                         Specification of input file (with list of clusters,
                         for example)
+  -d1 DIRECTORY1, --directory1 DIRECTORY1
+                        First directory containing set of results
+  -d2 DIRECTORY2, --directory2 DIRECTORY2
+                        Second directory containing set of results
+  -e EXPORT, --export EXPORT
+                        Name of CSV file with exported comparison results
   -v, --verbose         Make messages verbose
+
+please note that at at least one operation needs to be specified:
+  -l, --cluster-list
+  -r, --retrieve-results
+  -c, --compare-results
 </code></pre>
 <h2>Generated documentation</h2>
 <p><a href="https://redhatinsights.github.io/insights-results-aggregator-utils/packages/st.html">https://redhatinsights.github.io/insights-results-aggregator-utils/packages/st.html</a></p>
@@ -92,6 +110,9 @@ optional arguments:
     <div class='code'>
       <div class="highlight"><pre><span class="kn">import</span> <span class="nn">requests</span>
 <span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">csv</span>
 
 <span class="kn">from</span> <span class="nn">argparse</span> <span class="kn">import</span> <span class="n">ArgumentParser</span></pre></div>
     </div>
@@ -130,19 +151,19 @@ recognized by this tool.</p>
       <p>All supported command line arguments and flags</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-a&quot;</span><span class="p">,</span> <span class="s2">&quot;--address&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;address&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+      <div class="highlight"><pre>    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-a&quot;</span><span class="p">,</span> <span class="s2">&quot;--address&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;address&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Address of REST API for external data pipeline&quot;</span><span class="p">)</span>
 
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-x&quot;</span><span class="p">,</span> <span class="s2">&quot;--proxy&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;proxy&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-x&quot;</span><span class="p">,</span> <span class="s2">&quot;--proxy&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;proxy&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Proxy to be used to access REST API&quot;</span><span class="p">)</span>
 
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-u&quot;</span><span class="p">,</span> <span class="s2">&quot;--user&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-u&quot;</span><span class="p">,</span> <span class="s2">&quot;--user&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;User name for basic authentication&quot;</span><span class="p">)</span>
 
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-p&quot;</span><span class="p">,</span> <span class="s2">&quot;--password&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-p&quot;</span><span class="p">,</span> <span class="s2">&quot;--password&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Password for basic authentication&quot;</span><span class="p">)</span>
 
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="s2">&quot;--organization&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;organization&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="s2">&quot;--organization&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;organization&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Organization ID&quot;</span><span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-l&quot;</span><span class="p">,</span> <span class="s2">&quot;--cluster-list&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;cluster_list&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
@@ -156,8 +177,22 @@ recognized by this tool.</p>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="s2">&quot;--input&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;input&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Specification of input file (with list of clusters, for example)&quot;</span><span class="p">)</span>
 
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-c&quot;</span><span class="p">,</span> <span class="s2">&quot;--compare-results&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;compare_results&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+                        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Compare two sets of results, each set stored in its own directory&quot;</span><span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-d1&quot;</span><span class="p">,</span> <span class="s2">&quot;--directory1&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;directory1&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;First directory containing set of results&quot;</span><span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-d2&quot;</span><span class="p">,</span> <span class="s2">&quot;--directory2&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;directory2&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Second directory containing set of results&quot;</span><span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-e&quot;</span><span class="p">,</span> <span class="s2">&quot;--export&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;export_file_name&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;report.csv&quot;</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of CSV file with exported comparison results&quot;</span><span class="p">)</span>
+
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-v&quot;</span><span class="p">,</span> <span class="s2">&quot;--verbose&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;verbose&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Make messages verbose&quot;</span><span class="p">)</span></pre></div>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Make messages verbose&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -229,11 +264,18 @@ and fill in the object named <code>args</code>.</p>
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Auth settings:&quot;</span><span class="p">,</span> <span class="n">auth</span><span class="p">)</span>
 
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">cluster_list</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">retrieve_results</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">compare_results</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No action requested, add -l, -r, or -c&quot;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">cluster_list</span><span class="p">:</span>
         <span class="n">retrieve_cluster_list</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">organization</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">address</span><span class="p">,</span> <span class="n">proxies</span><span class="p">,</span> <span class="n">auth</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">retrieve_results</span><span class="p">:</span>
-        <span class="n">retrieve_results</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">address</span><span class="p">,</span> <span class="n">proxies</span><span class="p">,</span> <span class="n">auth</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span></pre></div>
+        <span class="n">retrieve_results</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">address</span><span class="p">,</span> <span class="n">proxies</span><span class="p">,</span> <span class="n">auth</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">compare_results</span><span class="p">:</span>
+        <span class="n">compare_results</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">directory1</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">directory2</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">export_file_name</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -286,7 +328,7 @@ and fill in the object named <code>args</code>.</p>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">assert</span> <span class="n">response</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Proper response expected&quot;</span>
     <span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="n">requests</span><span class="o">.</span><span class="n">codes</span><span class="o">.</span><span class="n">ok</span><span class="p">,</span> \
-            <span class="sa">f</span><span class="s2">&quot;Unexpected HTTP code returned: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">&quot;</span></pre></div>
+        <span class="sa">f</span><span class="s2">&quot;Unexpected HTTP code returned: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">&quot;</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -350,7 +392,7 @@ and fill in the object named <code>args</code>.</p>
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">errors</span><span class="o">=</span><span class="p">{}</span></pre></div>
+      <div class="highlight"><pre>    <span class="n">errors</span> <span class="o">=</span> <span class="p">{}</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -493,7 +535,7 @@ and fill in the object named <code>args</code>.</p>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">assert</span> <span class="n">response</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Proper response expected&quot;</span>
     <span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="n">requests</span><span class="o">.</span><span class="n">codes</span><span class="o">.</span><span class="n">ok</span><span class="p">,</span> \
-            <span class="sa">f</span><span class="s2">&quot;Unexpected HTTP code returned: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">&quot;</span></pre></div>
+        <span class="sa">f</span><span class="s2">&quot;Unexpected HTTP code returned: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">&quot;</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -553,6 +595,587 @@ and fill in the object named <code>args</code>.</p>
     <div class='docs'>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-34'>#</a>
+      </div>
+      <p>Compare results stored in two different directories.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">compare_results</span><span class="p">(</span><span class="n">directory1</span><span class="p">,</span> <span class="n">directory2</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-35'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-35'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">files1</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">read_list_of_clusters_from_directory</span><span class="p">(</span><span class="n">directory1</span><span class="p">))</span>
+    <span class="n">files2</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">read_list_of_clusters_from_directory</span><span class="p">(</span><span class="n">directory2</span><span class="p">))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-36'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-36'>#</a>
+      </div>
+      <p>common cluster names in both directories</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">common</span> <span class="o">=</span> <span class="n">files1</span> <span class="o">&amp;</span> <span class="n">files2</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-37'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-37'>#</a>
+      </div>
+      <p>reduntant results</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">redundant_d1</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">files1</span> <span class="o">-</span> <span class="n">common</span><span class="p">))</span>
+    <span class="n">redundant_d2</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">files2</span> <span class="o">-</span> <span class="n">common</span><span class="p">))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-38'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-38'>#</a>
+      </div>
+      <p>compute difference in results</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">comparison_results</span> <span class="o">=</span> <span class="n">compare_results_sets</span><span class="p">(</span><span class="n">directory1</span><span class="p">,</span> <span class="n">directory2</span><span class="p">,</span> <span class="n">common</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-39'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-39'>#</a>
+      </div>
+      <p>create a new CSV file with detailed report of differences between two
+sets of results</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">csvfile</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-40'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-40'>#</a>
+      </div>
+      <p>create a CSV writer object</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">csv_writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">csvfile</span><span class="p">,</span> <span class="n">quotechar</span> <span class="o">=</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="n">quoting</span><span class="o">=</span><span class="n">csv</span><span class="o">.</span><span class="n">QUOTE_ALL</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">csv_writer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;CSV writer can not be constructed&quot;</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-41'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-41'>#</a>
+      </div>
+      <p>export all required information into CSV file</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">export_basic_info</span><span class="p">(</span><span class="n">csv_writer</span><span class="p">,</span> <span class="n">directory1</span><span class="p">,</span> <span class="n">directory2</span><span class="p">,</span> <span class="n">files1</span><span class="p">,</span> <span class="n">files2</span><span class="p">,</span> <span class="n">common</span><span class="p">)</span>
+
+        <span class="n">export_redundant_clusters</span><span class="p">(</span><span class="n">csv_writer</span><span class="p">,</span> <span class="n">redundant_d1</span><span class="p">,</span> <span class="s2">&quot;Redundand clusters in 1st directory&quot;</span><span class="p">)</span>
+        <span class="n">export_redundant_clusters</span><span class="p">(</span><span class="n">csv_writer</span><span class="p">,</span> <span class="n">redundant_d2</span><span class="p">,</span> <span class="s2">&quot;Redundand clusters in 2nd directory&quot;</span><span class="p">)</span>
+
+        <span class="n">export_comparison_results</span><span class="p">(</span><span class="n">csv_writer</span><span class="p">,</span> <span class="n">comparison_results</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-42'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-42'>#</a>
+      </div>
+      <p>Compare two results sets.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">compare_results_sets</span><span class="p">(</span><span class="n">directory1</span><span class="p">,</span> <span class="n">directory2</span><span class="p">,</span> <span class="n">common</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-43'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-43'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">diff_results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">rule_ids</span> <span class="o">=</span> <span class="p">{}</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-44'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-44'>#</a>
+      </div>
+      <p>iterate over all clusters</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">for</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">common</span><span class="p">):</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">diff</span><span class="p">[</span><span class="s2">&quot;cluster&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cluster</span>
+
+        <span class="k">try</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-45'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-45'>#</a>
+      </div>
+      <p>preliminary - can be changed later in exception handler</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">diff</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;ok&quot;</span>
+            <span class="n">diff</span><span class="p">[</span><span class="s2">&quot;error&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-46'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-46'>#</a>
+      </div>
+      <p>not true yet!</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">diff</span><span class="p">[</span><span class="s2">&quot;same_results&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;yes&quot;</span> <span class="c1"># not true yet</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-47'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-47'>#</a>
+      </div>
+      <p>try to read both results to be compared</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">r1</span> <span class="o">=</span> <span class="n">read_cluster_results</span><span class="p">(</span><span class="n">directory1</span><span class="p">,</span> <span class="n">cluster</span><span class="p">)</span>
+            <span class="n">r2</span> <span class="o">=</span> <span class="n">read_cluster_results</span><span class="p">(</span><span class="n">directory2</span><span class="p">,</span> <span class="n">cluster</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-48'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-48'>#</a>
+      </div>
+      <p>1st step is simple: rule hits counters comparison as exposed in
+metadata field in JSON</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">d1</span> <span class="o">=</span> <span class="n">compare_rule_hits_count</span><span class="p">(</span><span class="n">r1</span><span class="p">,</span> <span class="n">r2</span><span class="p">,</span> <span class="n">diff</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-49'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-49'>#</a>
+      </div>
+      <p>rule hit numbers are the same, let&rsquo;s continue with 2nd step</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">if</span> <span class="n">d1</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-50'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-50'>#</a>
+      </div>
+      <p>TODO: better comparison</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                <span class="n">d2</span> <span class="o">=</span> <span class="n">compare_rule_hits</span><span class="p">(</span><span class="n">r1</span><span class="p">,</span> <span class="n">r2</span><span class="p">,</span> <span class="n">diff</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">d2</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">diff</span><span class="p">[</span><span class="s2">&quot;same_results&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;no&quot;</span>
+            <span class="k">else</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-51'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-51'>#</a>
+      </div>
+      <p>now we know for sure, that rule hit counters are different</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                <span class="n">diff</span><span class="p">[</span><span class="s2">&quot;same_results&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;no&quot;</span>
+                <span class="n">diff</span><span class="p">[</span><span class="s2">&quot;same_hits&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;?&quot;</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-52'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-52'>#</a>
+      </div>
+      <p>fill-in info about error that occured during results reading or
+during comparison</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">diff</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;error&quot;</span>
+            <span class="n">diff</span><span class="p">[</span><span class="s2">&quot;error&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">repr</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-53'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-53'>#</a>
+      </div>
+      <p>update diff results</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">diff_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">diff_results</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-54'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-54'>#</a>
+      </div>
+      <p>Just compare rule hits metadata and fill-in diff structure accordingly.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">compare_rule_hits_count</span><span class="p">(</span><span class="n">r1</span><span class="p">,</span> <span class="n">r2</span><span class="p">,</span> <span class="n">diff</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-55'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-55'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">hits1</span> <span class="o">=</span> <span class="n">r1</span><span class="p">[</span><span class="s2">&quot;report&quot;</span><span class="p">][</span><span class="s2">&quot;meta&quot;</span><span class="p">][</span><span class="s2">&quot;count&quot;</span><span class="p">]</span>
+    <span class="n">hits2</span> <span class="o">=</span> <span class="n">r2</span><span class="p">[</span><span class="s2">&quot;report&quot;</span><span class="p">][</span><span class="s2">&quot;meta&quot;</span><span class="p">][</span><span class="s2">&quot;count&quot;</span><span class="p">]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-56'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-56'>#</a>
+      </div>
+      <p>remember counters -&gt; needs to be written into the table</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">diff</span><span class="p">[</span><span class="s2">&quot;hits1&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hits1</span>
+    <span class="n">diff</span><span class="p">[</span><span class="s2">&quot;hits2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hits2</span>
+
+    <span class="n">the_same</span> <span class="o">=</span> <span class="n">hits1</span> <span class="o">==</span> <span class="n">hits2</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-57'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-57'>#</a>
+      </div>
+      <p>result of comparison of two counters</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">diff</span><span class="p">[</span><span class="s2">&quot;eq_hits&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;yes&quot;</span> <span class="k">if</span> <span class="n">the_same</span> <span class="k">else</span> <span class="s2">&quot;no&quot;</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-58'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-58'>#</a>
+      </div>
+      <p>return comparison result</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">the_same</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-59'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-59'>#</a>
+      </div>
+      <p>Compare &lsquo;read&rsquo; rule hits and fill-in diff structure accordingly.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">compare_rule_hits</span><span class="p">(</span><span class="n">r1</span><span class="p">,</span> <span class="n">r2</span><span class="p">,</span> <span class="n">diff</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-60'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-60'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">d1</span> <span class="o">=</span> <span class="n">r1</span><span class="p">[</span><span class="s2">&quot;report&quot;</span><span class="p">][</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
+    <span class="n">d2</span> <span class="o">=</span> <span class="n">r2</span><span class="p">[</span><span class="s2">&quot;report&quot;</span><span class="p">][</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
+
+    <span class="n">all_found</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">for</span> <span class="n">hit1</span> <span class="ow">in</span> <span class="n">d1</span><span class="p">:</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">hit2</span> <span class="ow">in</span> <span class="n">d2</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">hit1</span><span class="p">[</span><span class="s2">&quot;rule_id&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">hit2</span><span class="p">[</span><span class="s2">&quot;rule_id&quot;</span><span class="p">]:</span>
+                <span class="n">found</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">found</span><span class="p">:</span>
+            <span class="n">all_found</span> <span class="o">=</span> <span class="kc">False</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-61'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-61'>#</a>
+      </div>
+      <p>result of comparison</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">diff</span><span class="p">[</span><span class="s2">&quot;same_hits&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;yes&quot;</span> <span class="k">if</span> <span class="n">all_found</span> <span class="k">else</span> <span class="s2">&quot;no&quot;</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-62'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-62'>#</a>
+      </div>
+      <p>return comparison result</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">all_found</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-63'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-63'>#</a>
+      </div>
+      <p>Try to read results for given cluster, where results are stored in specified directory.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">read_cluster_results</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">cluster</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-64'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-64'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">directory</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">cluster</span><span class="si">}</span><span class="s2">.json&quot;</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fin</span><span class="p">:</span>
+        <span class="n">raw_data</span> <span class="o">=</span> <span class="n">fin</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">raw_data</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">results</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-65'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-65'>#</a>
+      </div>
+      <p>Read list of clusters (taken from file names) from given directory.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">read_list_of_clusters_from_directory</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-66'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-66'>#</a>
+      </div>
+      <p>list of all files in directory</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">files</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-67'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-67'>#</a>
+      </div>
+      <p>filter just JSON files and get rid of file extension</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="p">[</span><span class="n">f</span><span class="p">[:</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.json&quot;</span><span class="p">)]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-68'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-68'>#</a>
+      </div>
+      <p>Export basic info into CSV file.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">export_basic_info</span><span class="p">(</span><span class="n">csv_writer</span><span class="p">,</span> <span class="n">directory1</span><span class="p">,</span> <span class="n">directory2</span><span class="p">,</span> <span class="n">files1</span><span class="p">,</span> <span class="n">files2</span><span class="p">,</span> <span class="n">common</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-69'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-69'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">csv_writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">((</span><span class="s2">&quot;Basic info about test results&quot;</span><span class="p">,))</span>
+    <span class="n">csv_writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">((</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;1st directory with results&quot;</span><span class="p">,</span> <span class="n">directory1</span><span class="p">))</span>
+    <span class="n">csv_writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">((</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;2nd directory with results&quot;</span><span class="p">,</span> <span class="n">directory2</span><span class="p">))</span>
+    <span class="n">csv_writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">((</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;Results in 1st directory&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">files1</span><span class="p">)))</span>
+    <span class="n">csv_writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">((</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;Results in 2nd directory&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">files2</span><span class="p">)))</span>
+    <span class="n">csv_writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">((</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;Common clusters to compare&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">common</span><span class="p">)))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-70'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-70'>#</a>
+      </div>
+      <p>empty row</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">csv_writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(())</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-71'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-71'>#</a>
+      </div>
+      <p>Export list of redundant clusters into CSV.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">export_redundant_clusters</span><span class="p">(</span><span class="n">csv_writer</span><span class="p">,</span> <span class="n">files</span><span class="p">,</span> <span class="n">title</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-72'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-72'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">csv_writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">((</span><span class="n">title</span><span class="p">,))</span>
+    <span class="n">csv_writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">((</span><span class="s2">&quot;n&quot;</span><span class="p">,</span> <span class="s2">&quot;cluster&quot;</span><span class="p">))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-73'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-73'>#</a>
+      </div>
+      <p>write all cluster names preceded by counter</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">files</span><span class="p">):</span>
+        <span class="n">csv_writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">cluster</span><span class="p">))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-74'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-74'>#</a>
+      </div>
+      <p>empty row</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">csv_writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(())</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-75'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-75'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">export_comparison_results</span><span class="p">(</span><span class="n">csv_writer</span><span class="p">,</span> <span class="n">comparison_results</span><span class="p">):</span>
+    <span class="n">csv_writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">((</span><span class="s2">&quot;Comparison results&quot;</span><span class="p">,))</span>
+    <span class="n">csv_writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">((</span><span class="s2">&quot;n&quot;</span><span class="p">,</span> <span class="s2">&quot;cluster&quot;</span><span class="p">,</span> <span class="s2">&quot;status&quot;</span><span class="p">,</span> <span class="s2">&quot;same results&quot;</span><span class="p">,</span> <span class="s2">&quot;eq.#hits&quot;</span><span class="p">,</span> <span class="s2">&quot;hits1&quot;</span><span class="p">,</span> <span class="s2">&quot;hits2&quot;</span><span class="p">,</span> <span class="s2">&quot;same hits&quot;</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-76'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-76'>#</a>
+      </div>
+      <p>write all cluster names preceded by counter</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">comparison_results</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;ok&quot;</span><span class="p">:</span>
+            <span class="n">csv_writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;cluster&quot;</span><span class="p">],</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">],</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;same_results&quot;</span><span class="p">],</span>
+                <span class="n">r</span><span class="p">[</span><span class="s2">&quot;eq_hits&quot;</span><span class="p">],</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;hits1&quot;</span><span class="p">],</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;hits2&quot;</span><span class="p">],</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;same_hits&quot;</span><span class="p">],</span>
+                <span class="n">r</span><span class="p">[</span><span class="s2">&quot;error&quot;</span><span class="p">]))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">csv_writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;cluster&quot;</span><span class="p">],</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">],</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;error&quot;</span><span class="p">]))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-77'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-77'>#</a>
       </div>
       <p>If this script is started from command line, run the <code>main</code> function which is
 entry point to the processing.</p>
