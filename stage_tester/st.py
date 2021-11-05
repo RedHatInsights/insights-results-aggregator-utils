@@ -317,6 +317,7 @@ def compare_results(directory1, directory2, filename):
 def compare_results_sets(directory1, directory2, common):
     """Compare two results sets."""
     diff_results = []
+    rule_ids = {}
 
     # iterate over all clusters
     for cluster in sorted(common):
@@ -324,28 +325,84 @@ def compare_results_sets(directory1, directory2, common):
         diff["cluster"] = cluster
 
         try:
+            # preliminary - can be changed later in exception handler
+            diff["status"] = "ok"
+            diff["error"] = ""
+
+            # not true yet!
+            diff["same_results"] = "yes" # not true yet
+
+            # try to read both results to be compared
             r1 = read_cluster_results(directory1, cluster)
             r2 = read_cluster_results(directory2, cluster)
 
-            hits1 = r1["report"]["meta"]["count"]
-            hits2 = r2["report"]["meta"]["count"]
-            diff["hits1"] = hits1
-            diff["hits2"] = hits2
+            # 1st step is simple: rule hits counters comparison as exposed in
+            # metadata field in JSON
+            d1 = compare_rule_hits_count(r1, r2, diff)
 
-            if hits1 != hits2:
-                diff["same"] = "no"
+            # rule hit numbers are the same, let's continue with 2nd step
+            if d1:
+                # TODO: better comparison
+                d2 = compare_rule_hits(r1, r2, diff)
+                if d2:
+                    pass
+                else:
+                    diff["same_results"] = "no"
             else:
-                diff["same"] = "yes"
+                # now we know for sure, that rule hit counters are different
+                diff["same_results"] = "no"
+                diff["same_hits"] = "?"
 
-            diff["status"] = "ok"
-            diff["error"] = ""
         except Exception as e:
+            # fill-in info about error that occured during results reading or
+            # during comparison
             diff["status"] = "error"
             diff["error"] = repr(e)
 
+        # update diff results
         diff_results.append(diff)
 
     return diff_results
+
+
+def compare_rule_hits_count(r1, r2, diff):
+    """Just compare rule hits metadata and fill-in diff structure accordingly."""
+    hits1 = r1["report"]["meta"]["count"]
+    hits2 = r2["report"]["meta"]["count"]
+
+    # remember counters -> needs to be written into the table
+    diff["hits1"] = hits1
+    diff["hits2"] = hits2
+
+    the_same = hits1 == hits2
+
+    # result of comparison of two counters
+    diff["eq_hits"] = "yes" if the_same else "no"
+
+    # return comparison result
+    return the_same
+
+
+def compare_rule_hits(r1, r2, diff):
+    """Compare 'read' rule hits and fill-in diff structure accordingly."""
+    d1 = r1["report"]["data"]
+    d2 = r2["report"]["data"]
+
+    all_found = True
+
+    for hit1 in d1:
+        found = False
+        for hit2 in d2:
+            if hit1["rule_id"] == hit2["rule_id"]:
+                found = True
+        if not found:
+            all_found = False
+
+    # result of comparison
+    diff["same_hits"] = "yes" if all_found else "no"
+
+    # return comparison result
+    return all_found
 
 
 def read_cluster_results(directory, cluster):
@@ -395,15 +452,16 @@ def export_redundant_clusters(csv_writer, files, title):
 
 def export_comparison_results(csv_writer, comparison_results):
     csv_writer.writerow(("Comparison results",))
-    csv_writer.writerow(("n", "cluster", "status", "same", "hits 1", "hits2", "error"))
+    csv_writer.writerow(("n", "cluster", "status", "same results", "eq.#hits", "hits1", "hits2", "same hits", "error"))
 
     # write all cluster names preceded by counter
     for i, r in enumerate(comparison_results):
         if r["status"] == "ok":
-            csv_writer.writerow((i, r["cluster"], r["status"], r["same"], r["hits1"], r["hits2"],
+            csv_writer.writerow((i, r["cluster"], r["status"], r["same_results"],
+                r["eq_hits"], r["hits1"], r["hits2"], r["same_hits"],
                 r["error"]))
         else:
-            csv_writer.writerow((i, r["cluster"], r["status"], "", "", "", r["error"]))
+            csv_writer.writerow((i, r["cluster"], r["status"], "", "", "", "", "", r["error"]))
 
 
 # If this script is started from command line, run the `main` function which is
