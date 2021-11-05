@@ -180,6 +180,10 @@ def main():
         retrieve_results(args.address, proxies, auth, args.input, verbose)
 
     if args.compare_results:
+        assert args.directory1 is not None, \
+            "-d1/--directory1 CLI option needs to be provided in order to compare results"
+        assert args.directory2 is not None, \
+            "-d2/--directory2 CLI option needs to be provided in order to compare results"
         compare_results(args.directory1, args.directory2, args.export_file_name)
 
 
