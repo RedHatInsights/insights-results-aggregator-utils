@@ -302,7 +302,7 @@ def compare_results(directory1, directory2, filename):
     # sets of results
     with open(filename, "w") as csvfile:
         # create a CSV writer object
-        csv_writer = csv.writer(csvfile, quotechar = '"', quoting=csv.QUOTE_ALL)
+        csv_writer = csv.writer(csvfile, quotechar='"', quoting=csv.QUOTE_ALL)
         assert csv_writer is not None, "CSV writer can not be constructed"
 
         # export all required information into CSV file
@@ -330,7 +330,7 @@ def compare_results_sets(directory1, directory2, common):
             diff["error"] = ""
 
             # not true yet!
-            diff["same_results"] = "yes" # not true yet
+            diff["same_results"] = "yes"  # not true yet
 
             # try to read both results to be compared
             r1 = read_cluster_results(directory1, cluster)
@@ -452,14 +452,15 @@ def export_redundant_clusters(csv_writer, files, title):
 
 def export_comparison_results(csv_writer, comparison_results):
     csv_writer.writerow(("Comparison results",))
-    csv_writer.writerow(("n", "cluster", "status", "same results", "eq.#hits", "hits1", "hits2", "same hits", "error"))
+    csv_writer.writerow(("n", "cluster", "status", "same results", "eq.#hits", "hits1", "hits2",
+                         "same hits", "error"))
 
     # write all cluster names preceded by counter
     for i, r in enumerate(comparison_results):
         if r["status"] == "ok":
             csv_writer.writerow((i, r["cluster"], r["status"], r["same_results"],
-                r["eq_hits"], r["hits1"], r["hits2"], r["same_hits"],
-                r["error"]))
+                                 r["eq_hits"], r["hits1"], r["hits2"], r["same_hits"],
+                                 r["error"]))
         else:
             csv_writer.writerow((i, r["cluster"], r["status"], "", "", "", "", "", r["error"]))
 
