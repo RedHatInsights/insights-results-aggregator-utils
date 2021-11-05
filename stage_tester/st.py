@@ -276,9 +276,11 @@ def retrieve_additional_info(address, proxies, auth, verbose):
     if verbose:
         print("URL to access:", url)
 
+    # try to access /info endpoint, if it fails, it fails, that's ok -> the
+    # pipeline is doomed anyway in this case
     payload = call_rest_api(url, proxies, auth)
 
-    return payload
+    return payload["info"]
 
 
 def display_errors(errors):
@@ -335,6 +337,7 @@ def compare_results(directory1, directory2, filename, info):
         assert csv_writer is not None, "CSV writer can not be constructed"
 
         # export all required information into CSV file
+        export_additional_info(csv_writer, info)
         export_basic_info(csv_writer, directory1, directory2, files1, files2, common)
 
         export_redundant_clusters(csv_writer, redundant_d1, "Redundand clusters in 1st directory")
@@ -451,6 +454,32 @@ def read_list_of_clusters_from_directory(directory):
     files = os.listdir(directory)
     # filter just JSON files and get rid of file extension
     return [f[:-5] for f in files if f.endswith(".json")]
+
+
+def export_additional_info(csv_writer, info):
+    """Export additional info about pipeline components."""
+    if info is None:
+        return
+
+    csv_writer.writerow(("External data pipeline components",))
+
+    csv_writer.writerow(("","Smart Proxy"))
+    export_dictionary(csv_writer, info["SmartProxy"])
+
+    csv_writer.writerow(("","Content Service"))
+    export_dictionary(csv_writer, info["ContentService"])
+
+    csv_writer.writerow(("","Insights Results Aggregator"))
+    export_dictionary(csv_writer, info["Aggregator"])
+
+    # empty row
+    csv_writer.writerow(())
+
+
+def export_dictionary(csv_writer, dictionary):
+    """Export content of given dictionary into CSV (starting at third row)."""
+    for key in sorted(dictionary.keys()):
+        csv_writer.writerow(("", "", key, dictionary[key]))
 
 
 def export_basic_info(csv_writer, directory1, directory2, files1, files2, common):
