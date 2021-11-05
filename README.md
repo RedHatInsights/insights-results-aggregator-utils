@@ -885,7 +885,8 @@ provided via CLI together with user name and password used for basic auth.
 ```
 st.py [-h] [-a ADDRESS] [-x PROXY] [-u USER] [-p PASSWORD]
       [-o ORGANIZATION] [-l] [-r] [-i INPUT] [-c] [-d1 DIRECTORY1]
-      [-d2 DIRECTORY2] [-e EXPORT_FILE_NAME] [-v]
+      [-d2 DIRECTORY2] [-e EXPORT_FILE_NAME] [-d] [-v]
+
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -914,6 +915,9 @@ optional arguments:
                         Second directory containing set of results
   -e EXPORT_FILE_NAME, --export EXPORT_FILE_NAME
                         Name of CSV file with exported comparison results
+  -d, --additional-info
+                        Add additional info about data pipeline components
+                        into CSV report
   -v, --verbose         Make messages verbose
 ```
 
