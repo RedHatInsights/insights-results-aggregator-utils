@@ -187,14 +187,8 @@ def main():
         compare_results(args.directory1, args.directory2, args.export_file_name)
 
 
-def retrieve_cluster_list(organization, address, proxies, auth, verbose):
-    """Retrieve list of clusters from the external data pipeline REST API endpoint."""
-    # construct URL to get list of clusters for given organization ID
-    url = f'{address}/v1/organizations/{organization}/clusters'
-
-    if verbose:
-        print("URL to access:", url)
-
+def call_rest_api(url, proxies, auth):
+    """Call REST API, retrieve payload, and unmarshal it from JSON."""
     # send request to REST API
     response = requests.get(url, proxies=proxies, auth=auth)
 
@@ -206,6 +200,19 @@ def retrieve_cluster_list(organization, address, proxies, auth, verbose):
     # response should be in JSON format, time to parse it
     payload = response.json()
     assert payload is not None, "JSON response expected"
+
+    return payload
+
+
+def retrieve_cluster_list(organization, address, proxies, auth, verbose):
+    """Retrieve list of clusters from the external data pipeline REST API endpoint."""
+    # construct URL to get list of clusters for given organization ID
+    url = f'{address}/v1/organizations/{organization}/clusters'
+
+    if verbose:
+        print("URL to access:", url)
+
+    payload = call_rest_api(url, proxies, auth)
 
     # check the payload content
     assert "status" in payload, "'status' field needs to be present in the payload"
@@ -262,17 +269,7 @@ def display_errors(errors):
 
 def retrieve_results_for_cluster(url, proxies, auth, cluster, verbose):
     """Retrieve results for one specified cluster and store it into the file."""
-    # send request to REST API
-    response = requests.get(url, proxies=proxies, auth=auth)
-
-    # elementary check for response content
-    assert response is not None, "Proper response expected"
-    assert response.status_code == requests.codes.ok, \
-        f"Unexpected HTTP code returned: {response.status_code}"
-
-    # response should be in JSON format, time to parse it
-    payload = response.json()
-    assert payload is not None, "JSON response expected"
+    payload = call_rest_api(url, proxies, auth)
 
     # check the payload content
     assert "status" in payload, "'status' field needs to be present in the payload"
