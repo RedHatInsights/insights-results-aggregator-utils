@@ -295,17 +295,55 @@ def compare_results(directory1, directory2, filename):
     redundant_d1 = sorted(list(files1 - common))
     redundant_d2 = sorted(list(files2 - common))
 
+    # compute difference in results
+    comparison_results = compare_results_sets(directory1, directory2, common)
+
     # create a new CSV file with detailed report of differences between two
     # sets of results
     with open(filename, "w") as csvfile:
         # create a CSV writer object
-        csvwriter = csv.writer(csvfile, quotechar = '"', quoting=csv.QUOTE_ALL)
-        assert csvwriter is not None, "CSV writer can not be constructed"
+        csv_writer = csv.writer(csvfile, quotechar = '"', quoting=csv.QUOTE_ALL)
+        assert csv_writer is not None, "CSV writer can not be constructed"
 
-        export_basic_info(csvwriter, directory1, directory2, files1, files2, common)
+        # export all required information into CSV file
+        export_basic_info(csv_writer, directory1, directory2, files1, files2, common)
 
-        export_redundant_clusters(csvwriter, redundant_d1, "Redundand clusters in 1st directory")
-        export_redundant_clusters(csvwriter, redundant_d2, "Redundand clusters in 2nd directory")
+        export_redundant_clusters(csv_writer, redundant_d1, "Redundand clusters in 1st directory")
+        export_redundant_clusters(csv_writer, redundant_d2, "Redundand clusters in 2nd directory")
+
+        export_comparison_results(csv_writer, comparison_results)
+
+
+def compare_results_sets(directory1, directory2, common):
+    """Compare two results sets."""
+    diff_results = []
+
+    # iterate over all clusters
+    for cluster in sorted(common):
+        diff = {}
+        diff["cluster"] = cluster
+
+        try:
+            r1 = read_cluster_results(directory1, cluster)
+            r2 = read_cluster_results(directory2, cluster)
+            diff["status"] = "ok"
+        except Exception as e:
+            diff["status"] = "Error: " + repr(e)
+
+        diff_results.append(diff)
+
+    return diff_results
+
+
+def read_cluster_results(directory, cluster):
+    """Try to read results for given cluster, where results are stored in specified directory."""
+    filename = f"{directory}/{cluster}.json"
+
+    with open(filename, "r") as fin:
+        raw_data = fin.read()
+        results = json.loads(raw_data)
+
+    return results
 
 
 def read_list_of_clusters_from_directory(directory):
@@ -316,29 +354,39 @@ def read_list_of_clusters_from_directory(directory):
     return [f[:-5] for f in files if f.endswith(".json")]
 
 
-def export_basic_info(csvwriter, directory1, directory2, files1, files2, common):
+def export_basic_info(csv_writer, directory1, directory2, files1, files2, common):
     """Export basic info into CSV file."""
-    csvwriter.writerow(("Basic info about test results",))
-    csvwriter.writerow(("1st directory with results", directory1))
-    csvwriter.writerow(("2nd directory with results", directory2))
-    csvwriter.writerow(("Results in 1st directory", len(files1)))
-    csvwriter.writerow(("Results in 2nd directory", len(files2)))
-    csvwriter.writerow(("Common clusters to compare", len(common)))
+    csv_writer.writerow(("Basic info about test results",))
+    csv_writer.writerow(("1st directory with results", directory1))
+    csv_writer.writerow(("2nd directory with results", directory2))
+    csv_writer.writerow(("Results in 1st directory", len(files1)))
+    csv_writer.writerow(("Results in 2nd directory", len(files2)))
+    csv_writer.writerow(("Common clusters to compare", len(common)))
 
     # empty row
-    csvwriter.writerow(())
+    csv_writer.writerow(())
 
 
-def export_redundant_clusters(csvwriter, files, title):
+def export_redundant_clusters(csv_writer, files, title):
     """Export list of redundant clusters into CSV."""
-    csvwriter.writerow((title,))
-    csvwriter.writerow(("n", "cluster"))
+    csv_writer.writerow((title,))
+    csv_writer.writerow(("n", "cluster"))
 
+    # write all cluster names preceded by counter
     for i, cluster in enumerate(files):
-        csvwriter.writerow((i, cluster))
+        csv_writer.writerow((i, cluster))
 
     # empty row
-    csvwriter.writerow(())
+    csv_writer.writerow(())
+
+
+def export_comparison_results(csv_writer, comparison_results):
+    csv_writer.writerow(("Comparison results",))
+    csv_writer.writerow(("n", "cluster", "status"))
+
+    # write all cluster names preceded by counter
+    for i, r in enumerate(comparison_results):
+        csv_writer.writerow((i, r["cluster"], r["status"]))
 
 
 # If this script is started from command line, run the `main` function which is
