@@ -120,8 +120,13 @@ import sys
 import os
 import csv
 
+from collections import Counter
+from collections import namedtuple
 from datetime import datetime
 from argparse import ArgumentParser
+
+# Data type to represent valid rule selector
+ruleSelector = namedtuple("rule_selector", ["rule_id", "error_key"])
 
 
 def cli_arguments():
@@ -226,7 +231,7 @@ def main():
         if args.additional_info:
             info = retrieve_additional_info(args.address, proxies, auth, verbose)
 
-        compare_results(args.directory1, args.directory2, args.export_file_name, info)
+        compare_results(args.directory1, args.directory2, args.export_file_name, info, verbose)
 
 
 def call_rest_api(url, proxies, auth):
@@ -341,7 +346,7 @@ def retrieve_results_for_cluster(url, proxies, auth, cluster, verbose):
         json_file.write(results)
 
 
-def compare_results(directory1, directory2, filename, info):
+def compare_results(directory1, directory2, filename, info, verbose):
     """Compare results stored in two different directories."""
     files1 = set(read_list_of_clusters_from_directory(directory1))
     files2 = set(read_list_of_clusters_from_directory(directory2))
@@ -354,7 +359,12 @@ def compare_results(directory1, directory2, filename, info):
     redundant_d2 = sorted(list(files2 - common))
 
     # compute difference in results
-    comparison_results = compare_results_sets(directory1, directory2, common)
+    comparison_results, recommendations = compare_results_sets(directory1, directory2, common,
+                                                               verbose)
+
+    # check we did it right
+    assert comparison_results is not None
+    assert recommendations is not None
 
     # create a new CSV file with detailed report of differences between two
     # sets of results
@@ -372,11 +382,22 @@ def compare_results(directory1, directory2, filename, info):
 
         export_comparison_results(csv_writer, comparison_results)
 
+        if verbose:
+            export_recommendations(csv_writer, recommendations)
 
-def compare_results_sets(directory1, directory2, common):
+
+def compare_results_sets(directory1, directory2, common, include_recommendations_table):
     """Compare two results sets."""
     diff_results = []
-    rule_ids = {}
+
+    # There are two set of counters, first set is created for recommendations
+    # read from first set of results, second set is created for recommendations
+    # read from the second set of results. Counter keys are constructed from
+    # `rule_id` and `error_key`
+    recommendations = {
+            "r1": Counter(),
+            "r2": Counter()
+    }
 
     # iterate over all clusters
     for cluster in sorted(common):
@@ -394,6 +415,10 @@ def compare_results_sets(directory1, directory2, common):
             # try to read both results to be compared
             r1 = read_cluster_results(directory1, cluster)
             r2 = read_cluster_results(directory2, cluster)
+
+            # update recommendations table if required
+            if include_recommendations_table:
+                update_recommendations(recommendations, r1, r2)
 
             # 1st step is simple: rule hits counters comparison as exposed in
             # metadata field in JSON
@@ -421,7 +446,39 @@ def compare_results_sets(directory1, directory2, common):
         # update diff results
         diff_results.append(diff)
 
-    return diff_results
+    return diff_results, recommendations
+
+
+def update_recommendations(recommendations, results1, results2):
+    """Update counters with recommendations found in result set 1 and result set 2."""
+    # It is needed to update both set of counters, each is based on different
+    # set of recommendations reports.
+    update_recommendations_for_results(recommendations["r1"], results1)
+    update_recommendations_for_results(recommendations["r2"], results2)
+
+
+def update_recommendations_for_results(counters, results):
+    """Update counters with recommendations for selected result set."""
+    data = results["report"]["data"]
+
+    # iterate over all rule hits, check the content + update counters for each
+    # rule selector found
+    for hit in data:
+        # preliminary check if all attributes are there
+        assert "rule_id" in hit, "Expected 'rule_id' attribute"
+        assert "extra_data" in hit, "Expected 'extra_data' containing a map"
+        assert "error_key" in hit["extra_data"], "Expected 'extra_data' containing a map"
+
+        # construct the full rule selector
+        rule_id = hit["rule_id"]
+        error_key = hit["extra_data"]["error_key"]
+        rule_selector = ruleSelector(rule_id=rule_id, error_key=error_key)
+
+        # NOTE: the dirty trick how to use named tuple as key named tuple
+        # itself is iterable and counters.update will iterate over all items,
+        # which we don't want to. So we need to provide an one-item iterable
+        # instead
+        counters.update((rule_selector,))
 
 
 def compare_rule_hits_count(r1, r2, diff):
@@ -481,6 +538,38 @@ def read_list_of_clusters_from_directory(directory):
     files = os.listdir(directory)
     # filter just JSON files and get rid of file extension
     return [f[:-5] for f in files if f.endswith(".json")]
+
+
+def export_recommendations(csv_writer, recommendations):
+    """Export recommendations taken from both results sets."""
+
+    # all rule selectors
+    rule_selectors = sorted(list(set(recommendations["r1"].keys()) |
+                                 set(recommendations["r2"].keys())))
+
+    # empty row
+    csv_writer.writerow(())
+
+    # sub-table title + row headers
+    csv_writer.writerow(("Recommendations",))
+    csv_writer.writerow(("n", "rule_id", "error_key", "#hits in set1", "#hits in set2",
+                         "diff?", "diff amount"))
+
+    # table content
+    for i, rule_selector in enumerate(rule_selectors):
+        # retrieve counter values for the given rule_selector
+        counter1 = recommendations["r1"][rule_selector]
+        counter2 = recommendations["r2"][rule_selector]
+
+        # compute the difference between counters
+        diff = abs(counter1 - counter2)
+
+        # difference as string
+        diff_str = "no" if diff == 0 else "yes"
+
+        # write info about given rule_selector
+        csv_writer.writerow((i, rule_selector.rule_id, rule_selector.error_key,
+                            counter1, counter2, diff_str, diff))
 
 
 def export_additional_info(csv_writer, info):
