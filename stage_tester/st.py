@@ -20,19 +20,23 @@ Description
 -----
 
 This script can be used to perform several operations with external data
-pipeline usually deployed on Stage environment.
+pipeline usually deployed on Stage environment and accessible through proxy
+server.
 
 First operation retrieves list of clusters from the external data pipeline
-through the standard REST API. Organization ID needs to be provided via CLI
-option, because list of clusters is filtered by organization.
+through the standard REST API (and optionally via proxy server). Organization
+ID needs to be provided via CLI option, because list of clusters is filtered by
+organization. This operation is selected by using `-l` command line option.
 
 Second operation retrieves results from the external data pipeline for several
-clusters. List of clusters needs to be stored in a text file. Name of this text
-file is to be provided by `-i` command line option.
+clusters. List of clusters needs to be stored in a plain text file. Name of
+this text file is to be provided by `-i` command line option. This operation is
+selected by using `-r` command line option.
 
 Third operation compares two sets of results. Each set needs to be stored in
 separate directory. CSV file with detailed comparison of such two sets is
-generated during this operation.
+generated during this operation. This operation is selected by using `-c`
+command line option.
 
 REST API on Stage environment is accessed through proxy. Proxy name should be
 provided via CLI together with user name and password used for basic auth.
@@ -83,7 +87,28 @@ please note that at at least one operation needs to be specified:
   -c, --compare-results
 ```
 
-Generated documentation
+Examples
+-----
+
+* Retrieve list of clusters via REST API for organization ID 12345678
+
+```
+st.py -l -a https://$REST_API_URL -x http://$PROXY_URL -u $USER_NAME -p $PASSWORD -o 12345678
+```
+
+* Read results for clusters whose IDs are stored in file named `clusters.txt`
+
+```
+st.py -r -a https://$REST_API_URL -x http://$PROXY_URL -u $USER_NAME -p $PASSWORD -i clusters.txt
+```
+
+* Compare results stored in directories `c1` and `c`
+
+```
+st.py -c -d1=c1 -d2=c2 -a https://$REST_API_URL -x http://$PROXY_URL -u $USER_NAME -p $PASSWORD
+```
+
+Generated documentation in literate programming style
 -----
 <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/st.html>
 """
@@ -154,7 +179,7 @@ def cli_arguments():
                         help="Make messages verbose", required=False)
 
     # Now it is time to parse flags, check the actual content of command line
-    # and fill in the object named `args`.
+    # and fill-in the object named `args`.
     return parser.parse_args()
 
 
@@ -162,6 +187,8 @@ def main():
     """Entry point to this script."""
     # Parse and process and command line arguments.
     args = cli_arguments()
+
+    # Verbosity flag
     verbose = args.verbose
 
     # setup proxy or proxies
