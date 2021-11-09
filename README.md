@@ -881,6 +881,9 @@ separate directory. CSV file with detailed comparison of such two sets is
 generated during this operation. This operation is selected by using `-c`
 command line option.
 
+Fourth operation retrieves processing timestamp for both set of results and
+stores these timestamps into CSV files for further analysis.
+
 REST API on Stage environment is accessed through proxy. Proxy name should be
 provided via CLI together with user name and password used for basic auth.
 
@@ -941,11 +944,24 @@ st.py -l -a https://$REST_API_URL -x http://$PROXY_URL -u $USER_NAME -p $PASSWOR
 st.py -r -a https://$REST_API_URL -x http://$PROXY_URL -u $USER_NAME -p $PASSWORD -i clusters.txt
 ```
 
-* Compare results stored in directories `c1` and `c`
+* Export processing timestamps into CSV files
 
 ```
-st.py -c -d1=c1 -d2=c2 -a https://$REST_API_URL -x http://$PROXY_URL -u $USER_NAME -p $PASSWORD
+st.py -t -d1=c1 -d2=c2
 ```
+
+* Compare results stored in directories `c1` and `c`, results w/o info about the pipeline
+
+```
+st.py -c -d1=c1 -d2=c2
+```
+
+* Compare results stored in directories `c1` and `c`, results with info about the pipeline
+
+```
+st.py -c -v -d1=c1 -d2=c2 -a https://$REST_API_URL -x http://$PROXY_URL -u $USER_NAME -p $PASSWORD
+```
+
 
 #### Generated documentation
 
