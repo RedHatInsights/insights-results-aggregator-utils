@@ -33,7 +33,11 @@ Generated documentation in literate programming style
 <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/pta.html>
 """
 
-import json
+import pandas as pd
+#import numpy as np
+#import matplotlib.pyplot as plt
+import datetime
+
 from argparse import ArgumentParser
 
 
@@ -44,7 +48,7 @@ def cli_arguments():
     parser = ArgumentParser()
 
     # All supported command line arguments and flags
-    parser.add_argument("-i", "--input", dest="input", default=None, required=False,
+    parser.add_argument("-i", "--input", dest="input_file", default=None, required=True,
                     help="Specification of input file (with list of clusters, for example)")
 
     parser.add_argument("-v", "--verbose", dest="verbose", action="store_true", default=None,
@@ -57,11 +61,35 @@ def cli_arguments():
 
 def main():
     """Entry point to this script."""
-    # Parse and process and command line arguments.
+    # parse and process and command line arguments.
     args = cli_arguments()
 
-    # Verbosity flag
+    # verbosity flag
     verbose = args.verbose
+
+    # read the data file
+    timestamps = read_timestamps(args.input_file)
+
+    # compute durations
+    timestamps["analysed_duration"] = timestamps["analyzed"] - timestamps["last checked"]
+    timestamps["stored_duration"] = timestamps["stored"] - timestamps["analyzed"]
+    timestamps["total_duration"] = timestamps["stored"] - timestamps["last checked"]
+
+    # print the basic description of read and computed durations
+    print(timestamps.describe())
+
+
+def read_timestamps(filename):
+    """Read timestamps from given CSV file, parse timestamps correctly."""
+    return pd.read_csv(filename,
+                       date_parser=datetime_parser,
+                       parse_dates=["last checked", "analyzed", "stored"])
+
+
+def datetime_parser(raw_data):
+    """Custom datetime parses."""
+    return datetime.datetime.strptime(raw_data[:-1], "%Y-%m-%dT%H:%M:%S")
+
 
 
 # If this script is started from command line, run the `main` function which is
