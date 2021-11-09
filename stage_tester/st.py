@@ -56,6 +56,8 @@ optional arguments:
   -r, --retrieve-results
                         Retrieve results for given list of clusters via REST
                         API
+  -t, --export-times    Export processing times to CSV files that can be used
+                        for further analysis
   -c, --compare-results Compare two sets of results, each set stored in its
                         own directory
   -a ADDRESS, --address ADDRESS
@@ -159,6 +161,11 @@ def cli_arguments():
                         help="Retrieve results for given list of clusters via REST API",
                         default=None)
 
+    parser.add_argument("-t", "--export-times", dest="export_times", action="store_true",
+                        help="Export processing times to CSV files that can be used for further " +
+                        "analysis",
+                        default=None)
+
     parser.add_argument("-i", "--input", dest="input", default=None, required=False,
                         help="Specification of input file (with list of clusters, for example)")
 
@@ -210,8 +217,10 @@ def main():
     if verbose:
         print("Auth settings:", auth)
 
-    if not any((args.cluster_list, args.retrieve_results, args.compare_results)):
-        print("No action requested, add -l, -r, or -c")
+    # check if at least required argument is provided on CLI
+    if not any((args.cluster_list, args.retrieve_results,
+                args.export_times, args.compare_results)):
+        print("No action requested, add -l, -r, -t, or -c")
         sys.exit(1)
 
     if args.cluster_list:
@@ -219,6 +228,9 @@ def main():
 
     if args.retrieve_results:
         retrieve_results(args.address, proxies, auth, args.input, verbose)
+
+    if args.export_times:
+        export_times(args.directory1, args.directory2)
 
     if args.compare_results:
         assert args.directory1 is not None, \
@@ -344,6 +356,41 @@ def retrieve_results_for_cluster(url, proxies, auth, cluster, verbose):
     # generate output file with cluster results
     with open(filename, "w") as json_file:
         json_file.write(results)
+
+
+def export_times(directory1, directory2):
+    """Export processing times into CSV files to be later analyzed."""
+    files1 = read_list_of_clusters_from_directory(directory1)
+    files2 = read_list_of_clusters_from_directory(directory2)
+    export_times_into("times1.csv", directory1, files1)
+    export_times_into("times2.csv", directory2, files2)
+
+
+def export_times_into(filename, directory, clusters):
+    """Export processing times into CSV file with specified name to be later analyzed."""
+    # create a new CSV file that will cointains processing times
+    with open(filename, "w") as csvfile:
+        # create a CSV writer object
+        csv_writer = csv.writer(csvfile, quotechar='"', quoting=csv.QUOTE_ALL)
+        assert csv_writer is not None, "CSV writer can not be constructed"
+
+        csv_writer.writerow(("n", "cluster", "last checked", "analyzed", "stored"))
+
+        # iterate over all clusters
+        for i, cluster in enumerate(clusters):
+            try:
+                # try to read both results for given cluster
+                r = read_cluster_results(directory, cluster)
+                meta = r["report"]["meta"]
+                t1 = meta["last_checked_at"]
+                t2 = meta["analyzed_at"]
+                t3 = meta["stored_at"]
+
+                # store fields as is, to be checked, validated, and analyzed later
+                csv_writer.writerow((i, cluster, t1, t2, t3))
+            except Exception as e:
+                # skip errors
+                print(e)
 
 
 def compare_results(directory1, directory2, filename, info, verbose):
