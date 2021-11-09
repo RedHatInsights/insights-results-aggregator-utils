@@ -42,4 +42,29 @@ def cli_arguments():
     # First of all, we need to specify all command line flags that are
     # recognized by this tool.
     parser = ArgumentParser()
-    pass
+
+    # All supported command line arguments and flags
+    parser.add_argument("-i", "--input", dest="input", default=None, required=False,
+                    help="Specification of input file (with list of clusters, for example)")
+
+    parser.add_argument("-v", "--verbose", dest="verbose", action="store_true", default=None,
+                        help="Make messages verbose", required=False)
+
+    # Now it is time to parse flags, check the actual content of command line
+    # and fill-in the object named `args`.
+    return parser.parse_args()
+
+
+def main():
+    """Entry point to this script."""
+    # Parse and process and command line arguments.
+    args = cli_arguments()
+
+    # Verbosity flag
+    verbose = args.verbose
+
+
+# If this script is started from command line, run the `main` function which is
+# entry point to the processing.
+if __name__ == "__main__":
+    main()
