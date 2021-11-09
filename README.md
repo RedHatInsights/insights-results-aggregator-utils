@@ -967,6 +967,37 @@ st.py -c -v -d1=c1 -d2=c2 -a https://$REST_API_URL -x http://$PROXY_URL -u $USER
 
 * https://redhatinsights.github.io/insights-results-aggregator-utils/packages/st.html
 
+
+
+### `pta.py` (Processing Times Analyser)
+
+#### Description
+
+Script to retrieve and analyze processing times from reports taken from external data pipeline
+
+#### Usage
+
+```
+usage: pta.py [-h] -i INPUT_FILE [-v]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -i INPUT_FILE, --input INPUT_FILE
+                        Specification of input file (with list of clusters,
+                        for example)
+  -v, --verbose         Make messages verbose
+```
+
+### Example
+
+```
+pta.py -i times.csv -v
+```
+
+#### Generated documentation
+
+* https://redhatinsights.github.io/insights-results-aggregator-utils/packages/pta.html
+
 ------------------------------------------------------------------------------
 
 ## Database related tools
