@@ -63,7 +63,7 @@ def cli_arguments():
 
     # All supported command line arguments and flags
     parser.add_argument("-i", "--input", dest="input_file", default=None, required=True,
-                    help="Specification of input file (with list of clusters, for example)")
+                        help="Specification of input file (with list of clusters, for example)")
 
     parser.add_argument("-v", "--verbose", dest="verbose", action="store_true", default=None,
                         help="Make messages verbose", required=False)
@@ -137,7 +137,6 @@ def read_timestamps(filename):
 def datetime_parser(raw_data):
     """Custom datetime parses."""
     return datetime.datetime.strptime(raw_data[:-1], "%Y-%m-%dT%H:%M:%S")
-
 
 
 # If this script is started from command line, run the `main` function which is
