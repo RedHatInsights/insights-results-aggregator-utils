@@ -889,7 +889,7 @@ provided via CLI together with user name and password used for basic auth.
 ```
 st.py [-h] [-a ADDRESS] [-x PROXY] [-u USER] [-p PASSWORD]
       [-o ORGANIZATION] [-l] [-r] [-i INPUT] [-c] [-d1 DIRECTORY1]
-      [-d2 DIRECTORY2] [-e EXPORT_FILE_NAME] [-d] [-v]
+      [-d2 DIRECTORY2] [-e EXPORT_FILE_NAME] [-d] [-v] [-t]
 
 
 optional arguments:
@@ -907,6 +907,8 @@ optional arguments:
   -r, --retrieve-results
                         Retrieve results for given list of clusters via REST
                         API
+  -t, --export-times    Export processing times to CSV files that can be used
+                        for further analysis
   -i INPUT, --input INPUT
                         Specification of input file (with list of clusters,
                         for example)
