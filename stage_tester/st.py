@@ -56,6 +56,8 @@ optional arguments:
   -r, --retrieve-results
                         Retrieve results for given list of clusters via REST
                         API
+  -t, --export-times    Export processing times to CSV files that can be used
+                        for further analysis
   -c, --compare-results Compare two sets of results, each set stored in its
                         own directory
   -a ADDRESS, --address ADDRESS
@@ -157,6 +159,11 @@ def cli_arguments():
 
     parser.add_argument("-r", "--retrieve-results", dest="retrieve_results", action="store_true",
                         help="Retrieve results for given list of clusters via REST API",
+                        default=None)
+
+    parser.add_argument("-t", "--export-times", dest="export_times", action="store_true",
+                        help="Export processing times to CSV files that can be used for further " +
+                        "analysis",
                         default=None)
 
     parser.add_argument("-i", "--input", dest="input", default=None, required=False,
