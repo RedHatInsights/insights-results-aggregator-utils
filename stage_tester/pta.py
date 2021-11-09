@@ -21,11 +21,24 @@ Description
 
 Usage
 -----
+
 ```
+usage: pta.py [-h] -i INPUT_FILE [-v]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -i INPUT_FILE, --input INPUT_FILE
+                        Specification of input file (with list of clusters,
+                        for example)
+  -v, --verbose         Make messages verbose
 ```
 
-Examples
+Example
 -----
+
+```
+pta.py -i times.csv -v
+```
 
 
 Generated documentation in literate programming style
@@ -34,8 +47,8 @@ Generated documentation in literate programming style
 """
 
 import pandas as pd
-#import numpy as np
-#import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.pyplot as plt
 import datetime
 
 from argparse import ArgumentParser
@@ -68,15 +81,49 @@ def main():
     verbose = args.verbose
 
     # read the data file
-    timestamps = read_timestamps(args.input_file)
+    df = read_timestamps(args.input_file)
 
     # compute durations
-    timestamps["analysed_duration"] = timestamps["analyzed"] - timestamps["last checked"]
-    timestamps["stored_duration"] = timestamps["stored"] - timestamps["analyzed"]
-    timestamps["total_duration"] = timestamps["stored"] - timestamps["last checked"]
+    df["Analysis"] = df["analyzed"] - df["last checked"]
+    df["Store to database"] = df["stored"] - df["analyzed"]
+    df["Total duration"] = df["stored"] - df["last checked"]
 
-    # print the basic description of read and computed durations
-    print(timestamps.describe())
+    # convert all duration series (columns) to seconds
+    for duration in ("Analysis", "Store to database", "Total duration"):
+        df[duration] /= np.timedelta64(1, "s")
+
+    # print basic description of read and computed durations
+    print(df.describe())
+
+    # show plot with analysis durations
+    df["Analysis"].plot(kind="line")
+    plt.savefig("analysis.png")
+    plt.show()
+
+    # show plot with store to database durations
+    df["Store to database"].plot(kind="line")
+    plt.savefig("db_store.png")
+    plt.show()
+
+    # show plot with total durations
+    df["Total duration"].plot(kind="line")
+    plt.savefig("total.png")
+    plt.show()
+
+    # show histogram with analysis durations
+    df.hist(column="Analysis")
+    plt.savefig("analysis_hist.png")
+    plt.show()
+
+    # show histogram with store to database durations
+    df.hist(column="Store to database")
+    plt.savefig("db_store_hist.png")
+    plt.show()
+
+    # show histogram with total durations
+    df.hist(column="Total duration")
+    plt.savefig("total_hist.png")
+    plt.show()
 
 
 def read_timestamps(filename):
