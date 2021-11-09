@@ -18,6 +18,7 @@
 
 Description
 -----
+Script to retrieve and analyze processing times from reports taken from external data pipeline
 
 Usage
 -----
