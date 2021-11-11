@@ -31,6 +31,8 @@ optional arguments:
   -i INPUT_FILE, --input INPUT_FILE
                         Specification of input file (with list of clusters,
                         for example)
+  -b BIN_SIZE, --bin-size BIN_SIZE
+                        Bin size for histograms
   -v, --verbose         Make messages verbose
 ```
 
@@ -39,6 +41,10 @@ Example
 
 ```
 pta.py -i times.csv -v
+```
+
+```
+pta.py -i times.csv -v -b 100
 ```
 
 
@@ -64,6 +70,9 @@ def cli_arguments():
     # All supported command line arguments and flags
     parser.add_argument("-i", "--input", dest="input_file", default=None, required=True,
                         help="Specification of input file (with list of clusters, for example)")
+
+    parser.add_argument("-b", "--bin-size", dest="bin_size", action="store", type=int, default=30,
+                        help="Bin size for histograms", required=False)
 
     parser.add_argument("-v", "--verbose", dest="verbose", action="store_true", default=None,
                         help="Make messages verbose", required=False)
@@ -112,17 +121,17 @@ def main():
     plt.show()
 
     # show histogram with analysis durations
-    df.hist(column="Analysis")
+    df.hist(column="Analysis", bins=args.bin_size)
     plt.savefig("analysis_hist.png")
     plt.show()
 
     # show histogram with store to database durations
-    df.hist(column="Store to database")
+    df.hist(column="Store to database", bins=args.bin_size)
     plt.savefig("db_store_hist.png")
     plt.show()
 
     # show histogram with total durations
-    df.hist(column="Total duration")
+    df.hist(column="Total duration", bins=args.bin_size)
     plt.savefig("total_hist.png")
     plt.show()
 
@@ -136,7 +145,7 @@ def read_timestamps(filename):
 
 def datetime_parser(raw_data):
     """Custom datetime parses."""
-    return datetime.datetime.strptime(raw_data[:-1], "%Y-%m-%dT%H:%M:%S")
+    return datetime.datetime.strptime(raw_data[:-1], "%Y-%m-%dT%H:%M:%S.%f")
 
 
 # If this script is started from command line, run the `main` function which is
