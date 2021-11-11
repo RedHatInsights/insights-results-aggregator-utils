@@ -985,6 +985,8 @@ optional arguments:
   -i INPUT_FILE, --input INPUT_FILE
                         Specification of input file (with list of clusters,
                         for example)
+  -b BIN_SIZE, --bin-size BIN_SIZE
+                        Bin size for histograms
   -v, --verbose         Make messages verbose
 ```
 
@@ -992,6 +994,10 @@ optional arguments:
 
 ```
 pta.py -i times.csv -v
+```
+
+```
+pta.py -i times.csv -v -b 100
 ```
 
 #### Generated documentation
