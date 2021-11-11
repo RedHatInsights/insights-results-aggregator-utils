@@ -39,8 +39,7 @@ You may obtain a copy of the License at</p>
 distributed under the License is distributed on an &ldquo;AS IS&rdquo; BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
-limitations under the License.
-Script to retrieve and analyze processing times from reports taken from external data pipeline.</p>
+limitations under the License.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre></pre></div>
@@ -52,7 +51,9 @@ Script to retrieve and analyze processing times from reports taken from external
       <div class='octowrap'>
         <a class='octothorpe' href='#section-2'>#</a>
       </div>
-      <h2>Description</h2>
+      <p>Script to retrieve and analyze processing times from reports taken from external data pipeline.</p>
+<h2>Description</h2>
+<p>Script to retrieve and analyze processing times from reports taken from external data pipeline</p>
 <h2>Usage</h2>
 <pre><code>usage: pta.py [-h] -i INPUT_FILE [-v]
 
@@ -61,11 +62,16 @@ optional arguments:
   -i INPUT_FILE, --input INPUT_FILE
                         Specification of input file (with list of clusters,
                         for example)
+  -b BIN_SIZE, --bin-size BIN_SIZE
+                        Bin size for histograms
   -v, --verbose         Make messages verbose
 </code></pre>
 
-<h2>Example</h2>
+<h2>Examples</h2>
 <pre><code>pta.py -i times.csv -v
+</code></pre>
+
+<pre><code>pta.py -i times.csv -v -b 100
 </code></pre>
 
 <h2>Generated documentation in literate programming style</h2>
@@ -115,7 +121,10 @@ recognized by this tool.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="s2">&quot;--input&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;input_file&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-                    <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Specification of input file (with list of clusters, for example)&quot;</span><span class="p">)</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Specification of input file (with list of clusters, for example)&quot;</span><span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-b&quot;</span><span class="p">,</span> <span class="s2">&quot;--bin-size&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;bin_size&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Bin size for histograms&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-v&quot;</span><span class="p">,</span> <span class="s2">&quot;--verbose&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;verbose&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Make messages verbose&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span></pre></div>
@@ -272,7 +281,7 @@ and fill-in the object named <code>args</code>.</p>
       <p>show histogram with analysis durations</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">df</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s2">&quot;Analysis&quot;</span><span class="p">)</span>
+      <div class="highlight"><pre>    <span class="n">df</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s2">&quot;Analysis&quot;</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">bin_size</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;analysis_hist.png&quot;</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></pre></div>
     </div>
@@ -286,7 +295,7 @@ and fill-in the object named <code>args</code>.</p>
       <p>show histogram with store to database durations</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">df</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s2">&quot;Store to database&quot;</span><span class="p">)</span>
+      <div class="highlight"><pre>    <span class="n">df</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s2">&quot;Store to database&quot;</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">bin_size</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;db_store_hist.png&quot;</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></pre></div>
     </div>
@@ -300,7 +309,7 @@ and fill-in the object named <code>args</code>.</p>
       <p>show histogram with total durations</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">df</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s2">&quot;Total duration&quot;</span><span class="p">)</span>
+      <div class="highlight"><pre>    <span class="n">df</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s2">&quot;Total duration&quot;</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">bin_size</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;total_hist.png&quot;</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></pre></div>
     </div>
@@ -337,7 +346,7 @@ and fill-in the object named <code>args</code>.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-22'>#</a>
       </div>
-      <p>Custom datetime parses.</p>
+      <p>Perform custom datetime parsing.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre><span class="k">def</span> <span class="nf">datetime_parser</span><span class="p">(</span><span class="n">raw_data</span><span class="p">):</span></pre></div>
@@ -352,7 +361,7 @@ and fill-in the object named <code>args</code>.</p>
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">raw_data</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">T%H:%M:%S&quot;</span><span class="p">)</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">raw_data</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">T%H:%M:%S.</span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
