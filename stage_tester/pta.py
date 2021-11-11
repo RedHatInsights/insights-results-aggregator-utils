@@ -14,7 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Script to retrieve and analyze processing times from reports taken from external data pipeline.
+"""
+Script to retrieve and analyze processing times from reports taken from external data pipeline.
 
 Description
 -----
@@ -36,9 +37,8 @@ optional arguments:
   -v, --verbose         Make messages verbose
 ```
 
-Example
------
-
+Examples
+--------
 ```
 pta.py -i times.csv -v
 ```
@@ -47,10 +47,10 @@ pta.py -i times.csv -v
 pta.py -i times.csv -v -b 100
 ```
 
-
 Generated documentation in literate programming style
 -----
 <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/pta.html>
+
 """
 
 import pandas as pd
@@ -144,7 +144,7 @@ def read_timestamps(filename):
 
 
 def datetime_parser(raw_data):
-    """Custom datetime parses."""
+    """Perform custom datetime parsing."""
     return datetime.datetime.strptime(raw_data[:-1], "%Y-%m-%dT%H:%M:%S.%f")
 
 
