@@ -767,6 +767,22 @@ def xlsx_export_additional_info(worksheet, info):
     if info is None:
         return
 
+    worksheet.write("A1", "External data pipeline components")
+    worksheet.write("A3", "Smart Proxy")
+    worksheet.write("A11", "Content service")
+    worksheet.write("A19", "Insights Results Aggregator")
+
+    xlsx_export_dictionary(worksheet, 3, info["SmartProxy"])
+    xlsx_export_dictionary(worksheet, 11, info["ContentService"])
+    xlsx_export_dictionary(worksheet, 19, info["Aggregator"])
+
+
+def xlsx_export_dictionary(worksheet, row, dictionary):
+    """Export content of given dictionary into XLSX (starting at defined row)."""
+    for i, key in enumerate(sorted(dictionary.keys())):
+        worksheet.write(row + i, 0, key)
+        worksheet.write(row + i, 1, dictionary[key])
+
 
 def xlsx_export_basic_info(worksheet, directory1, directory2, files1, files2, common):
     """Export basic info into XLSX file."""
