@@ -637,7 +637,29 @@ def export_to_xlsx(filename, info, directory1, directory2, files1, files2, commo
                    redundant_d1, redundant_d2, comparison_results, recommendations,
                    verbose):
     """Create a new XLSX file with detailed report of differences between two sets of results."""
-    pass
+    with xlsxwriter.Workbook(filename) as workbook:
+        # create worksheets
+        info_worksheet = workbook.add_worksheet("Pipeline info")
+        basic_worksheet = workbook.add_worksheet("Basic info")
+        redundant_clusters_worksheet_1 = workbook.add_worksheet("Redundant clusters in d1")
+        redundant_clusters_worksheet_2 = workbook.add_worksheet("Redundant clusters in d2")
+        comparison_results_worksheet = workbook.add_worksheet("Comarison results")
+        recommendations_worksheet = workbook.add_worksheet("Recommendations")
+
+
+        # export all required information into workbook
+        xlsx_export_additional_info(info_worksheet, info)
+        xlsx_export_basic_info(basic_worksheet, directory1, directory2, files1, files2, common)
+
+        xlsx_export_redundant_clusters(redundant_clusters_worksheet_1, redundant_d1,
+                                       "Redundand clusters in 1st directory")
+        xlsx_export_redundant_clusters(redundant_clusters_worksheet_2, redundant_d2,
+                                       "Redundand clusters in 2nd directory")
+
+        xlsx_export_comparison_results(comparison_results_worksheet, comparison_results)
+
+        if verbose:
+            xlsx_export_recommendations(recommendations_worksheet, recommendations)
 
 
 def csv_export_recommendations(csv_writer, recommendations):
@@ -673,7 +695,7 @@ def csv_export_recommendations(csv_writer, recommendations):
 
 
 def csv_export_additional_info(csv_writer, info):
-    """Export additional info about pipeline components."""
+    """Export additional info about pipeline components into CSV file."""
     if info is None:
         return
 
@@ -738,6 +760,29 @@ def csv_export_comparison_results(csv_writer, comparison_results):
                                  r["error"]))
         else:
             csv_writer.writerow((i, r["cluster"], r["status"], "", "", "", "", "", r["error"]))
+
+
+def xlsx_export_additional_info(worksheet, info):
+    """Export additional info about pipeline components into XLSX worksheet."""
+    if info is None:
+        return
+
+
+def xlsx_export_basic_info(worksheet, directory1, directory2, files1, files2, common):
+    """Export basic info into XLSX file."""
+    worksheet.write("A1", "Basic info about test results")
+    worksheet.write("A2", "Tested on")
+    worksheet.write("B2", datetime.now().isoformat().replace("T", " "))
+    worksheet.write("A3", "1st directory with results")
+    worksheet.write("B3", directory1)
+    worksheet.write("A4", "2nd directory with results")
+    worksheet.write("B4", directory2)
+    worksheet.write("A5", "Results in 1st directory")
+    worksheet.write("B5", len(files1))
+    worksheet.write("A6", "Results in 2nd directory")
+    worksheet.write("B6", len(files2))
+    worksheet.write("A7", "Common clusters to compare")
+    worksheet.write("B7", len(common))
 
 
 # If this script is started from command line, run the `main` function which is
