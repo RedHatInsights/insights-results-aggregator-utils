@@ -436,24 +436,12 @@ def compare_results(directory1, directory2, filename, xlsx_output, info, verbose
     assert comparison_results is not None
     assert recommendations is not None
 
-    # create a new CSV file with detailed report of differences between two
-    # sets of results
-    with open(filename, "w") as csvfile:
-        # create a CSV writer object
-        csv_writer = csv.writer(csvfile, quotechar='"', quoting=csv.QUOTE_ALL)
-        assert csv_writer is not None, "CSV writer can not be constructed"
-
-        # export all required information into CSV file
-        export_additional_info(csv_writer, info)
-        export_basic_info(csv_writer, directory1, directory2, files1, files2, common)
-
-        export_redundant_clusters(csv_writer, redundant_d1, "Redundand clusters in 1st directory")
-        export_redundant_clusters(csv_writer, redundant_d2, "Redundand clusters in 2nd directory")
-
-        export_comparison_results(csv_writer, comparison_results)
-
-        if verbose:
-            export_recommendations(csv_writer, recommendations)
+    if xlsx_output:
+        export_to_xlsx()
+    else:
+        export_to_csv(filename, info, directory1, directory2, files1, files2, common,
+                      redundant_d1, redundant_d2, comparison_results, recommendations,
+                      verbose)
 
 
 def compare_results_sets(directory1, directory2, common, include_recommendations_table):
@@ -608,6 +596,28 @@ def read_list_of_clusters_from_directory(directory):
     files = os.listdir(directory)
     # filter just JSON files and get rid of file extension
     return [f[:-5] for f in files if f.endswith(".json")]
+
+
+def export_to_csv(filename, info, directory1, directory2, files1, files2, common,
+                  redundant_d1, redundant_d2, comparison_results, recommendations,
+                  verbose):
+    """Create a new CSV file with detailed report of differences between two sets of results."""
+    with open(filename, "w") as csvfile:
+        # create a CSV writer object
+        csv_writer = csv.writer(csvfile, quotechar='"', quoting=csv.QUOTE_ALL)
+        assert csv_writer is not None, "CSV writer can not be constructed"
+
+        # export all required information into CSV file
+        export_additional_info(csv_writer, info)
+        export_basic_info(csv_writer, directory1, directory2, files1, files2, common)
+
+        export_redundant_clusters(csv_writer, redundant_d1, "Redundand clusters in 1st directory")
+        export_redundant_clusters(csv_writer, redundant_d2, "Redundand clusters in 2nd directory")
+
+        export_comparison_results(csv_writer, comparison_results)
+
+        if verbose:
+            export_recommendations(csv_writer, recommendations)
 
 
 def export_recommendations(csv_writer, recommendations):
