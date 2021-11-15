@@ -662,7 +662,7 @@ def export_to_xlsx(filename, info, directory1, directory2, files1, files2, commo
 
 
 def csv_export_recommendations(csv_writer, recommendations):
-    """Export recommendations taken from both results sets."""
+    """Export recommendations taken from both results sets into CSV file."""
 
     # all rule selectors
     rule_selectors = sorted(list(set(recommendations["r1"].keys()) |
@@ -793,8 +793,8 @@ def xlsx_export_redundant_clusters(worksheet, files, title):
 
     # write all cluster names preceded by counter
     for i, cluster in enumerate(files):
-        worksheet.write(i+1, 0, i+1)
-        worksheet.write(i+1, 1, cluster)
+        worksheet.write(i+2, 0, i+1)
+        worksheet.write(i+2, 1, cluster)
 
 
 def xlsx_export_comparison_results(worksheet, comparison_results):
@@ -812,18 +812,57 @@ def xlsx_export_comparison_results(worksheet, comparison_results):
 
     # write all cluster names preceded by counter
     for i, r in enumerate(comparison_results):
-        worksheet.write(i+1, 0, i)
-        worksheet.write(i+1, 1, r["cluster"])
-        worksheet.write(i+1, 2, r["status"])
+        worksheet.write(i+2, 0, i)
+        worksheet.write(i+2, 1, r["cluster"])
+        worksheet.write(i+2, 2, r["status"])
 
         if r["status"] == "ok":
-            worksheet.write(i+1, 3, r["same_results"])
-            worksheet.write(i+1, 4, r["eq_hits"])
-            worksheet.write(i+1, 5, r["hits1"])
-            worksheet.write(i+1, 6, r["hits2"])
-            worksheet.write(i+1, 7, r["same_hits"])
+            worksheet.write(i+2, 3, r["same_results"])
+            worksheet.write(i+2, 4, r["eq_hits"])
+            worksheet.write(i+2, 5, r["hits1"])
+            worksheet.write(i+2, 6, r["hits2"])
+            worksheet.write(i+2, 7, r["same_hits"])
 
-        worksheet.write(i+1, 8, r["error"])
+        worksheet.write(i+2, 8, r["error"])
+
+
+def xlsx_export_recommendations(worksheet, recommendations):
+    """Export recommendations taken from both results sets into XLSX worksheet."""
+
+    # all rule selectors
+    rule_selectors = sorted(list(set(recommendations["r1"].keys()) |
+                                 set(recommendations["r2"].keys())))
+
+    # table title + row headers
+    worksheet.write("A1", "Recommendations")
+    worksheet.write("A2", "n")
+    worksheet.write("B2", "rule id")
+    worksheet.write("C2", "error key")
+    worksheet.write("D2", "#hits in set1")
+    worksheet.write("E2", "#hits in set2")
+    worksheet.write("F2", "diff?")
+    worksheet.write("G2", "diff amount")
+
+    # table content
+    for i, rule_selector in enumerate(rule_selectors):
+        # retrieve counter values for the given rule_selector
+        counter1 = recommendations["r1"][rule_selector]
+        counter2 = recommendations["r2"][rule_selector]
+
+        # compute the difference between counters
+        diff = abs(counter1 - counter2)
+
+        # difference as string
+        diff_str = "no" if diff == 0 else "yes"
+
+        # write info about given rule_selector
+        worksheet.write(i+2, 0, i+1)
+        worksheet.write(i+2, 1, rule_selector.rule_id)
+        worksheet.write(i+2, 2, rule_selector.error_key)
+        worksheet.write(i+2, 3, counter1)
+        worksheet.write(i+2, 4, counter2)
+        worksheet.write(i+2, 5, diff_str)
+        worksheet.write(i+2, 6, diff)
 
 
 # If this script is started from command line, run the `main` function which is
