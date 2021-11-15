@@ -437,7 +437,9 @@ def compare_results(directory1, directory2, filename, xlsx_output, info, verbose
     assert recommendations is not None
 
     if xlsx_output:
-        export_to_xlsx()
+        export_to_xlsx(filename, info, directory1, directory2, files1, files2, common,
+                       redundant_d1, redundant_d2, comparison_results, recommendations,
+                       verbose)
     else:
         export_to_csv(filename, info, directory1, directory2, files1, files2, common,
                       redundant_d1, redundant_d2, comparison_results, recommendations,
@@ -608,19 +610,28 @@ def export_to_csv(filename, info, directory1, directory2, files1, files2, common
         assert csv_writer is not None, "CSV writer can not be constructed"
 
         # export all required information into CSV file
-        export_additional_info(csv_writer, info)
-        export_basic_info(csv_writer, directory1, directory2, files1, files2, common)
+        csv_export_additional_info(csv_writer, info)
+        csv_export_basic_info(csv_writer, directory1, directory2, files1, files2, common)
 
-        export_redundant_clusters(csv_writer, redundant_d1, "Redundand clusters in 1st directory")
-        export_redundant_clusters(csv_writer, redundant_d2, "Redundand clusters in 2nd directory")
+        csv_export_redundant_clusters(csv_writer, redundant_d1,
+                                      "Redundand clusters in 1st directory")
+        csv_export_redundant_clusters(csv_writer, redundant_d2,
+                                      "Redundand clusters in 2nd directory")
 
-        export_comparison_results(csv_writer, comparison_results)
+        csv_export_comparison_results(csv_writer, comparison_results)
 
         if verbose:
-            export_recommendations(csv_writer, recommendations)
+            csv_export_recommendations(csv_writer, recommendations)
 
 
-def export_recommendations(csv_writer, recommendations):
+def export_to_xlsx(filename, info, directory1, directory2, files1, files2, common,
+                   redundant_d1, redundant_d2, comparison_results, recommendations,
+                   verbose):
+    """Create a new XLSX file with detailed report of differences between two sets of results."""
+    pass
+
+
+def csv_export_recommendations(csv_writer, recommendations):
     """Export recommendations taken from both results sets."""
 
     # all rule selectors
@@ -652,7 +663,7 @@ def export_recommendations(csv_writer, recommendations):
                             counter1, counter2, diff_str, diff))
 
 
-def export_additional_info(csv_writer, info):
+def csv_export_additional_info(csv_writer, info):
     """Export additional info about pipeline components."""
     if info is None:
         return
@@ -660,25 +671,25 @@ def export_additional_info(csv_writer, info):
     csv_writer.writerow(("External data pipeline components",))
 
     csv_writer.writerow(("", "Smart Proxy"))
-    export_dictionary(csv_writer, info["SmartProxy"])
+    csv_export_dictionary(csv_writer, info["SmartProxy"])
 
     csv_writer.writerow(("", "Content Service"))
-    export_dictionary(csv_writer, info["ContentService"])
+    csv_export_dictionary(csv_writer, info["ContentService"])
 
     csv_writer.writerow(("", "Insights Results Aggregator"))
-    export_dictionary(csv_writer, info["Aggregator"])
+    csv_export_dictionary(csv_writer, info["Aggregator"])
 
     # empty row
     csv_writer.writerow(())
 
 
-def export_dictionary(csv_writer, dictionary):
+def csv_export_dictionary(csv_writer, dictionary):
     """Export content of given dictionary into CSV (starting at third row)."""
     for key in sorted(dictionary.keys()):
         csv_writer.writerow(("", "", key, dictionary[key]))
 
 
-def export_basic_info(csv_writer, directory1, directory2, files1, files2, common):
+def csv_export_basic_info(csv_writer, directory1, directory2, files1, files2, common):
     """Export basic info into CSV file."""
     csv_writer.writerow(("Basic info about test results",))
     csv_writer.writerow(("", "Tested on", datetime.now().isoformat().replace("T", " ")))
@@ -692,7 +703,7 @@ def export_basic_info(csv_writer, directory1, directory2, files1, files2, common
     csv_writer.writerow(())
 
 
-def export_redundant_clusters(csv_writer, files, title):
+def csv_export_redundant_clusters(csv_writer, files, title):
     """Export list of redundant clusters into CSV."""
     csv_writer.writerow((title,))
     csv_writer.writerow(("n", "cluster"))
@@ -705,7 +716,7 @@ def export_redundant_clusters(csv_writer, files, title):
     csv_writer.writerow(())
 
 
-def export_comparison_results(csv_writer, comparison_results):
+def csv_export_comparison_results(csv_writer, comparison_results):
     csv_writer.writerow(("Comparison results",))
     csv_writer.writerow(("n", "cluster", "status", "same results", "eq.#hits", "hits1", "hits2",
                          "same hits", "error"))
