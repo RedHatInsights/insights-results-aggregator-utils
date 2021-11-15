@@ -34,9 +34,10 @@ this text file is to be provided by `-i` command line option. This operation is
 selected by using `-r` command line option.
 
 Third operation compares two sets of results. Each set needs to be stored in
-separate directory. CSV file with detailed comparison of such two sets is
-generated during this operation. This operation is selected by using `-c`
-command line option.
+separate directory. CSV file or XLSX file (Excel workbook) with detailed
+comparison of such two sets is generated during this operation. This operation
+is selected by using `-c` command line option. If `-s` CLI option is used
+XLSX file is generated instead of CSV file.
 
 Fourth operation retrieves processing timestamp for both set of results and
 stores these timestamps into CSV files for further analysis.
@@ -127,6 +128,12 @@ st.py -c -d1=c1 -d2=c2
 st.py -c -v -d1=c1 -d2=c2 -a https://$REST_API_URL -x http://$PROXY_URL -u $USER_NAME -p $PASSWORD
 ```
 
+* Compare results stored in directories `c1` and `c`, export report into XLSX file (Excel sheet)
+
+```
+st.py -c -x -d1=c1 -d2=c2 -a https://$REST_API_URL -x http://$PROXY_URL -u $USER_NAME -p $PASSWORD
+```
+
 Generated documentation in literate programming style
 -----
 <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/st.html>
@@ -138,6 +145,8 @@ import json
 import sys
 import os
 import csv
+
+import xlsxwriter
 
 from collections import Counter
 from collections import namedtuple
