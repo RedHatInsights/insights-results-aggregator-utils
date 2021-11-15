@@ -646,7 +646,6 @@ def export_to_xlsx(filename, info, directory1, directory2, files1, files2, commo
         comparison_results_worksheet = workbook.add_worksheet("Comarison results")
         recommendations_worksheet = workbook.add_worksheet("Recommendations")
 
-
         # export all required information into workbook
         xlsx_export_additional_info(info_worksheet, info)
         xlsx_export_basic_info(basic_worksheet, directory1, directory2, files1, files2, common)
@@ -748,6 +747,7 @@ def csv_export_redundant_clusters(csv_writer, files, title):
 
 
 def csv_export_comparison_results(csv_writer, comparison_results):
+    """Write comparison results into CSV file."""
     csv_writer.writerow(("Comparison results",))
     csv_writer.writerow(("n", "cluster", "status", "same results", "eq.#hits", "hits1", "hits2",
                          "same hits", "error"))
@@ -783,6 +783,47 @@ def xlsx_export_basic_info(worksheet, directory1, directory2, files1, files2, co
     worksheet.write("B6", len(files2))
     worksheet.write("A7", "Common clusters to compare")
     worksheet.write("B7", len(common))
+
+
+def xlsx_export_redundant_clusters(worksheet, files, title):
+    """Export list of redundant clusters into XLSX worksheet."""
+    worksheet.write("A1", "Redundant clusters")
+    worksheet.write("A2", "n")
+    worksheet.write("B2", "cluster")
+
+    # write all cluster names preceded by counter
+    for i, cluster in enumerate(files):
+        worksheet.write(i+1, 0, i+1)
+        worksheet.write(i+1, 1, cluster)
+
+
+def xlsx_export_comparison_results(worksheet, comparison_results):
+    """Write comparison results into XLSX file."""
+    worksheet.write("A1", "Comparison results")
+    worksheet.write("A2", "n")
+    worksheet.write("B2", "cluster")
+    worksheet.write("C2", "status")
+    worksheet.write("D2", "same results")
+    worksheet.write("E2", "eq.#hits")
+    worksheet.write("F2", "hits1")
+    worksheet.write("G2", "hits2")
+    worksheet.write("H2", "same hits")
+    worksheet.write("I2", "error")
+
+    # write all cluster names preceded by counter
+    for i, r in enumerate(comparison_results):
+        worksheet.write(i+1, 0, i)
+        worksheet.write(i+1, 1, r["cluster"])
+        worksheet.write(i+1, 2, r["status"])
+
+        if r["status"] == "ok":
+            worksheet.write(i+1, 3, r["same_results"])
+            worksheet.write(i+1, 4, r["eq_hits"])
+            worksheet.write(i+1, 5, r["hits1"])
+            worksheet.write(i+1, 6, r["hits2"])
+            worksheet.write(i+1, 7, r["same_hits"])
+
+        worksheet.write(i+1, 8, r["error"])
 
 
 # If this script is started from command line, run the `main` function which is
