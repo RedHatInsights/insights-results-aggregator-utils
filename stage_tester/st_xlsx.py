@@ -14,7 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Script to retrieve results from the external data pipeline through the standard REST API.
+"""
+Script to retrieve results from the external data pipeline through the standard REST API.
 
 Description
 -----
@@ -96,8 +97,7 @@ please note that at at least one operation needs to be specified:
 ```
 
 Examples
------
-
+--------
 * Retrieve list of clusters via REST API for organization ID 12345678
 
 ```
@@ -137,6 +137,7 @@ st.py -c -x -d1=c1 -d2=c2 -a https://$REST_API_URL -x http://$PROXY_URL -u $USER
 Generated documentation in literate programming style
 -----
 <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/st.html>
+
 """
 
 
@@ -704,7 +705,6 @@ def export_to_xlsx(filename, info, directory1, directory2, files1, files2, commo
 
 def csv_export_recommendations(csv_writer, recommendations):
     """Export recommendations taken from both results sets into CSV file."""
-
     # all rule selectors
     rule_selectors = sorted(list(set(recommendations["r1"].keys()) |
                                  set(recommendations["r2"].keys())))
@@ -907,7 +907,6 @@ def xlsx_export_comparison_results(worksheet, styles, comparison_results):
 
 def xlsx_export_recommendations(worksheet, styles, recommendations):
     """Export recommendations taken from both results sets into XLSX worksheet."""
-
     # all rule selectors
     rule_selectors = sorted(list(set(recommendations["r1"].keys()) |
                                  set(recommendations["r2"].keys())))
