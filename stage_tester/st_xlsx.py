@@ -664,6 +664,23 @@ def export_to_xlsx(filename, info, directory1, directory2, files1, files2, commo
         comparison_results_worksheet = workbook.add_worksheet("Comarison results")
         recommendations_worksheet = workbook.add_worksheet("Recommendations")
 
+        # column widths for worksheets
+        info_worksheet.set_column('A:A', 30)
+        info_worksheet.set_column('B:B', 60)
+        basic_worksheet.set_column('A:A', 40)
+        basic_worksheet.set_column('B:B', 40)
+        redundant_clusters_worksheet_1.set_column('A:A', 2)
+        redundant_clusters_worksheet_1.set_column('B:B', 50)
+        redundant_clusters_worksheet_2.set_column('A:A', 2)
+        redundant_clusters_worksheet_2.set_column('B:B', 50)
+        comparison_results_worksheet.set_column('A:A', 2)
+        comparison_results_worksheet.set_column('B:B', 50)
+        comparison_results_worksheet.set_column('C:G', 15)
+        recommendations_worksheet.set_column('A:A', 2)
+        recommendations_worksheet.set_column('B:B', 90)
+        recommendations_worksheet.set_column('C:C', 50)
+        recommendations_worksheet.set_column('E:H', 15)
+
         # export all required information into workbook
         xlsx_export_additional_info(info_worksheet, styles, info)
         xlsx_export_basic_info(basic_worksheet, styles, directory1, directory2, files1, files2,
@@ -787,9 +804,16 @@ def xlsx_export_additional_info(worksheet, styles, info):
         return
 
     worksheet.write("A1", "External data pipeline components", styles["title_line"])
+    worksheet.write("B1", "", styles["title_line"])
+
     worksheet.write("A3", "Smart Proxy", styles["table_header"])
+    worksheet.write("B3", "", styles["table_header"])
+
     worksheet.write("A11", "Content service", styles["table_header"])
+    worksheet.write("B11", "", styles["table_header"])
+
     worksheet.write("A19", "Insights Results Aggregator", styles["table_header"])
+    worksheet.write("B19", "", styles["table_header"])
 
     xlsx_export_dictionary(worksheet, 3, info["SmartProxy"], styles["table_cell"])
     xlsx_export_dictionary(worksheet, 11, info["ContentService"], styles["table_cell"])
@@ -837,31 +861,42 @@ def xlsx_export_redundant_clusters(worksheet, styles, files, title):
 
 def xlsx_export_comparison_results(worksheet, styles, comparison_results):
     """Write comparison results into XLSX file."""
-    worksheet.write("A1", "Comparison results")
-    worksheet.write("A2", "n")
-    worksheet.write("B2", "cluster")
-    worksheet.write("C2", "status")
-    worksheet.write("D2", "same results")
-    worksheet.write("E2", "eq.#hits")
-    worksheet.write("F2", "hits1")
-    worksheet.write("G2", "hits2")
-    worksheet.write("H2", "same hits")
-    worksheet.write("I2", "error")
+    worksheet.write("A1", "Comparison results", styles["title_line"])
+    worksheet.write("B1", "", styles["title_line"])
+    worksheet.write("C1", "", styles["title_line"])
+    worksheet.write("D1", "", styles["title_line"])
+    worksheet.write("E1", "", styles["title_line"])
+    worksheet.write("F1", "", styles["title_line"])
+    worksheet.write("G1", "", styles["title_line"])
+    worksheet.write("H1", "", styles["title_line"])
+
+    worksheet.write("A2", "n", styles["table_header"])
+    worksheet.write("B2", "cluster", styles["table_header"])
+    worksheet.write("C2", "status", styles["table_header"])
+    worksheet.write("D2", "same results", styles["table_header"])
+    worksheet.write("E2", "eq.#hits", styles["table_header"])
+    worksheet.write("F2", "hits1", styles["table_header"])
+    worksheet.write("G2", "hits2", styles["table_header"])
+    worksheet.write("H2", "same hits", styles["table_header"])
+    worksheet.write("I2", "error", styles["table_header"])
 
     # write all cluster names preceded by counter
     for i, r in enumerate(comparison_results):
-        worksheet.write(i+2, 0, i)
-        worksheet.write(i+2, 1, r["cluster"])
-        worksheet.write(i+2, 2, r["status"])
+        worksheet.write(i+2, 0, i, styles["table_cell"])
+        worksheet.write(i+2, 1, r["cluster"], styles["table_cell"])
+        worksheet.write(i+2, 2, r["status"], styles["table_cell"])
 
         if r["status"] == "ok":
-            worksheet.write(i+2, 3, r["same_results"])
-            worksheet.write(i+2, 4, r["eq_hits"])
-            worksheet.write(i+2, 5, r["hits1"])
-            worksheet.write(i+2, 6, r["hits2"])
-            worksheet.write(i+2, 7, r["same_hits"])
+            worksheet.write(i+2, 3, r["same_results"], styles["table_cell"])
+            worksheet.write(i+2, 4, r["eq_hits"], styles["table_cell"])
+            worksheet.write(i+2, 5, r["hits1"], styles["table_cell"])
+            worksheet.write(i+2, 6, r["hits2"], styles["table_cell"])
+            worksheet.write(i+2, 7, r["same_hits"], styles["table_cell"])
+        else:
+            for j in range(3, 8):
+                worksheet.write(i+2, j, "", styles["table_cell"])
 
-        worksheet.write(i+2, 8, r["error"])
+        worksheet.write(i+2, 8, r["error"], styles["table_cell"])
 
 
 def xlsx_export_recommendations(worksheet, styles, recommendations):
@@ -872,14 +907,21 @@ def xlsx_export_recommendations(worksheet, styles, recommendations):
                                  set(recommendations["r2"].keys())))
 
     # table title + row headers
-    worksheet.write("A1", "Recommendations")
-    worksheet.write("A2", "n")
-    worksheet.write("B2", "rule id")
-    worksheet.write("C2", "error key")
-    worksheet.write("D2", "#hits in set1")
-    worksheet.write("E2", "#hits in set2")
-    worksheet.write("F2", "diff?")
-    worksheet.write("G2", "diff amount")
+    worksheet.write("A1", "Recommendations", styles["title_line"])
+    worksheet.write("B1", "", styles["title_line"])
+    worksheet.write("C1", "", styles["title_line"])
+    worksheet.write("D1", "", styles["title_line"])
+    worksheet.write("E1", "", styles["title_line"])
+    worksheet.write("F1", "", styles["title_line"])
+    worksheet.write("G1", "", styles["title_line"])
+
+    worksheet.write("A2", "n", styles["table_header"])
+    worksheet.write("B2", "rule id", styles["table_header"])
+    worksheet.write("C2", "error key", styles["table_header"])
+    worksheet.write("D2", "#hits in set1", styles["table_header"])
+    worksheet.write("E2", "#hits in set2", styles["table_header"])
+    worksheet.write("F2", "diff?", styles["table_header"])
+    worksheet.write("G2", "diff amount", styles["table_header"])
 
     # table content
     for i, rule_selector in enumerate(rule_selectors):
@@ -894,13 +936,13 @@ def xlsx_export_recommendations(worksheet, styles, recommendations):
         diff_str = "no" if diff == 0 else "yes"
 
         # write info about given rule_selector
-        worksheet.write(i+2, 0, i+1)
-        worksheet.write(i+2, 1, rule_selector.rule_id)
-        worksheet.write(i+2, 2, rule_selector.error_key)
-        worksheet.write(i+2, 3, counter1)
-        worksheet.write(i+2, 4, counter2)
-        worksheet.write(i+2, 5, diff_str)
-        worksheet.write(i+2, 6, diff)
+        worksheet.write(i+2, 0, i+1, styles["table_cell"])
+        worksheet.write(i+2, 1, rule_selector.rule_id, styles["table_cell"])
+        worksheet.write(i+2, 2, rule_selector.error_key, styles["table_cell"])
+        worksheet.write(i+2, 3, counter1, styles["table_cell"])
+        worksheet.write(i+2, 4, counter2, styles["table_cell"])
+        worksheet.write(i+2, 5, diff_str, styles["table_cell"])
+        worksheet.write(i+2, 6, diff, styles["table_cell"])
 
 
 # If this script is started from command line, run the `main` function which is
