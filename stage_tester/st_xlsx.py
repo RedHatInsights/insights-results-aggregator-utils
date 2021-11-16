@@ -649,11 +649,15 @@ def export_to_xlsx(filename, info, directory1, directory2, files1, files2, commo
         table_cell_style = workbook.add_format()
         table_cell_style.set_bg_color("ffffcc")
 
+        error_cell_style = workbook.add_format()
+        error_cell_style.set_bg_color("ffcccc")
+
         # prepare dict with all styles
         styles = {
                 "title_line": title_line_style,
                 "table_header": table_header_style,
-                "table_cell": table_cell_style
+                "table_cell": table_cell_style,
+                "error_cell": error_cell_style
                 }
 
         # create worksheets
@@ -676,6 +680,7 @@ def export_to_xlsx(filename, info, directory1, directory2, files1, files2, commo
         comparison_results_worksheet.set_column('A:A', 2)
         comparison_results_worksheet.set_column('B:B', 50)
         comparison_results_worksheet.set_column('C:G', 15)
+        comparison_results_worksheet.set_column('I:I', 40)
         recommendations_worksheet.set_column('A:A', 2)
         recommendations_worksheet.set_column('B:B', 90)
         recommendations_worksheet.set_column('C:C', 50)
@@ -684,7 +689,7 @@ def export_to_xlsx(filename, info, directory1, directory2, files1, files2, commo
         # export all required information into workbook
         xlsx_export_additional_info(info_worksheet, styles, info)
         xlsx_export_basic_info(basic_worksheet, styles, directory1, directory2, files1, files2,
-                common)
+                               common)
 
         xlsx_export_redundant_clusters(redundant_clusters_worksheet_1, styles, redundant_d1,
                                        "Redundand clusters in 1st directory")
@@ -869,6 +874,7 @@ def xlsx_export_comparison_results(worksheet, styles, comparison_results):
     worksheet.write("F1", "", styles["title_line"])
     worksheet.write("G1", "", styles["title_line"])
     worksheet.write("H1", "", styles["title_line"])
+    worksheet.write("I1", "", styles["title_line"])
 
     worksheet.write("A2", "n", styles["table_header"])
     worksheet.write("B2", "cluster", styles["table_header"])
@@ -896,7 +902,7 @@ def xlsx_export_comparison_results(worksheet, styles, comparison_results):
             for j in range(3, 8):
                 worksheet.write(i+2, j, "", styles["table_cell"])
 
-        worksheet.write(i+2, 8, r["error"], styles["table_cell"])
+        worksheet.write(i+2, 8, r["error"], styles["error_cell"])
 
 
 def xlsx_export_recommendations(worksheet, styles, recommendations):
