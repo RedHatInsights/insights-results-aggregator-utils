@@ -665,7 +665,7 @@ def export_to_xlsx(filename, info, directory1, directory2, files1, files2, commo
         recommendations_worksheet = workbook.add_worksheet("Recommendations")
 
         # export all required information into workbook
-        xlsx_export_additional_info(info_worksheet, info)
+        xlsx_export_additional_info(info_worksheet, styles, info)
         xlsx_export_basic_info(basic_worksheet, styles, directory1, directory2, files1, files2,
                 common)
 
@@ -781,55 +781,58 @@ def csv_export_comparison_results(csv_writer, comparison_results):
             csv_writer.writerow((i, r["cluster"], r["status"], "", "", "", "", "", r["error"]))
 
 
-def xlsx_export_additional_info(worksheet, info):
+def xlsx_export_additional_info(worksheet, styles, info):
     """Export additional info about pipeline components into XLSX worksheet."""
     if info is None:
         return
 
-    worksheet.write("A1", "External data pipeline components")
-    worksheet.write("A3", "Smart Proxy")
-    worksheet.write("A11", "Content service")
-    worksheet.write("A19", "Insights Results Aggregator")
+    worksheet.write("A1", "External data pipeline components", styles["title_line"])
+    worksheet.write("A3", "Smart Proxy", styles["table_header"])
+    worksheet.write("A11", "Content service", styles["table_header"])
+    worksheet.write("A19", "Insights Results Aggregator", styles["table_header"])
 
-    xlsx_export_dictionary(worksheet, 3, info["SmartProxy"])
-    xlsx_export_dictionary(worksheet, 11, info["ContentService"])
-    xlsx_export_dictionary(worksheet, 19, info["Aggregator"])
+    xlsx_export_dictionary(worksheet, 3, info["SmartProxy"], styles["table_cell"])
+    xlsx_export_dictionary(worksheet, 11, info["ContentService"], styles["table_cell"])
+    xlsx_export_dictionary(worksheet, 19, info["Aggregator"], styles["table_cell"])
 
 
-def xlsx_export_dictionary(worksheet, row, dictionary):
+def xlsx_export_dictionary(worksheet, row, dictionary, style):
     """Export content of given dictionary into XLSX (starting at defined row)."""
     for i, key in enumerate(sorted(dictionary.keys())):
-        worksheet.write(row + i, 0, key)
-        worksheet.write(row + i, 1, dictionary[key])
+        worksheet.write(row + i, 0, key, style)
+        worksheet.write(row + i, 1, dictionary[key], style)
 
 
 def xlsx_export_basic_info(worksheet, styles, directory1, directory2, files1, files2, common):
     """Export basic info into XLSX file."""
-    worksheet.write("A1", "Basic info about test results")
-    worksheet.write("A2", "Tested on")
-    worksheet.write("B2", datetime.now().isoformat().replace("T", " "))
-    worksheet.write("A3", "1st directory with results")
-    worksheet.write("B3", directory1)
-    worksheet.write("A4", "2nd directory with results")
-    worksheet.write("B4", directory2)
-    worksheet.write("A5", "Results in 1st directory")
-    worksheet.write("B5", len(files1))
-    worksheet.write("A6", "Results in 2nd directory")
-    worksheet.write("B6", len(files2))
-    worksheet.write("A7", "Common clusters to compare")
-    worksheet.write("B7", len(common))
+    worksheet.write("A1", "Basic info about test results", styles["title_line"])
+    worksheet.write("B1", "", styles["title_line"])
+
+    worksheet.write("A2", "Tested on", styles["table_header"])
+    worksheet.write("B2", datetime.now().isoformat().replace("T", " "), styles["table_cell"])
+    worksheet.write("A3", "1st directory with results", styles["table_header"])
+    worksheet.write("B3", directory1, styles["table_cell"])
+    worksheet.write("A4", "2nd directory with results", styles["table_header"])
+    worksheet.write("B4", directory2, styles["table_cell"])
+    worksheet.write("A5", "Results in 1st directory", styles["table_header"])
+    worksheet.write("B5", len(files1), styles["table_cell"])
+    worksheet.write("A6", "Results in 2nd directory", styles["table_header"])
+    worksheet.write("B6", len(files2), styles["table_cell"])
+    worksheet.write("A7", "Common clusters to compare", styles["table_header"])
+    worksheet.write("B7", len(common), styles["table_cell"])
 
 
 def xlsx_export_redundant_clusters(worksheet, styles, files, title):
     """Export list of redundant clusters into XLSX worksheet."""
-    worksheet.write("A1", "Redundant clusters")
-    worksheet.write("A2", "n")
-    worksheet.write("B2", "cluster")
+    worksheet.write("A1", "Redundant clusters", styles["title_line"])
+    worksheet.write("B1", "", styles["title_line"])
+    worksheet.write("A2", "n", styles["table_header"])
+    worksheet.write("B2", "cluster", styles["table_header"])
 
     # write all cluster names preceded by counter
     for i, cluster in enumerate(files):
-        worksheet.write(i+2, 0, i+1)
-        worksheet.write(i+2, 1, cluster)
+        worksheet.write(i+2, 0, i+1, styles["table_cell"])
+        worksheet.write(i+2, 1, cluster, styles["table_cell"])
 
 
 def xlsx_export_comparison_results(worksheet, styles, comparison_results):
