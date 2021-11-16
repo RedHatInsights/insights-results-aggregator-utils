@@ -638,6 +638,24 @@ def export_to_xlsx(filename, info, directory1, directory2, files1, files2, commo
                    verbose):
     """Create a new XLSX file with detailed report of differences between two sets of results."""
     with xlsxwriter.Workbook(filename) as workbook:
+        # define styles
+        title_line_style = workbook.add_format()
+        title_line_style.set_bold()
+        title_line_style.set_bg_color("#99ccff")
+
+        table_header_style = workbook.add_format()
+        table_header_style.set_bg_color("#c0c0c0")
+
+        table_cell_style = workbook.add_format()
+        table_cell_style.set_bg_color("ffffcc")
+
+        # prepare dict with all styles
+        styles = {
+                "title_line": title_line_style,
+                "table_header": table_header_style,
+                "table_cell": table_cell_style
+                }
+
         # create worksheets
         info_worksheet = workbook.add_worksheet("Pipeline info")
         basic_worksheet = workbook.add_worksheet("Basic info")
@@ -648,17 +666,18 @@ def export_to_xlsx(filename, info, directory1, directory2, files1, files2, commo
 
         # export all required information into workbook
         xlsx_export_additional_info(info_worksheet, info)
-        xlsx_export_basic_info(basic_worksheet, directory1, directory2, files1, files2, common)
+        xlsx_export_basic_info(basic_worksheet, styles, directory1, directory2, files1, files2,
+                common)
 
-        xlsx_export_redundant_clusters(redundant_clusters_worksheet_1, redundant_d1,
+        xlsx_export_redundant_clusters(redundant_clusters_worksheet_1, styles, redundant_d1,
                                        "Redundand clusters in 1st directory")
-        xlsx_export_redundant_clusters(redundant_clusters_worksheet_2, redundant_d2,
+        xlsx_export_redundant_clusters(redundant_clusters_worksheet_2, styles, redundant_d2,
                                        "Redundand clusters in 2nd directory")
 
-        xlsx_export_comparison_results(comparison_results_worksheet, comparison_results)
+        xlsx_export_comparison_results(comparison_results_worksheet, styles, comparison_results)
 
         if verbose:
-            xlsx_export_recommendations(recommendations_worksheet, recommendations)
+            xlsx_export_recommendations(recommendations_worksheet, styles, recommendations)
 
 
 def csv_export_recommendations(csv_writer, recommendations):
@@ -784,7 +803,7 @@ def xlsx_export_dictionary(worksheet, row, dictionary):
         worksheet.write(row + i, 1, dictionary[key])
 
 
-def xlsx_export_basic_info(worksheet, directory1, directory2, files1, files2, common):
+def xlsx_export_basic_info(worksheet, styles, directory1, directory2, files1, files2, common):
     """Export basic info into XLSX file."""
     worksheet.write("A1", "Basic info about test results")
     worksheet.write("A2", "Tested on")
@@ -801,7 +820,7 @@ def xlsx_export_basic_info(worksheet, directory1, directory2, files1, files2, co
     worksheet.write("B7", len(common))
 
 
-def xlsx_export_redundant_clusters(worksheet, files, title):
+def xlsx_export_redundant_clusters(worksheet, styles, files, title):
     """Export list of redundant clusters into XLSX worksheet."""
     worksheet.write("A1", "Redundant clusters")
     worksheet.write("A2", "n")
@@ -813,7 +832,7 @@ def xlsx_export_redundant_clusters(worksheet, files, title):
         worksheet.write(i+2, 1, cluster)
 
 
-def xlsx_export_comparison_results(worksheet, comparison_results):
+def xlsx_export_comparison_results(worksheet, styles, comparison_results):
     """Write comparison results into XLSX file."""
     worksheet.write("A1", "Comparison results")
     worksheet.write("A2", "n")
@@ -842,7 +861,7 @@ def xlsx_export_comparison_results(worksheet, comparison_results):
         worksheet.write(i+2, 8, r["error"])
 
 
-def xlsx_export_recommendations(worksheet, recommendations):
+def xlsx_export_recommendations(worksheet, styles, recommendations):
     """Export recommendations taken from both results sets into XLSX worksheet."""
 
     # all rule selectors
