@@ -51,7 +51,8 @@ optional arguments:
   -c CLUSTER_UUID, --cluster CLUSTER_UUID
                         UUID of the cluster to interact with
   -l FILE, --cluster-list FILE
-                        File containing list of clusters to interact with (1 or more cluster uuid expected)
+                        File containing list of clusters to interact with
+                        (1 or more cluster uuid expected)
   -s SELECTOR, --rule-selector SELECTOR
                         Recommendation we want to operate upon (PLUGIN|EK format)
   -e OPERATION [OPERATION ...], --execute OPERATION [OPERATION ...]
@@ -85,27 +86,35 @@ Examples
 
 * Thumbs up vote for a given recommendation
 
-``` ui_actions.py -a 'https://$REST_API_URL' -c '$CLUSTER_ID' -v -s 'some.valid.module|ERROR_KEY' -e like -u '$USER'
+``` ui_actions.py -a 'https://$REST_API_URL' -c '$CLUSTER_ID' -v \
+-s 'some.valid.module|ERROR_KEY' -e like -u '$USER' \
 -p '$PASSWORD' ```
 
 * Disable a given recommendation
 
-``` ui_actions.py -a 'https://$REST_API_URL' -c '$CLUSTER_ID' -v -s 'some.valid.module|ERROR_KEY' -e disable -u
-'$USER' -p '$PASSWORD' ```
+``` ui_actions.py -a 'https://$REST_API_URL' -c '$CLUSTER_ID' -v \
+-s 'some.valid.module|ERROR_KEY' -e disable -u '$USER' -p '$PASSWORD' ```
+
 
 * Disable a given recommendation with feedback
 
-``` ui_actions.py -a 'https://$REST_API_URL' -c '$CLUSTER_ID' -v -s 'some.valid.module|ERROR_KEY' -e
-disable_with_feedback "some feedback" -u '$USER' -p '$PASSWORD' ```
+``` ui_actions.py -a 'https://$REST_API_URL' -c '$CLUSTER_ID' -v |
+-s 'some.valid.module|ERROR_KEY' -e disable_with_feedback "some feedback" \
+-u '$USER' -p '$PASSWORD' ```
 
 * Execute multiple actions for a given recommendation
 
-``` ui_actions.py -a 'https://$REST_API_URL' -c '$CLUSTER_ID' -v -s 'some.valid.module|ERROR_KEY' -e
-disable_with_feedback 'some feedback' enable dislike -u '$USER' -p '$PASSWORD' ``` ``` ui_actions.py -a
-'https://$REST_API_URL' -c '$CLUSTER_ID' -v -s 'some.valid.module|ERROR_KEY' -e disable_with_feedback enable dislike
--u '$USER' -p '$PASSWORD' ```
+``` ui_actions.py -a 'https://$REST_API_URL' -c '$CLUSTER_ID' -v \
+-s 'some.valid.module|ERROR_KEY' -e disable_with_feedback 'some feedback' \
+enable dislike -u '$USER' -p '$PASSWORD' ```
 
-Note: disable_with_feedback expects a string argument, and if none is provided, no feedback is sent
+``` ui_actions.py -a 'https://$REST_API_URL' -c '$CLUSTER_ID' -v \
+-s 'some.valid.module|ERROR_KEY' -e disable_with_feedback enable \
+dislike -u '$USER' -p '$PASSWORD' ```
+
+Note: disable_with_feedback expects a feedback message (string),
+and if none is provided, no feedback is sent.
+
 Generated documentation in literate programming style
 -----
 <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/ui_actions.html>
@@ -160,7 +169,8 @@ def cli_arguments():
 
     parser.add_argument("-l", "--cluster-list", dest="cluster_list_file",
                         required=not ({'-c', '--cluster'} & set(sys.argv)),
-                        help="File containing list of clusters to interact with (1 or more cluster uuid expected)")
+                        help="File containing list of clusters to interact with\
+                            (1 or more cluster uuid expected)")
 
     parser.add_argument("-s", "--rule-selector", dest="selector",
                         help="Recommendation we want to operate upon (PLUGIN|EK format)")
@@ -185,8 +195,8 @@ def cli_arguments():
 
 def check_api_response(response):
     assert response is not None, "Proper response expected"
-    assert response.status_code == requests.codes.ok,\
-        f"Received {response.status_code} when {requests.codes.ok} expected "
+    assert response.status_code == requests.codes.ok, \
+        "Received {response.status_code} when {requests.codes.ok} expected "
 
 
 def print_url(url, rest_op, data):
@@ -200,20 +210,27 @@ def execute_operations(address, proxies, auth, clusters, plugin, error_key):
             url = f"{address}clusters/{cluster}/rules/{plugin}.report/error_key/{error_key}/{op}"
             print_url(url, "PUT", None)
             if op == "like":
-                check_api_response(requests.put(url, proxies=proxies, auth=auth))
+                check_api_response(requests.put(
+                    url, proxies=proxies, auth=auth))
             elif op == "dislike":
-                check_api_response(requests.put(url, proxies=proxies, auth=auth))
+                check_api_response(requests.put(
+                    url, proxies=proxies, auth=auth))
             elif op == "reset_vote":
-                check_api_response(requests.put(url, proxies=proxies, auth=auth))
+                check_api_response(requests.put(
+                    url, proxies=proxies, auth=auth))
             elif op == "enable":
-                check_api_response(requests.put(url, proxies=proxies, auth=auth))
+                check_api_response(requests.put(
+                    url, proxies=proxies, auth=auth))
             elif op == "disable":
-                check_api_response(requests.put(url, proxies=proxies, auth=auth))
+                check_api_response(requests.put(
+                    url, proxies=proxies, auth=auth))
                 if item[1]:
-                    url = f"{address}/clusters/{cluster}/rules/{plugin}.report/error_key/{error_key}/disable_feedback"
+                    url = f"{address}/clusters/{cluster}/rules/{plugin}.report/" \
+                          f"error_key/{error_key}/disable_feedback"
                     feedback_message = {"message": item[1]}
                     print_url(url, "POST", feedback_message)
-                    check_api_response(requests.post(url, proxies=proxies, auth=auth, json=feedback_message))
+                    check_api_response(requests.post(
+                        url, proxies=proxies, auth=auth, json=feedback_message))
 
 
 def main():
@@ -223,7 +240,8 @@ def main():
 
     # check -c and -l args are not both provided
     if args.cluster and args.cluster_list_file:
-        print(f"{sys.argv[0]}: error: Please provide cluster UUID through either -c or -l, not both.")
+        print(f"{sys.argv[0]}: "
+              f"error: Please provide cluster UUID through either -c or -l, not both.")
         sys.exit(1)
 
     # validate the recommendation to work with
@@ -248,7 +266,9 @@ def main():
                 print(f"{sys.argv[0]}: error: Please provide a valid operation.")
                 sys.exit(1)
         elif op == "disable_with_feedback":
-            if len(operations) == 1 or idx + 1 == len(operations) or operations[idx + 1] in ALLOWED_OPERATIONS:
+            if len(operations) == 1 or \
+                    idx + 1 == len(operations) or \
+                    operations[idx + 1] in ALLOWED_OPERATIONS:
                 # disable_with_feedback provided without feedback
                 print(f"{sys.argv[0]}: warning: {op} without feedback string")
                 register_operation("disable")
