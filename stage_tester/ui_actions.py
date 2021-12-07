@@ -21,7 +21,7 @@ Description
 
 This script can be used to simulate user actions available on OCM UI related
 with recommendations. It interacts with the external data pipeline on Stage
-environment .
+environment.
 
 For a given organization and cluster, the tool allows to simulate the
 following operations:
@@ -36,7 +36,7 @@ provided via CLI together with user name and password used for basic auth.
 Usage
 -----
 
-``` usage: ui_actions.py [-h] -a ADDRESS [-x PROXY] [-u USER] [-p PASSWORD] -o ORGANIZATION -c CLUSTER [-l
+``` usage: ui_actions.py [-h] -a ADDRESS [-x PROXY] [-u USER] [-p PASSWORD] -c CLUSTER [-l
 CLUSTER_LIST_FILE] [-r RECOMMENDATION] [-e OPERATION [OPERATION ...]] [-v]
 
 optional arguments:
@@ -48,8 +48,6 @@ optional arguments:
   -u USER, --user USER  User name for basic authentication
   -p PASSWORD, --password PASSWORD
                         Password for basic authentication
-  -o ORGANIZATION, --organization ORGANIZATION
-                        ID of the organization to interact with
   -c CLUSTER_UUID, --cluster CLUSTER_UUID
                         UUID of the cluster to interact with
   -l FILE, --cluster-list FILE
@@ -65,7 +63,7 @@ optional arguments:
                           - "enable"
                           - "disable"
                           - "disable_with_feedback"
-    -v, --verbose       Make messages verbose
+    -v, --verbose       Make execution more verbose
 
 Notes:
 
@@ -87,30 +85,25 @@ Examples
 
 * Thumbs up vote for a given recommendation
 
-```
-ui_actions.py -a 'https://$REST_API_URL' -c '$CLUSTER_ID' -v -s 'some.valid.module|ERROR_KEY' -e like -u '$USER' -p '$PASSWORD'
-```
+``` ui_actions.py -a 'https://$REST_API_URL' -c '$CLUSTER_ID' -v -s 'some.valid.module|ERROR_KEY' -e like -u '$USER'
+-p '$PASSWORD' ```
 
 * Disable a given recommendation
 
-```
-ui_actions.py -a 'https://$REST_API_URL' -c '$CLUSTER_ID' -v -s 'some.valid.module|ERROR_KEY' -e disable -u '$USER' -p '$PASSWORD'
-```
+``` ui_actions.py -a 'https://$REST_API_URL' -c '$CLUSTER_ID' -v -s 'some.valid.module|ERROR_KEY' -e disable -u
+'$USER' -p '$PASSWORD' ```
 
 * Disable a given recommendation with feedback
 
-```
-ui_actions.py -a 'https://$REST_API_URL' -c '$CLUSTER_ID' -v -s 'some.valid.module|ERROR_KEY' -e disable_with_feedback "some feedback" -u '$USER' -p '$PASSWORD'
-```
+``` ui_actions.py -a 'https://$REST_API_URL' -c '$CLUSTER_ID' -v -s 'some.valid.module|ERROR_KEY' -e
+disable_with_feedback "some feedback" -u '$USER' -p '$PASSWORD' ```
 
 * Execute multiple actions for a given recommendation
 
-```
-ui_actions.py -a 'https://$REST_API_URL' -c '$CLUSTER_ID' -v -s 'some.valid.module|ERROR_KEY' -e disable_with_feedback 'some feedback' enable dislike -u '$USER' -p '$PASSWORD'
-```
-```
-ui_actions.py -a 'https://$REST_API_URL' -c '$CLUSTER_ID' -v -s 'some.valid.module|ERROR_KEY' -e disable_with_feedback enable dislike -u '$USER' -p '$PASSWORD'
-```
+``` ui_actions.py -a 'https://$REST_API_URL' -c '$CLUSTER_ID' -v -s 'some.valid.module|ERROR_KEY' -e
+disable_with_feedback 'some feedback' enable dislike -u '$USER' -p '$PASSWORD' ``` ``` ui_actions.py -a
+'https://$REST_API_URL' -c '$CLUSTER_ID' -v -s 'some.valid.module|ERROR_KEY' -e disable_with_feedback enable dislike
+-u '$USER' -p '$PASSWORD' ```
 
 Note: disable_with_feedback expects a string argument, and if none is provided, no feedback is sent
 Generated documentation in literate programming style
@@ -187,9 +180,40 @@ def cli_arguments():
     parser.add_argument("-v", "--verbose", dest="verbose", action="store_true", default=None,
                         help="Make messages verbose", required=False)
 
-    # Now it is time to parse flags, check the actual content of command line
-    # and fill-in the object named `args`.
     return parser.parse_args()
+
+
+def check_api_response(response):
+    assert response is not None, "Proper response expected"
+    assert response.status_code == requests.codes.ok,\
+        f"Received {response.status_code} when {requests.codes.ok} expected "
+
+
+def print_url(url, rest_op, data):
+    print("\t", f"Operation: {rest_op}", url, f"{data}" if data else "")
+
+
+def execute_operations(address, proxies, auth, clusters, plugin, error_key):
+    for cluster in clusters:
+        for item in REGISTERED_OPERATIONS:
+            op = item[0]
+            url = f"{address}clusters/{cluster}/rules/{plugin}.report/error_key/{error_key}/{op}"
+            print_url(url, "PUT", None)
+            if op == "like":
+                check_api_response(requests.put(url, proxies=proxies, auth=auth))
+            elif op == "dislike":
+                check_api_response(requests.put(url, proxies=proxies, auth=auth))
+            elif op == "reset_vote":
+                check_api_response(requests.put(url, proxies=proxies, auth=auth))
+            elif op == "enable":
+                check_api_response(requests.put(url, proxies=proxies, auth=auth))
+            elif op == "disable":
+                check_api_response(requests.put(url, proxies=proxies, auth=auth))
+                if item[1]:
+                    url = f"{address}/clusters/{cluster}/rules/{plugin}.report/error_key/{error_key}/disable_feedback"
+                    feedback_message = {"message": item[1]}
+                    print_url(url, "POST", feedback_message)
+                    check_api_response(requests.post(url, proxies=proxies, auth=auth, json=feedback_message))
 
 
 def main():
@@ -215,9 +239,7 @@ def main():
 
     # validate operation(s) to execute
     operations = args.operations[0]
-    print("operations:", operations)
     for idx, op in enumerate(operations):
-        print("operation:", op)
         if op not in ALLOWED_OPERATIONS:
             # Only OK if it is the feedback for disable_with_feedback
             if not (type(op) == str and operations[idx - 1] == "disable_with_feedback"):
@@ -231,89 +253,30 @@ def main():
                 print(f"{sys.argv[0]}: warning: {op} without feedback string")
                 register_operation("disable")
             else:
-                register_operation(op, operations[idx + 1])
+                register_operation("disable", operations[idx + 1])
         else:
             register_operation(op)
 
-    # Verbosity flag
     verbose = args.verbose
-    # setup proxy or proxies
     proxies = {
         'https': args.proxy
     } if args.proxy else None
-    # tuple with items needed to be filled for basic authentication
     auth = (args.user, args.password)
-    # organization ID
-    organization = args.organization
-    # set of clusters to work with
     clusters = {args.cluster} if args.cluster else set(open(args.cluster_list_file).read().split())
-    # plugin and error key to work with
     plugin = selector.split("|")[0]
     error_key = selector.split("|")[1]
 
     if verbose:
         print("Proxy settings:", proxies)
         print("Auth settings:", auth)
-
         print("Address:", args.address)
-        print("Organization:", organization)
         print("Cluster(s):", clusters)
         print("Rule selector:", selector)
         print("Plugin:", plugin)
         print("Error Key:", error_key)
         print("Operations:", REGISTERED_OPERATIONS)
 
-    execute_operations(args.address, proxies, auth, organization, clusters, plugin, error_key)
-
-
-def execute_operations(address, proxies, auth, organization, clusters, plugin, error_key):
-    for cluster in clusters:
-        for item in REGISTERED_OPERATIONS:
-            print("working with", item)
-            op = item[0]
-            if op == "like":
-                url = f"{address}/clusters/{cluster}/rules/{plugin}.report/error_key/{error_key}/like"
-                print(url)
-                resp = requests.put(url, proxies=proxies, auth=auth)
-                assert resp is not None, "Proper response expected"
-                assert resp.status_code == requests.codes.ok, f"Received {resp.status_code} when {requests.codes.ok} expected"
-            elif op == "dislike":
-                url = f"{address}/clusters/{cluster}/rules/{plugin}.report/error_key/{error_key}/dislike"
-                print(url)
-                resp = requests.put(url, proxies=proxies, auth=auth)
-                assert resp is not None, "Proper response expected"
-                assert resp.status_code == requests.codes.ok, f"Received {resp.status_code} when {requests.codes.ok} expected"
-            elif op == "reset_vote":
-                url = f"{address}/clusters/{cluster}/rules/{plugin}.report/error_key/{error_key}/reset_vote"
-                print(url)
-                resp = requests.put(url, proxies=proxies, auth=auth)
-                assert resp is not None, "Proper response expected"
-                assert resp.status_code == requests.codes.ok, f"Received {resp.status_code} when {requests.codes.ok} expected"
-            elif op == "enable":
-                url = f"{address}/clusters/{cluster}/rules/{plugin}.report/error_key/{error_key}/enable"
-                print(url)
-                resp = requests.put(url, proxies=proxies, auth=auth)
-                assert resp is not None, "Proper response expected"
-                assert resp.status_code == requests.codes.ok, f"Received {resp.status_code} when {requests.codes.ok} expected"
-            elif op == "disable":
-                url = f"{address}/clusters/{cluster}/rules/{plugin}.report/error_key/{error_key}/disable"
-                print(url)
-                resp = requests.put(url, proxies=proxies, auth=auth)
-                assert resp is not None, "Proper response expected"
-                assert resp.status_code == requests.codes.ok, f"Received {resp.status_code} when {requests.codes.ok} expected"
-            elif op == "disable_with_feedback":
-                url = f"{address}/clusters/{cluster}/rules/{plugin}.report/error_key/{error_key}/disable"
-                print(url)
-                resp = requests.put(url, proxies=proxies, auth=auth)
-                assert resp is not None, "Proper response expected"
-                assert resp.status_code == requests.codes.ok, f"Received {resp.content} - {resp.status_code} when {requests.codes.ok} expected"
-                url = f"{address}/clusters/{cluster}/rules/{plugin}.report/error_key/{error_key}/disable_feedback"
-                if item[1]:
-                    feedback_message = {"message": item[1]}
-                    print(url, feedback_message)
-                    resp = requests.post(url, proxies=proxies, auth=auth, data=feedback_message)
-                    assert resp is not None, "Proper response expected"
-                    assert resp.status_code == requests.codes.ok, f"Received {resp.status_code} when {requests.codes.ok} expected"
+    execute_operations(args.address, proxies, auth, clusters, plugin, error_key)
 
 
 # If this script is started from command line, run the `main` function which is
