@@ -11,6 +11,7 @@ func getConfig() Config {
 	bucketPtr := flag.String("bucket", "", "bucket name")
 	prefixPtr := flag.String("prefix", "", "path to the clusters folders")
 	nClustersPtr := flag.Int("n-clusters", 1, "number of clusters")
+	csvPathPtr := flag.String("output", "", "path to save the CSV file")
 
 	flag.Parse()
 
@@ -25,5 +26,6 @@ func getConfig() Config {
 			Prefix:     *prefixPtr,
 		},
 		NClusters: *nClustersPtr,
+		CSVpath:   *csvPathPtr,
 	}
 }

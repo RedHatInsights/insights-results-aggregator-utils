@@ -26,20 +26,32 @@ func main() {
 		Msg("Configuration")
 
 	s3client, err := getClient(config.s3config)
-	if err != nil {
-		return
-	}
+	checkError(err)
+
 	clusters, err := getClusters(s3client, config.s3config, config.NClusters)
-	if err != nil {
-		return
-	}
+	checkError(err)
+
+	f, w, err := initCSV(config.CSVpath)
+	checkError(err)
+	defer closeCSV(f, w)
 
 	log.Debug().Strs("selected clusters", clusters).Msg("Clusters")
 
 	for i := range clusters {
-		err = downloadNTarballs(s3client, config.s3config, clusters[i], nTarballs)
+		tarBalls, err := getNTarBalls(s3client, config.s3config, clusters[i], nTarballs)
+		checkError(err)
+		for j := range tarBalls {
+			err = downloadTarball(s3client, config.s3config, tarBalls[j])
+			checkError(err)
+			err = writeRow(w, clusters[i], tarBalls[j])
+			checkError(err)
+		}
 	}
+	checkError(err)
+}
+
+func checkError(err error) {
 	if err != nil {
-		return
+		os.Exit(1)
 	}
 }

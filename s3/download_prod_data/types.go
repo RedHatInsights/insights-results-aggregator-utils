@@ -3,6 +3,7 @@ package main
 type Config struct {
 	s3config  S3config
 	NClusters int
+	CSVpath   string
 }
 
 type S3config struct {

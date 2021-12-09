@@ -46,13 +46,24 @@ func getClusters(s3client *s3.S3, s3config S3config, nClusters int) ([]string, e
 	return getRandomSubsliceFromSlice(clusters, nClusters), nil
 }
 
-func downloadNTarballs(s3client *s3.S3, s3config S3config, cluster string, nTarballs int) error {
-	var (
-		err      error
-		tarBalls []string
-		body     []byte
-	)
-	log.Debug().Msg("Downloading tarballs")
+func downloadTarball(s3client *s3.S3, s3config S3config, tarBall string) error {
+	log.Debug().Str("archive_path", tarBall).Msg("Downloading tarball")
+	body, err := s3util.DownloadObject(s3client, s3config.Bucket, tarBall)
+	if err != nil {
+		log.Error().Err(err).Str("archive_path", tarBall).Msg("Error downloading tarball")
+		return err
+	}
+
+	if err := writeToPath(tarBall, body); err != nil {
+		log.Error().Err(err).Str("archive_path", tarBall).Msg("Error writing tarball")
+		return err
+	}
+
+	return nil
+}
+
+func getNTarBalls(s3client *s3.S3, s3config S3config, cluster string, nTarballs int) (tarBalls []string, err error) {
+	log.Debug().Str("cluster", cluster).Msg("Listing tarballs")
 	if nTarballs > maxKeys {
 		tarBalls, err = s3util.ListBucket(s3client, s3config.Bucket, cluster, "", maxKeys)
 		if len(tarBalls) > nTarballs {
@@ -62,20 +73,7 @@ func downloadNTarballs(s3client *s3.S3, s3config S3config, cluster string, nTarb
 		tarBalls, _, err = s3util.ListNObjectsInBucket(s3client, s3config.Bucket, cluster, "", "", int64(nTarballs))
 	}
 	if err != nil {
-		return err
+		return nil, err
 	}
-
-	for i := range tarBalls {
-		log.Debug().Str("archive_path", tarBalls[i]).Msg("Downloading tarball")
-		if body, err = s3util.DownloadObject(s3client, s3config.Bucket, tarBalls[i]); err != nil {
-			log.Error().Err(err).Str("archive_path", tarBalls[i]).Msg("Error downloading tarball")
-			return err
-		}
-
-		if err := writeToPath(tarBalls[i], body); err != nil {
-			return err
-		}
-
-	}
-	return nil
+	return tarBalls, err
 }
