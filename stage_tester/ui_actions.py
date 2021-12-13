@@ -135,12 +135,13 @@ ALLOWED_OPERATIONS = {
     "disable_with_feedback"
 }
 
-REGISTERED_OPERATIONS = []
+REGISTERED_OPERATIONS = {}
 
 
-def register_operation(op, arg=None):
-    REGISTERED_OPERATIONS.append(
-        [op, arg]
+def register_operation(op, func, data=None):
+    print(f"{sys.argv[0]}: info: registering {op}", "with data: {data}" if data else "")
+    REGISTERED_OPERATIONS.update(
+        {op: [func, data]}
     )
 
 
@@ -205,32 +206,15 @@ def print_url(url, rest_op, data):
 
 def execute_operations(address, proxies, auth, clusters, plugin, error_key):
     for cluster in clusters:
-        for item in REGISTERED_OPERATIONS:
-            op = item[0]
-            url = f"{address}clusters/{cluster}/rules/{plugin}.report/error_key/{error_key}/{op}"
-            print_url(url, "PUT", None)
-            if op == "like":
-                check_api_response(requests.put(
+        for action, ops in REGISTERED_OPERATIONS.items():
+            url = f"{address}clusters/{cluster}/rules/{plugin}.report/error_key/{error_key}/{action}"
+            print_url(url, ops[0].__name__, ops[1])
+            if ops[1]:
+                check_api_response(ops[0](
+                    url, proxies=proxies, auth=auth, json=ops[1]))
+            else:
+                check_api_response(ops[0](
                     url, proxies=proxies, auth=auth))
-            elif op == "dislike":
-                check_api_response(requests.put(
-                    url, proxies=proxies, auth=auth))
-            elif op == "reset_vote":
-                check_api_response(requests.put(
-                    url, proxies=proxies, auth=auth))
-            elif op == "enable":
-                check_api_response(requests.put(
-                    url, proxies=proxies, auth=auth))
-            elif op == "disable":
-                check_api_response(requests.put(
-                    url, proxies=proxies, auth=auth))
-                if item[1]:
-                    url = f"{address}/clusters/{cluster}/rules/{plugin}.report/" \
-                          f"error_key/{error_key}/disable_feedback"
-                    feedback_message = {"message": item[1]}
-                    print_url(url, "POST", feedback_message)
-                    check_api_response(requests.post(
-                        url, proxies=proxies, auth=auth, json=feedback_message))
 
 
 def main():
@@ -266,16 +250,16 @@ def main():
                 print(f"{sys.argv[0]}: error: Please provide a valid operation.")
                 sys.exit(1)
         elif op == "disable_with_feedback":
-            if len(operations) == 1 or \
-                    idx + 1 == len(operations) or \
+            if idx + 1 == len(operations) or \
                     operations[idx + 1] in ALLOWED_OPERATIONS:
                 # disable_with_feedback provided without feedback
                 print(f"{sys.argv[0]}: warning: {op} without feedback string")
-                register_operation("disable")
+                register_operation("disable", requests.put)
             else:
-                register_operation("disable", operations[idx + 1])
+                register_operation("disable", requests.put)
+                register_operation("disable_feedback", requests.post, {"message": operations[idx + 1]})
         else:
-            register_operation(op)
+            register_operation(op, requests.put)
 
     verbose = args.verbose
     proxies = {
