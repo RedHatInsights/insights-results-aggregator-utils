@@ -63,7 +63,7 @@ optional arguments:
                           - "reset_vote"
                           - "enable"
                           - "disable"
-                          - "disable_with_feedback <feedback>"
+                          - "disable_feedback [<feedback string>]"
     -v, --verbose       Make execution more verbose
 
 Notes:
@@ -78,7 +78,8 @@ Notes:
 linebreak separated UUIDs.
 
 - The --execute argument accepts multiple operations, that would be
-executed sequentially in the given order
+executed sequentially in the given order. Each operation is expected
+to be provided once.
 ```
 
 Examples
@@ -99,21 +100,21 @@ Examples
 * Disable a given recommendation with feedback
 
 ``` ui_actions.py -a 'https://$REST_API_URL' -c '$CLUSTER_ID' -v |
--s 'some.valid.rule_id|ERROR_KEY' -e disable_with_feedback "some feedback" \
+-s 'some.valid.rule_id|ERROR_KEY' -e disable_feedback "some feedback" \
 -u '$USER' -p '$PASSWORD' ```
 
 * Execute multiple actions for a given recommendation
 
 ``` ui_actions.py -a 'https://$REST_API_URL' -c '$CLUSTER_ID' -v \
--s 'some.valid.rule_id|ERROR_KEY' -e disable_with_feedback 'some feedback' \
+-s 'some.valid.rule_id|ERROR_KEY' -e disable_feedback 'some feedback' \
 enable dislike -u '$USER' -p '$PASSWORD' ```
 
 ``` ui_actions.py -a 'https://$REST_API_URL' -c '$CLUSTER_ID' -v \
--s 'some.valid.rule_id|ERROR_KEY' -e disable_with_feedback enable \
+-s 'some.valid.rule_id|ERROR_KEY' -e disable_feedback enable \
 dislike -u '$USER' -p '$PASSWORD' ```
 
-Note: disable_with_feedback expects a feedback message (string),
-and if none is provided, no feedback is sent.
+Note: disable_feedback expects a feedback message (string),
+and if none is provided, rule is disabled and no feedback is sent.
 
 Generated documentation in literate programming style
 -----
@@ -132,14 +133,14 @@ ALLOWED_OPERATIONS = {
     "reset_vote",
     "enable",
     "disable",
-    "disable_with_feedback"
+    "disable_feedback"
 }
 
 REGISTERED_OPERATIONS = {}
 
 
 def register_operation(op, func, data=None):
-    print(f"{sys.argv[0]}: info: registering {op}", "with data: {data}" if data else "")
+    print(f"{sys.argv[0]}: info: registering {op}", f"with data: {data}" if data else "")
     REGISTERED_OPERATIONS.update(
         {op: [func, data]}
     )
@@ -183,7 +184,7 @@ def cli_arguments():
       - "reset_vote"
       - "enable"
       - "disable"
-      - "disable_with_feedback <feedback>"
+      - "disable_feedback [<feedback string>]"
     """
     parser.add_argument("-e", "--execute", dest="operations", action='append', nargs='+',
                         help=help_message_execute_op, required=True)
@@ -241,26 +242,23 @@ def main():
 
     # validate operation(s) to execute
     operations = args.operations[0]
-    for idx, op in enumerate(operations):
-        if op not in ALLOWED_OPERATIONS:
-            # Only OK if it is the feedback for disable_with_feedback
-            if not (type(op) == str and operations[idx - 1] == "disable_with_feedback"):
+    for op in operations:
+        if op in ALLOWED_OPERATIONS:
+            if op == "disable_feedback":
+                register_operation("disable", requests.put)
+                register_operation("disable_feedback", requests.post)
+            else:
+                register_operation(op, requests.put)
+        else:
+            # Only OK if it is the feedback for disable_feedback
+            if not ("disable_feedback" in REGISTERED_OPERATIONS
+                    and REGISTERED_OPERATIONS["disable_feedback"][1] is None):
                 print(f"{sys.argv[0]}: error: Received operation: {op}.")
                 print(f"{sys.argv[0]}: error: Expected one of {ALLOWED_OPERATIONS}.")
                 print(f"{sys.argv[0]}: error: Please provide a valid operation.")
                 sys.exit(1)
-        elif op == "disable_with_feedback":
-            if idx + 1 == len(operations) or \
-                    operations[idx + 1] in ALLOWED_OPERATIONS:
-                # disable_with_feedback provided without feedback
-                print(f"{sys.argv[0]}: warning: {op} without feedback string")
-                register_operation("disable", requests.put)
             else:
-                register_operation("disable", requests.put)
-                register_operation(
-                    "disable_feedback", requests.post, {"message": operations[idx + 1]})
-        else:
-            register_operation(op, requests.put)
+                register_operation("disable_feedback", requests.post, {"message": op})
 
     verbose = args.verbose
     proxies = {
