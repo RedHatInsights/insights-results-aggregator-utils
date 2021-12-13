@@ -54,7 +54,7 @@ optional arguments:
                         File containing list of clusters to interact with
                         (1 or more cluster uuid expected)
   -s SELECTOR, --rule-selector SELECTOR
-                        Recommendation we want to operate upon (PLUGIN|EK format)
+                        Recommendation we want to operate upon (RULE_ID|EK format)
   -e OPERATION [OPERATION ...], --execute OPERATION [OPERATION ...]
                         Operation(s) to perform on the provided recommendation.
                         Accepted operations are:
@@ -63,13 +63,13 @@ optional arguments:
                           - "reset_vote"
                           - "enable"
                           - "disable"
-                          - "disable_with_feedback"
+                          - "disable_with_feedback <feedback>"
     -v, --verbose       Make execution more verbose
 
 Notes:
 
 - The following arguments need to be specified:
-  -a, --address
+  -a, --addr
   -s, --rule-selector
   -e, --execute
   EITHER -c, --cluster OR -l, --cluster-list
@@ -87,29 +87,29 @@ Examples
 * Thumbs up vote for a given recommendation
 
 ``` ui_actions.py -a 'https://$REST_API_URL' -c '$CLUSTER_ID' -v \
--s 'some.valid.module|ERROR_KEY' -e like -u '$USER' \
+-s 'some.valid.rule_id|ERROR_KEY' -e like -u '$USER' \
 -p '$PASSWORD' ```
 
 * Disable a given recommendation
 
 ``` ui_actions.py -a 'https://$REST_API_URL' -c '$CLUSTER_ID' -v \
--s 'some.valid.module|ERROR_KEY' -e disable -u '$USER' -p '$PASSWORD' ```
+-s 'some.valid.rule_id|ERROR_KEY' -e disable -u '$USER' -p '$PASSWORD' ```
 
 
 * Disable a given recommendation with feedback
 
 ``` ui_actions.py -a 'https://$REST_API_URL' -c '$CLUSTER_ID' -v |
--s 'some.valid.module|ERROR_KEY' -e disable_with_feedback "some feedback" \
+-s 'some.valid.rule_id|ERROR_KEY' -e disable_with_feedback "some feedback" \
 -u '$USER' -p '$PASSWORD' ```
 
 * Execute multiple actions for a given recommendation
 
 ``` ui_actions.py -a 'https://$REST_API_URL' -c '$CLUSTER_ID' -v \
--s 'some.valid.module|ERROR_KEY' -e disable_with_feedback 'some feedback' \
+-s 'some.valid.rule_id|ERROR_KEY' -e disable_with_feedback 'some feedback' \
 enable dislike -u '$USER' -p '$PASSWORD' ```
 
 ``` ui_actions.py -a 'https://$REST_API_URL' -c '$CLUSTER_ID' -v \
--s 'some.valid.module|ERROR_KEY' -e disable_with_feedback enable \
+-s 'some.valid.rule_id|ERROR_KEY' -e disable_with_feedback enable \
 dislike -u '$USER' -p '$PASSWORD' ```
 
 Note: disable_with_feedback expects a feedback message (string),
@@ -149,7 +149,7 @@ def cli_arguments():
     """Retrieve all CLI arguments provided by user."""
     parser = ArgumentParser()
 
-    parser.add_argument("-a", "--address", dest="address", required=True,
+    parser.add_argument("-a", "--address", dest="addr", required=True,
                         help="Address of REST API for external data pipeline")
 
     parser.add_argument("-x", "--proxy", dest="proxy", required=False,
@@ -174,7 +174,7 @@ def cli_arguments():
                             (1 or more cluster uuid expected)")
 
     parser.add_argument("-s", "--rule-selector", dest="selector",
-                        help="Recommendation we want to operate upon (PLUGIN|EK format)")
+                        help="Recommendation we want to operate upon (RULE_ID|EK format)")
 
     help_message_execute_op = """Operation(s) to perform on the provided recommendation.
     Accepted operations are:
@@ -183,7 +183,7 @@ def cli_arguments():
       - "reset_vote"
       - "enable"
       - "disable"
-      - "disable_with_feedback"
+      - "disable_with_feedback <feedback>"
     """
     parser.add_argument("-e", "--execute", dest="operations", action='append', nargs='+',
                         help=help_message_execute_op, required=True)
@@ -204,10 +204,10 @@ def print_url(url, rest_op, data):
     print("\t", f"Operation: {rest_op}", url, f"{data}" if data else "")
 
 
-def execute_operations(address, proxies, auth, clusters, plugin, error_key):
+def execute_operations(addr, proxies, auth, clusters, rule_id, error_key):
     for cluster in clusters:
         for action, ops in REGISTERED_OPERATIONS.items():
-            url = f"{address}clusters/{cluster}/rules/{plugin}.report/error_key/{error_key}/{action}"
+            url = f"{addr}clusters/{cluster}/rules/{rule_id}.report/error_key/{error_key}/{action}"
             print_url(url, ops[0].__name__, ops[1])
             if ops[1]:
                 check_api_response(ops[0](
@@ -236,7 +236,7 @@ def main():
     numbers, or underscores ("_")
     """
     if not re.match(r'[a-zA-Z_0-9]+\.[a-zA-Z_0-9.]+\|[A-Z_0-9]+$', selector):
-        print(f"{sys.argv[0]}: error: Please provide a valid rule selector (plugin|ek)")
+        print(f"{sys.argv[0]}: error: Please provide a valid rule selector (rule_id|ek)")
         sys.exit(1)
 
     # validate operation(s) to execute
@@ -257,7 +257,8 @@ def main():
                 register_operation("disable", requests.put)
             else:
                 register_operation("disable", requests.put)
-                register_operation("disable_feedback", requests.post, {"message": operations[idx + 1]})
+                register_operation(
+                    "disable_feedback", requests.post, {"message": operations[idx + 1]})
         else:
             register_operation(op, requests.put)
 
@@ -267,20 +268,20 @@ def main():
     } if args.proxy else None
     auth = (args.user, args.password)
     clusters = {args.cluster} if args.cluster else set(open(args.cluster_list_file).read().split())
-    plugin = selector.split("|")[0]
+    rule_id = selector.split("|")[0]
     error_key = selector.split("|")[1]
 
     if verbose:
         print("Proxy settings:", proxies)
         print("Auth settings:", auth)
-        print("Address:", args.address)
+        print("Address:", args.addr)
         print("Cluster(s):", clusters)
         print("Rule selector:", selector)
-        print("Plugin:", plugin)
+        print("Rule ID:", rule_id)
         print("Error Key:", error_key)
         print("Operations:", REGISTERED_OPERATIONS)
 
-    execute_operations(args.address, proxies, auth, clusters, plugin, error_key)
+    execute_operations(args.addr, proxies, auth, clusters, rule_id, error_key)
 
 
 # If this script is started from command line, run the `main` function which is
