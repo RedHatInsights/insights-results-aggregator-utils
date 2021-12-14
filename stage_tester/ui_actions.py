@@ -122,6 +122,7 @@ Generated documentation in literate programming style
 """
 
 from argparse import ArgumentParser
+from argparse import RawTextHelpFormatter
 import requests
 
 import re
@@ -148,7 +149,7 @@ def register_operation(op, func, data=None):
 
 def cli_arguments():
     """Retrieve all CLI arguments provided by user."""
-    parser = ArgumentParser()
+    parser = ArgumentParser(formatter_class=RawTextHelpFormatter)
 
     parser.add_argument("-a", "--address", dest="addr", required=True,
                         help="Address of REST API for external data pipeline")
@@ -171,8 +172,8 @@ def cli_arguments():
 
     parser.add_argument("-l", "--cluster-list", dest="cluster_list_file",
                         required=not ({'-c', '--cluster'} & set(sys.argv)),
-                        help="File containing list of clusters to interact with\
-                            (1 or more cluster uuid expected)")
+                        help="File containing list of clusters to interact with "
+                        "(1 or more cluster uuid expected)")
 
     parser.add_argument("-s", "--rule-selector", dest="selector",
                         help="Recommendation we want to operate upon (RULE_ID|EK format)")
