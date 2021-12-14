@@ -172,8 +172,8 @@ def cli_arguments():
 
     parser.add_argument("-l", "--cluster-list", dest="cluster_list_file",
                         required=not ({'-c', '--cluster'} & set(sys.argv)),
-                        help="File containing list of clusters to interact with "\
-                            "(1 or more cluster uuid expected)")
+                        help="File containing list of clusters to interact with "
+                        "(1 or more cluster uuid expected)")
 
     parser.add_argument("-s", "--rule-selector", dest="selector",
                         help="Recommendation we want to operate upon (RULE_ID|EK format)")
