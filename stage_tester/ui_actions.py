@@ -139,6 +139,8 @@ ALLOWED_OPERATIONS = {
 
 REGISTERED_OPERATIONS = {}
 
+RULE_SELECTOR = r'[a-zA-Z_0-9]+\.[a-zA-Z_0-9.]+\|[A-Z_0-9]+$'
+
 
 def register_operation(op, func, data=None):
     print(f"{sys.argv[0]}: info: registering {op}", f"with data: {data}" if data else "")
@@ -209,13 +211,15 @@ def print_url(url, rest_op, data):
 def execute_operations(addr, proxies, auth, clusters, rule_id, error_key):
     for cluster in clusters:
         for action, ops in REGISTERED_OPERATIONS.items():
+            function, payload = ops
             url = f"{addr}clusters/{cluster}/rules/{rule_id}.report/error_key/{error_key}/{action}"
-            print_url(url, ops[0].__name__, ops[1])
-            if ops[1]:
-                check_api_response(ops[0](
-                    url, proxies=proxies, auth=auth, json=ops[1]))
+            print_url(url, function.__name__, payload)
+
+            if payload:
+                check_api_response(function(
+                    url, proxies=proxies, auth=auth, json=payload))
             else:
-                check_api_response(ops[0](
+                check_api_response(function(
                     url, proxies=proxies, auth=auth))
 
 
@@ -237,7 +241,7 @@ def main():
     (".") before a vertical line ("|"), followed by only uppercase characters,
     numbers, or underscores ("_")
     """
-    if not re.match(r'[a-zA-Z_0-9]+\.[a-zA-Z_0-9.]+\|[A-Z_0-9]+$', selector):
+    if not re.match(RULE_SELECTOR, selector):
         print(f"{sys.argv[0]}: error: Please provide a valid rule selector (rule_id|ek)")
         sys.exit(1)
 
@@ -267,8 +271,7 @@ def main():
     } if args.proxy else None
     auth = (args.user, args.password)
     clusters = {args.cluster} if args.cluster else set(open(args.cluster_list_file).read().split())
-    rule_id = selector.split("|")[0]
-    error_key = selector.split("|")[1]
+    rule_id, error_key = selector.split("|")
 
     if verbose:
         print("Proxy settings:", proxies)
