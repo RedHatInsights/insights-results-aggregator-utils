@@ -9,7 +9,7 @@ import (
 
 const (
 	maxKeys         = 1000
-	nTarballs       = 1
+	nTarballs       = 1 // TODO: pass as parameter?
 	downloadsFolder = "downloads"
 )
 

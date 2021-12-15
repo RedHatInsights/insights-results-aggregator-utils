@@ -31,15 +31,40 @@ func getClient(s3config S3config) (*s3.S3, error) {
 	return s3Client, nil
 }
 
+// getClusters expects the bucket to have a format `s3://BUCKET/SUPER_FOLDER/CLUSTER/...`.
 func getClusters(s3client *s3.S3, s3config S3config, nClusters int) ([]string, error) {
 	log.Debug().Msg("Reading clusters")
-	clusters, err := s3util.ListFolders(s3client, s3config.Bucket, s3config.Prefix, "", maxKeys)
+	var clusters = []string{}
+
+	// First list the super folders
+	superFolders, err := s3util.ListFolders(
+		s3client, s3config.Bucket, s3config.Prefix, "", maxKeys)
 	if err != nil {
-		log.Error().Err(err).Msg("error reading clusters list")
+		log.Error().Err(err).Msg("error reading super folders")
 		return nil, err
 	}
-	log.Debug().Int("total clusters", len(clusters)).Msg("Reading clusters")
-	return getRandomSubsliceFromSlice(clusters, nClusters), nil
+
+	// Then fill the `clusters` list until it has nClusters or there are no more clusters
+	// to list
+	log.Debug().Int("total superfolders", len(superFolders)).Msg("Reading superFolders")
+	for i := range superFolders {
+		subClusters, err := s3util.ListFolders(
+			s3client, s3config.Bucket, superFolders[i], "", maxKeys)
+		if err != nil {
+			log.Error().Err(err).Msg("error reading clusters list")
+			return nil, err
+		}
+		clusters = append(clusters, subClusters...)
+		if len(clusters) > nClusters {
+			clusters = clusters[0:nClusters]
+			break
+		}
+	}
+	log.Debug().
+		Int("total clusters", len(clusters)).
+		Int("selected clusters", nClusters).
+		Msg("Reading clusters")
+	return clusters, nil
 }
 
 func downloadTarball(s3client *s3.S3, s3config S3config, tarBall string) error {
