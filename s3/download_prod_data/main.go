@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"strings"
 
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -42,7 +43,8 @@ func main() {
 		for j := range tarBalls {
 			err = downloadTarball(s3client, config.s3config, tarBalls[j])
 			checkError(err)
-			err = writeRow(w, clusters[i], tarBalls[j])
+			clusterWithoutSuperFolder := strings.Split(clusters[i], "/")[1]
+			err = writeRow(w, clusterWithoutSuperFolder, tarBalls[j])
 			checkError(err)
 		}
 	}
