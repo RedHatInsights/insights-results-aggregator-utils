@@ -9,7 +9,6 @@ import (
 
 const (
 	maxKeys         = 1000
-	nTarballs       = 1 // TODO: pass as parameter?
 	downloadsFolder = "downloads"
 )
 
@@ -38,7 +37,7 @@ func main() {
 	log.Debug().Strs("selected clusters", clusters).Msg("Clusters")
 
 	for i := range clusters {
-		tarBalls, err := getNTarBalls(s3client, config.s3config, clusters[i], nTarballs)
+		tarBalls, err := getNTarBalls(s3client, config.s3config, clusters[i], config.NTarballs)
 		checkError(err)
 		for j := range tarBalls {
 			err = downloadTarball(s3client, config.s3config, tarBalls[j])
