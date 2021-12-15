@@ -1,8 +1,6 @@
 package main
 
 import (
-	"io/fs"
-
 	s3util "github.com/RedHatInsights/insights-operator-utils/s3"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
@@ -10,8 +8,6 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/rs/zerolog/log"
 )
-
-const filePermissions fs.FileMode = 0700
 
 func getClient(s3config S3config) (*s3.S3, error) {
 	sess, err := session.NewSession(&aws.Config{
