@@ -5,9 +5,9 @@ import "flag"
 func getConfig() Config {
 	accessKeyPtr := flag.String("access-key", "", "access key")
 	secretKeyPtr := flag.String("secret-key", "", "secret key")
-	endpointPtr := flag.String("endpoint", "", "endpoint")
+	endpointPtr := flag.String("endpoint", "", "endpoint (leave empty to use AWS)")
 	regionPtr := flag.String("region", "us-east-1", "bucket region")
-	disableSSLPtr := flag.Bool("disable-ssl", false, "whether to disable SSL or not")
+	disableSSLPtr := flag.Bool("disable-ssl", false, "whether to disable SSL or not (default false)")
 	bucketPtr := flag.String("bucket", "", "bucket name")
 	prefixPtr := flag.String("prefix", "", "path to the clusters folders")
 	nClustersPtr := flag.Int("n-clusters", 1, "number of clusters")

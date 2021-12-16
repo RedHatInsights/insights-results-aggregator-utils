@@ -502,6 +502,50 @@ optional arguments:
                         max records to export (default=all)
 ```
 
+### `download_prod_data`
+
+Script to download N tarballs from M clusters from external data pipeline bucket.
+
+#### Description
+
+This script is used to download tarballs stored in AWS S3 bucket and export the clusters and tarball path to a CSV.
+It is fully configurable although it expects the bucket to have a format `s3://BUCKET/SUPER_FOLDER/CLUSTER/...`.
+
+#### Generated documentation
+
+* https://redhatinsights.github.io/insights-results-aggregator-utils/packages/upload_timestamps.html
+
+#### Usage
+
+```
+❯ cd s3/download_prod_data
+❯ go build .
+❯ ./download_prod_data --help
+Usage of ./download_prod_data:
+  -access-key string
+        access key
+  -bucket string
+        bucket name
+  -disable-ssl
+        whether to disable SSL or not (default false)
+  -endpoint string
+        endpoint (leave empty to use AWS)
+  -n-clusters int
+        number of clusters (default 1)
+  -n-tarballs int
+        number of tarballs per cluster (default 1)
+  -output string
+        path to save the CSV file
+  -prefix string
+        path to the clusters folders
+  -region string
+        bucket region (default "us-east-1")
+  -secret-key string
+        secret key
+```
+
+You can also `go run main.go`, it is not mandatory to build it.
+
 ------------------------------------------------------------------------------
 
 
