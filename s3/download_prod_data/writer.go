@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"io/fs"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -25,7 +24,7 @@ func writeToPath(path string, content []byte) error {
 	}
 
 	log.Debug().Str("archive_path", path).Msg("Writing tarball")
-	if err := ioutil.WriteFile(filePath, content, filePermissions); err != nil {
+	if err := os.WriteFile(filePath, content, filePermissions); err != nil {
 		log.Error().Err(err).Str("archive_path", path).Msg("Error writing tarball")
 		return err
 	}
