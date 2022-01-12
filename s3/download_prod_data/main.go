@@ -43,7 +43,8 @@ func main() {
 		for j := range tarBalls {
 			err = downloadTarball(s3client, config.s3config, tarBalls[j])
 			checkError(err)
-			clusterWithoutSuperFolder := strings.Split(clusters[i], "/")[1]
+			splittedClusters := strings.Split(clusters[i], "/")
+			clusterWithoutSuperFolder := splittedClusters[len(splittedClusters)-2]
 			err = writeRow(w, clusterWithoutSuperFolder, tarBalls[j])
 			checkError(err)
 		}
