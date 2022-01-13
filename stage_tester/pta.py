@@ -68,14 +68,35 @@ def cli_arguments():
     parser = ArgumentParser()
 
     # All supported command line arguments and flags
-    parser.add_argument("-i", "--input", dest="input_file", default=None, required=True,
-                        help="Specification of input file (with list of clusters, for example)")
+    parser.add_argument(
+        "-i",
+        "--input",
+        dest="input_file",
+        default=None,
+        required=True,
+        help="Specification of input file (with list of clusters, for example)",
+    )
 
-    parser.add_argument("-b", "--bin-size", dest="bin_size", action="store", type=int, default=30,
-                        help="Bin size for histograms", required=False)
+    parser.add_argument(
+        "-b",
+        "--bin-size",
+        dest="bin_size",
+        action="store",
+        type=int,
+        default=30,
+        help="Bin size for histograms",
+        required=False,
+    )
 
-    parser.add_argument("-v", "--verbose", dest="verbose", action="store_true", default=None,
-                        help="Make messages verbose", required=False)
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        dest="verbose",
+        action="store_true",
+        default=None,
+        help="Make messages verbose",
+        required=False,
+    )
 
     # Now it is time to parse flags, check the actual content of command line
     # and fill-in the object named `args`.
@@ -138,9 +159,11 @@ def main():
 
 def read_timestamps(filename):
     """Read timestamps from given CSV file, parse timestamps correctly."""
-    return pd.read_csv(filename,
-                       date_parser=datetime_parser,
-                       parse_dates=["last checked", "analyzed", "stored"])
+    return pd.read_csv(
+        filename,
+        date_parser=datetime_parser,
+        parse_dates=["last checked", "analyzed", "stored"],
+    )
 
 
 def datetime_parser(raw_data):
