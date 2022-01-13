@@ -134,12 +134,12 @@ ALLOWED_OPERATIONS = {
     "reset_vote",
     "enable",
     "disable",
-    "disable_feedback"
+    "disable_feedback",
 }
 
 REGISTERED_OPERATIONS = {}
 
-RULE_SELECTOR = r'[a-zA-Z_0-9]+\.[a-zA-Z_0-9.]+\|[A-Z_0-9]+$'
+RULE_SELECTOR = r"[a-zA-Z_0-9]+\.[a-zA-Z_0-9.]+\|[A-Z_0-9]+$"
 
 
 def register_operation(op, func, data=None):
@@ -153,32 +153,68 @@ def cli_arguments():
     """Retrieve all CLI arguments provided by user."""
     parser = ArgumentParser(formatter_class=RawTextHelpFormatter)
 
-    parser.add_argument("-a", "--address", dest="addr", required=True,
-                        help="Address of REST API for external data pipeline")
+    parser.add_argument(
+        "-a",
+        "--address",
+        dest="addr",
+        required=True,
+        help="Address of REST API for external data pipeline",
+    )
 
-    parser.add_argument("-x", "--proxy", dest="proxy", required=False,
-                        help="Proxy to be used to access REST API")
+    parser.add_argument(
+        "-x",
+        "--proxy",
+        dest="proxy",
+        required=False,
+        help="Proxy to be used to access REST API",
+    )
 
-    parser.add_argument("-u", "--user", dest="user", required=False,
-                        help="User name for basic authentication")
+    parser.add_argument(
+        "-u",
+        "--user",
+        dest="user",
+        required=False,
+        help="User name for basic authentication",
+    )
 
-    parser.add_argument("-p", "--password", dest="password", required=False,
-                        help="Password for basic authentication")
+    parser.add_argument(
+        "-p",
+        "--password",
+        dest="password",
+        required=False,
+        help="Password for basic authentication",
+    )
 
-    parser.add_argument("-o", "--organization", dest="organization",
-                        help="ID of the organization to interact with")
+    parser.add_argument(
+        "-o",
+        "--organization",
+        dest="organization",
+        help="ID of the organization to interact with",
+    )
 
-    parser.add_argument("-c", "--cluster", dest="cluster",
-                        required=not ({'-l', '--cluster-list'} & set(sys.argv)),
-                        help="UUID of the cluster to interact with")
+    parser.add_argument(
+        "-c",
+        "--cluster",
+        dest="cluster",
+        required=not ({"-l", "--cluster-list"} & set(sys.argv)),
+        help="UUID of the cluster to interact with",
+    )
 
-    parser.add_argument("-l", "--cluster-list", dest="cluster_list_file",
-                        required=not ({'-c', '--cluster'} & set(sys.argv)),
-                        help="File containing list of clusters to interact with "
-                        "(1 or more cluster uuid expected)")
+    parser.add_argument(
+        "-l",
+        "--cluster-list",
+        dest="cluster_list_file",
+        required=not ({"-c", "--cluster"} & set(sys.argv)),
+        help="File containing list of clusters to interact with "
+        "(1 or more cluster uuid expected)",
+    )
 
-    parser.add_argument("-s", "--rule-selector", dest="selector",
-                        help="Recommendation we want to operate upon (RULE_ID|EK format)")
+    parser.add_argument(
+        "-s",
+        "--rule-selector",
+        dest="selector",
+        help="Recommendation we want to operate upon (RULE_ID|EK format)",
+    )
 
     help_message_execute_op = """Operation(s) to perform on the provided recommendation.
     Accepted operations are:
@@ -189,19 +225,34 @@ def cli_arguments():
       - "disable"
       - "disable_feedback [<feedback string>]"
     """
-    parser.add_argument("-e", "--execute", dest="operations", action='append', nargs='+',
-                        help=help_message_execute_op, required=True)
+    parser.add_argument(
+        "-e",
+        "--execute",
+        dest="operations",
+        action="append",
+        nargs="+",
+        help=help_message_execute_op,
+        required=True,
+    )
 
-    parser.add_argument("-v", "--verbose", dest="verbose", action="store_true", default=None,
-                        help="Make messages verbose", required=False)
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        dest="verbose",
+        action="store_true",
+        default=None,
+        help="Make messages verbose",
+        required=False,
+    )
 
     return parser.parse_args()
 
 
 def check_api_response(response):
     assert response is not None, "Proper response expected"
-    assert response.status_code == requests.codes.ok, \
-        "Received {response.status_code} when {requests.codes.ok} expected "
+    assert (
+        response.status_code == requests.codes.ok
+    ), "Received {response.status_code} when {requests.codes.ok} expected "
 
 
 def print_url(url, rest_op, data):
@@ -216,11 +267,11 @@ def execute_operations(addr, proxies, auth, clusters, rule_id, error_key):
             print_url(url, function.__name__, payload)
 
             if payload:
-                check_api_response(function(
-                    url, proxies=proxies, auth=auth, json=payload))
+                check_api_response(
+                    function(url, proxies=proxies, auth=auth, json=payload)
+                )
             else:
-                check_api_response(function(
-                    url, proxies=proxies, auth=auth))
+                check_api_response(function(url, proxies=proxies, auth=auth))
 
 
 def main():
@@ -266,11 +317,13 @@ def main():
                 register_operation("disable_feedback", requests.post, {"message": op})
 
     verbose = args.verbose
-    proxies = {
-        'https': args.proxy
-    } if args.proxy else None
+    proxies = {"https": args.proxy} if args.proxy else None
     auth = (args.user, args.password)
-    clusters = {args.cluster} if args.cluster else set(open(args.cluster_list_file).read().split())
+    clusters = (
+        {args.cluster}
+        if args.cluster
+        else set(open(args.cluster_list_file).read().split())
+    )
     rule_id, error_key = selector.split("|")
 
     if verbose:
