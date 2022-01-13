@@ -154,57 +154,139 @@ def cli_arguments():
     parser = ArgumentParser()
 
     # All supported command line arguments and flags
-    parser.add_argument("-a", "--address", dest="address", required=False,
-                        help="Address of REST API for external data pipeline")
+    parser.add_argument(
+        "-a",
+        "--address",
+        dest="address",
+        required=False,
+        help="Address of REST API for external data pipeline",
+    )
 
-    parser.add_argument("-x", "--proxy", dest="proxy", required=False,
-                        help="Proxy to be used to access REST API")
+    parser.add_argument(
+        "-x",
+        "--proxy",
+        dest="proxy",
+        required=False,
+        help="Proxy to be used to access REST API",
+    )
 
-    parser.add_argument("-u", "--user", dest="user", required=False,
-                        help="User name for basic authentication")
+    parser.add_argument(
+        "-u",
+        "--user",
+        dest="user",
+        required=False,
+        help="User name for basic authentication",
+    )
 
-    parser.add_argument("-p", "--password", dest="password", required=False,
-                        help="Password for basic authentication")
+    parser.add_argument(
+        "-p",
+        "--password",
+        dest="password",
+        required=False,
+        help="Password for basic authentication",
+    )
 
-    parser.add_argument("-o", "--organization", dest="organization", required=False,
-                        help="Organization ID")
+    parser.add_argument(
+        "-o",
+        "--organization",
+        dest="organization",
+        required=False,
+        help="Organization ID",
+    )
 
-    parser.add_argument("-l", "--cluster-list", dest="cluster_list", action="store_true",
-                        help="Operation to retrieve list of clusters via REST API",
-                        default=None)
+    parser.add_argument(
+        "-l",
+        "--cluster-list",
+        dest="cluster_list",
+        action="store_true",
+        help="Operation to retrieve list of clusters via REST API",
+        default=None,
+    )
 
-    parser.add_argument("-r", "--retrieve-results", dest="retrieve_results", action="store_true",
-                        help="Retrieve results for given list of clusters via REST API",
-                        default=None)
+    parser.add_argument(
+        "-r",
+        "--retrieve-results",
+        dest="retrieve_results",
+        action="store_true",
+        help="Retrieve results for given list of clusters via REST API",
+        default=None,
+    )
 
-    parser.add_argument("-t", "--export-times", dest="export_times", action="store_true",
-                        help="Export processing times to CSV files that can be used for further " +
-                        "analysis",
-                        default=None)
+    parser.add_argument(
+        "-t",
+        "--export-times",
+        dest="export_times",
+        action="store_true",
+        help="Export processing times to CSV files that can be used for further "
+        + "analysis",
+        default=None,
+    )
 
-    parser.add_argument("-i", "--input", dest="input", default=None, required=False,
-                        help="Specification of input file (with list of clusters, for example)")
+    parser.add_argument(
+        "-i",
+        "--input",
+        dest="input",
+        default=None,
+        required=False,
+        help="Specification of input file (with list of clusters, for example)",
+    )
 
-    parser.add_argument("-c", "--compare-results", dest="compare_results", action="store_true",
-                        default=None, required=False,
-                        help="Compare two sets of results, each set stored in its own directory")
+    parser.add_argument(
+        "-c",
+        "--compare-results",
+        dest="compare_results",
+        action="store_true",
+        default=None,
+        required=False,
+        help="Compare two sets of results, each set stored in its own directory",
+    )
 
-    parser.add_argument("-d1", "--directory1", dest="directory1", required=False, default=None,
-                        help="First directory containing set of results")
+    parser.add_argument(
+        "-d1",
+        "--directory1",
+        dest="directory1",
+        required=False,
+        default=None,
+        help="First directory containing set of results",
+    )
 
-    parser.add_argument("-d2", "--directory2", dest="directory2", required=False, default=None,
-                        help="Second directory containing set of results")
+    parser.add_argument(
+        "-d2",
+        "--directory2",
+        dest="directory2",
+        required=False,
+        default=None,
+        help="Second directory containing set of results",
+    )
 
-    parser.add_argument("-e", "--export", dest="export_file_name", required=False,
-                        default="report.csv",
-                        help="Name of CSV file with exported comparison results")
+    parser.add_argument(
+        "-e",
+        "--export",
+        dest="export_file_name",
+        required=False,
+        default="report.csv",
+        help="Name of CSV file with exported comparison results",
+    )
 
-    parser.add_argument("-d", "--additional-info", dest="additional_info", action="store_true",
-                        default=None, required=False,
-                        help="Add additional info about data pipeline components into CSV report")
+    parser.add_argument(
+        "-d",
+        "--additional-info",
+        dest="additional_info",
+        action="store_true",
+        default=None,
+        required=False,
+        help="Add additional info about data pipeline components into CSV report",
+    )
 
-    parser.add_argument("-v", "--verbose", dest="verbose", action="store_true", default=None,
-                        help="Make messages verbose", required=False)
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        dest="verbose",
+        action="store_true",
+        default=None,
+        help="Make messages verbose",
+        required=False,
+    )
 
     # Now it is time to parse flags, check the actual content of command line
     # and fill-in the object named `args`.
@@ -310,7 +392,7 @@ def retrieve_results(address, proxies, auth, input_file, verbose):
             print("Cluster: ", cluster)
 
         # construct URL to get report for one specified cluster
-        url = f'{address}/v1/clusters/{cluster}/report'
+        url = f"{address}/v1/clusters/{cluster}/report"
 
         if verbose:
             print("URL to access:", url)
@@ -371,7 +453,7 @@ def read_cluster_list_from_text_file(input_file):
 def retrieve_additional_info(address, proxies, auth, verbose):
     """Retrieve additional info about the external data pipeline via REST API endpoint."""
     # construct URL to get info from pipeline
-    url = f'{address}/v1/info'
+    url = f"{address}/v1/info"
 
     if verbose:
         print("URL to access:", url)
@@ -385,7 +467,7 @@ def retrieve_additional_info(address, proxies, auth, verbose):
 
 def display_errors(errors):
     """Display all errors or exceptions thrown during the selected operation."""
-    print("-"*60)
+    print("-" * 60)
 
     if len(errors) > 0:
         print("Errors detected during results processing")
@@ -394,7 +476,7 @@ def display_errors(errors):
     else:
         print("No errors found")
 
-    print("-"*60)
+    print("-" * 60)
 
 
 def retrieve_results_for_cluster(url, proxies, auth, cluster, verbose):
@@ -655,8 +737,17 @@ def export_recommendations(csv_writer, recommendations):
 
     # sub-table title + row headers
     csv_writer.writerow(("Recommendations",))
-    csv_writer.writerow(("n", "rule_id", "error_key", "#hits in set1", "#hits in set2",
-                         "diff?", "diff amount"))
+    csv_writer.writerow(
+        (
+            "n",
+            "rule_id",
+            "error_key",
+            "#hits in set1",
+            "#hits in set2",
+            "diff?",
+            "diff amount",
+        )
+    )
 
     # table content
     for i, rule_selector in enumerate(rule_selectors):
@@ -671,8 +762,17 @@ def export_recommendations(csv_writer, recommendations):
         diff_str = "no" if diff == 0 else "yes"
 
         # write info about given rule_selector
-        csv_writer.writerow((i, rule_selector.rule_id, rule_selector.error_key,
-                            counter1, counter2, diff_str, diff))
+        csv_writer.writerow(
+            (
+                i,
+                rule_selector.rule_id,
+                rule_selector.error_key,
+                counter1,
+                counter2,
+                diff_str,
+                diff,
+            )
+        )
 
 
 def export_additional_info(csv_writer, info):
@@ -730,15 +830,36 @@ def export_redundant_clusters(csv_writer, files, title):
 
 def export_comparison_results(csv_writer, comparison_results):
     csv_writer.writerow(("Comparison results",))
-    csv_writer.writerow(("n", "cluster", "status", "same results", "eq.#hits", "hits1", "hits2",
-                         "same hits", "error"))
+    csv_writer.writerow(
+        (
+            "n",
+            "cluster",
+            "status",
+            "same results",
+            "eq.#hits",
+            "hits1",
+            "hits2",
+            "same hits",
+            "error",
+        )
+    )
 
     # write all cluster names preceded by counter
     for i, r in enumerate(comparison_results):
         if r["status"] == "ok":
-            csv_writer.writerow((i, r["cluster"], r["status"], r["same_results"],
-                                 r["eq_hits"], r["hits1"], r["hits2"], r["same_hits"],
-                                 r["error"]))
+            csv_writer.writerow(
+                (
+                    i,
+                    r["cluster"],
+                    r["status"],
+                    r["same_results"],
+                    r["eq_hits"],
+                    r["hits1"],
+                    r["hits2"],
+                    r["same_hits"],
+                    r["error"],
+                )
+            )
         else:
             csv_writer.writerow((i, r["cluster"], r["status"], "", "", "", "", "", r["error"]))
 
