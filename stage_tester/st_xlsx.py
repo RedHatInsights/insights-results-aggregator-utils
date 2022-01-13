@@ -165,62 +165,150 @@ def cli_arguments():
     parser = ArgumentParser()
 
     # All supported command line arguments and flags
-    parser.add_argument("-a", "--address", dest="address", required=False,
-                        help="Address of REST API for external data pipeline")
+    parser.add_argument(
+        "-a",
+        "--address",
+        dest="address",
+        required=False,
+        help="Address of REST API for external data pipeline",
+    )
 
-    parser.add_argument("-x", "--proxy", dest="proxy", required=False,
-                        help="Proxy to be used to access REST API")
+    parser.add_argument(
+        "-x",
+        "--proxy",
+        dest="proxy",
+        required=False,
+        help="Proxy to be used to access REST API",
+    )
 
-    parser.add_argument("-u", "--user", dest="user", required=False,
-                        help="User name for basic authentication")
+    parser.add_argument(
+        "-u",
+        "--user",
+        dest="user",
+        required=False,
+        help="User name for basic authentication",
+    )
 
-    parser.add_argument("-p", "--password", dest="password", required=False,
-                        help="Password for basic authentication")
+    parser.add_argument(
+        "-p",
+        "--password",
+        dest="password",
+        required=False,
+        help="Password for basic authentication",
+    )
 
-    parser.add_argument("-o", "--organization", dest="organization", required=False,
-                        help="Organization ID")
+    parser.add_argument(
+        "-o",
+        "--organization",
+        dest="organization",
+        required=False,
+        help="Organization ID",
+    )
 
-    parser.add_argument("-l", "--cluster-list", dest="cluster_list", action="store_true",
-                        help="Operation to retrieve list of clusters via REST API",
-                        default=None)
+    parser.add_argument(
+        "-l",
+        "--cluster-list",
+        dest="cluster_list",
+        action="store_true",
+        help="Operation to retrieve list of clusters via REST API",
+        default=None,
+    )
 
-    parser.add_argument("-r", "--retrieve-results", dest="retrieve_results", action="store_true",
-                        help="Retrieve results for given list of clusters via REST API",
-                        default=None)
+    parser.add_argument(
+        "-r",
+        "--retrieve-results",
+        dest="retrieve_results",
+        action="store_true",
+        help="Retrieve results for given list of clusters via REST API",
+        default=None,
+    )
 
-    parser.add_argument("-t", "--export-times", dest="export_times", action="store_true",
-                        help="Export processing times to CSV files that can be used for further " +
-                        "analysis",
-                        default=None)
+    parser.add_argument(
+        "-t",
+        "--export-times",
+        dest="export_times",
+        action="store_true",
+        help="Export processing times to CSV files that can be used for further "
+        + "analysis",
+        default=None,
+    )
 
-    parser.add_argument("-i", "--input", dest="input", default=None, required=False,
-                        help="Specification of input file (with list of clusters, for example)")
+    parser.add_argument(
+        "-i",
+        "--input",
+        dest="input",
+        default=None,
+        required=False,
+        help="Specification of input file (with list of clusters, for example)",
+    )
 
-    parser.add_argument("-c", "--compare-results", dest="compare_results", action="store_true",
-                        default=None, required=False,
-                        help="Compare two sets of results, each set stored in its own directory")
+    parser.add_argument(
+        "-c",
+        "--compare-results",
+        dest="compare_results",
+        action="store_true",
+        default=None,
+        required=False,
+        help="Compare two sets of results, each set stored in its own directory",
+    )
 
-    parser.add_argument("-d1", "--directory1", dest="directory1", required=False, default=None,
-                        help="First directory containing set of results")
+    parser.add_argument(
+        "-d1",
+        "--directory1",
+        dest="directory1",
+        required=False,
+        default=None,
+        help="First directory containing set of results",
+    )
 
-    parser.add_argument("-d2", "--directory2", dest="directory2", required=False, default=None,
-                        help="Second directory containing set of results")
+    parser.add_argument(
+        "-d2",
+        "--directory2",
+        dest="directory2",
+        required=False,
+        default=None,
+        help="Second directory containing set of results",
+    )
 
-    parser.add_argument("-e", "--export", dest="export_file_name", required=False,
-                        default="report.csv",
-                        help="Name of CSV file with exported comparison results")
+    parser.add_argument(
+        "-e",
+        "--export",
+        dest="export_file_name",
+        required=False,
+        default="report.csv",
+        help="Name of CSV file with exported comparison results",
+    )
 
-    parser.add_argument("-s", "--xlsx", dest="export_to_xlsx", required=False, default=None,
-                        action="store_true",
-                        help="Use XLSX output instead of CSV output for exported " +
-                        "comparison results")
+    parser.add_argument(
+        "-s",
+        "--xlsx",
+        dest="export_to_xlsx",
+        required=False,
+        default=None,
+        action="store_true",
+        help="Use XLSX output instead of CSV output for exported "
+        + "comparison results",
+    )
 
-    parser.add_argument("-d", "--additional-info", dest="additional_info", action="store_true",
-                        default=None, required=False,
-                        help="Add additional info about data pipeline components into CSV report")
+    parser.add_argument(
+        "-d",
+        "--additional-info",
+        dest="additional_info",
+        action="store_true",
+        default=None,
+        required=False,
+        help="Add additional info about data pipeline components into CSV report",
+    )
 
-    parser.add_argument("-v", "--verbose", dest="verbose", action="store_true", default=None,
-                        help="Make messages verbose", required=False)
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        dest="verbose",
+        action="store_true",
+        default=None,
+        help="Make messages verbose",
+        required=False,
+    )
 
     # Now it is time to parse flags, check the actual content of command line
     # and fill-in the object named `args`.
@@ -250,8 +338,14 @@ def main():
         print("Auth settings:", auth)
 
     # check if at least required argument is provided on CLI
-    if not any((args.cluster_list, args.retrieve_results,
-                args.export_times, args.compare_results)):
+    if not any(
+        (
+            args.cluster_list,
+            args.retrieve_results,
+            args.export_times,
+            args.compare_results,
+        )
+    ):
         print("No action requested, add -l, -r, -t, or -c")
         sys.exit(1)
 
@@ -275,8 +369,14 @@ def main():
         if args.additional_info:
             info = retrieve_additional_info(args.address, proxies, auth, verbose)
 
-        compare_results(args.directory1, args.directory2, args.export_file_name,
-                        args.export_to_xlsx, info, verbose)
+        compare_results(
+            args.directory1,
+            args.directory2,
+            args.export_file_name,
+            args.export_to_xlsx,
+            info,
+            verbose,
+        )
 
 
 def call_rest_api(url, proxies, auth):
@@ -299,7 +399,7 @@ def call_rest_api(url, proxies, auth):
 def retrieve_cluster_list(organization, address, proxies, auth, verbose):
     """Retrieve list of clusters from the external data pipeline REST API endpoint."""
     # construct URL to get list of clusters for given organization ID
-    url = f'{address}/v1/organizations/{organization}/clusters'
+    url = f"{address}/v1/organizations/{organization}/clusters"
 
     if verbose:
         print("URL to access:", url)
@@ -327,7 +427,7 @@ def retrieve_results(address, proxies, auth, input_file, verbose):
             print("Cluster: ", cluster)
 
         # construct URL to get report for one specified cluster
-        url = f'{address}/v1/clusters/{cluster}/report'
+        url = f"{address}/v1/clusters/{cluster}/report"
 
         if verbose:
             print("URL to access:", url)
@@ -388,7 +488,7 @@ def read_cluster_list_from_text_file(input_file):
 def retrieve_additional_info(address, proxies, auth, verbose):
     """Retrieve additional info about the external data pipeline via REST API endpoint."""
     # construct URL to get info from pipeline
-    url = f'{address}/v1/info'
+    url = f"{address}/v1/info"
 
     if verbose:
         print("URL to access:", url)
@@ -402,7 +502,7 @@ def retrieve_additional_info(address, proxies, auth, verbose):
 
 def display_errors(errors):
     """Display all errors or exceptions thrown during the selected operation."""
-    print("-"*60)
+    print("-" * 60)
 
     if len(errors) > 0:
         print("Errors detected during results processing")
@@ -411,7 +511,7 @@ def display_errors(errors):
     else:
         print("No errors found")
 
-    print("-"*60)
+    print("-" * 60)
 
 
 def retrieve_results_for_cluster(url, proxies, auth, cluster, verbose):
@@ -487,13 +587,35 @@ def compare_results(directory1, directory2, filename, xlsx_output, info, verbose
     assert recommendations is not None
 
     if xlsx_output:
-        export_to_xlsx(filename, info, directory1, directory2, files1, files2, common,
-                       redundant_d1, redundant_d2, comparison_results, recommendations,
-                       verbose)
+        export_to_xlsx(
+            filename,
+            info,
+            directory1,
+            directory2,
+            files1,
+            files2,
+            common,
+            redundant_d1,
+            redundant_d2,
+            comparison_results,
+            recommendations,
+            verbose,
+        )
     else:
-        export_to_csv(filename, info, directory1, directory2, files1, files2, common,
-                      redundant_d1, redundant_d2, comparison_results, recommendations,
-                      verbose)
+        export_to_csv(
+            filename,
+            info,
+            directory1,
+            directory2,
+            files1,
+            files2,
+            common,
+            redundant_d1,
+            redundant_d2,
+            comparison_results,
+            recommendations,
+            verbose,
+        )
 
 
 def compare_results_sets(directory1, directory2, common, include_recommendations_table):
@@ -695,11 +817,11 @@ def export_to_xlsx(filename, info, directory1, directory2, files1, files2, commo
 
         # prepare dict with all styles
         styles = {
-                "title_line": title_line_style,
-                "table_header": table_header_style,
-                "table_cell": table_cell_style,
-                "error_cell": error_cell_style
-                }
+            "title_line": title_line_style,
+            "table_header": table_header_style,
+            "table_cell": table_cell_style,
+            "error_cell": error_cell_style,
+        }
 
         # create worksheets
         info_worksheet = workbook.add_worksheet("Pipeline info")
@@ -710,32 +832,40 @@ def export_to_xlsx(filename, info, directory1, directory2, files1, files2, commo
         recommendations_worksheet = workbook.add_worksheet("Recommendations")
 
         # column widths for worksheets
-        info_worksheet.set_column('A:A', 30)
-        info_worksheet.set_column('B:B', 60)
-        basic_worksheet.set_column('A:A', 40)
-        basic_worksheet.set_column('B:B', 40)
-        redundant_clusters_worksheet_1.set_column('A:A', 2)
-        redundant_clusters_worksheet_1.set_column('B:B', 50)
-        redundant_clusters_worksheet_2.set_column('A:A', 2)
-        redundant_clusters_worksheet_2.set_column('B:B', 50)
-        comparison_results_worksheet.set_column('A:A', 2)
-        comparison_results_worksheet.set_column('B:B', 50)
-        comparison_results_worksheet.set_column('C:G', 15)
-        comparison_results_worksheet.set_column('I:I', 40)
-        recommendations_worksheet.set_column('A:A', 2)
-        recommendations_worksheet.set_column('B:B', 90)
-        recommendations_worksheet.set_column('C:C', 50)
-        recommendations_worksheet.set_column('E:H', 15)
+        info_worksheet.set_column("A:A", 30)
+        info_worksheet.set_column("B:B", 60)
+        basic_worksheet.set_column("A:A", 40)
+        basic_worksheet.set_column("B:B", 40)
+        redundant_clusters_worksheet_1.set_column("A:A", 2)
+        redundant_clusters_worksheet_1.set_column("B:B", 50)
+        redundant_clusters_worksheet_2.set_column("A:A", 2)
+        redundant_clusters_worksheet_2.set_column("B:B", 50)
+        comparison_results_worksheet.set_column("A:A", 2)
+        comparison_results_worksheet.set_column("B:B", 50)
+        comparison_results_worksheet.set_column("C:G", 15)
+        comparison_results_worksheet.set_column("I:I", 40)
+        recommendations_worksheet.set_column("A:A", 2)
+        recommendations_worksheet.set_column("B:B", 90)
+        recommendations_worksheet.set_column("C:C", 50)
+        recommendations_worksheet.set_column("E:H", 15)
 
         # export all required information into workbook
         xlsx_export_additional_info(info_worksheet, styles, info)
         xlsx_export_basic_info(basic_worksheet, styles, directory1, directory2, files1, files2,
                                common)
 
-        xlsx_export_redundant_clusters(redundant_clusters_worksheet_1, styles, redundant_d1,
-                                       "Redundand clusters in 1st directory")
-        xlsx_export_redundant_clusters(redundant_clusters_worksheet_2, styles, redundant_d2,
-                                       "Redundand clusters in 2nd directory")
+        xlsx_export_redundant_clusters(
+            redundant_clusters_worksheet_1,
+            styles,
+            redundant_d1,
+            "Redundand clusters in 1st directory",
+        )
+        xlsx_export_redundant_clusters(
+            redundant_clusters_worksheet_2,
+            styles,
+            redundant_d2,
+            "Redundand clusters in 2nd directory",
+        )
 
         xlsx_export_comparison_results(comparison_results_worksheet, styles, comparison_results)
 
@@ -754,8 +884,17 @@ def csv_export_recommendations(csv_writer, recommendations):
 
     # sub-table title + row headers
     csv_writer.writerow(("Recommendations",))
-    csv_writer.writerow(("n", "rule_id", "error_key", "#hits in set1", "#hits in set2",
-                         "diff?", "diff amount"))
+    csv_writer.writerow(
+        (
+            "n",
+            "rule_id",
+            "error_key",
+            "#hits in set1",
+            "#hits in set2",
+            "diff?",
+            "diff amount",
+        )
+    )
 
     # table content
     for i, rule_selector in enumerate(rule_selectors):
@@ -770,8 +909,17 @@ def csv_export_recommendations(csv_writer, recommendations):
         diff_str = "no" if diff == 0 else "yes"
 
         # write info about given rule_selector
-        csv_writer.writerow((i, rule_selector.rule_id, rule_selector.error_key,
-                            counter1, counter2, diff_str, diff))
+        csv_writer.writerow(
+            (
+                i,
+                rule_selector.rule_id,
+                rule_selector.error_key,
+                counter1,
+                counter2,
+                diff_str,
+                diff,
+            )
+        )
 
 
 def csv_export_additional_info(csv_writer, info):
@@ -830,15 +978,36 @@ def csv_export_redundant_clusters(csv_writer, files, title):
 def csv_export_comparison_results(csv_writer, comparison_results):
     """Write comparison results into CSV file."""
     csv_writer.writerow(("Comparison results",))
-    csv_writer.writerow(("n", "cluster", "status", "same results", "eq.#hits", "hits1", "hits2",
-                         "same hits", "error"))
+    csv_writer.writerow(
+        (
+            "n",
+            "cluster",
+            "status",
+            "same results",
+            "eq.#hits",
+            "hits1",
+            "hits2",
+            "same hits",
+            "error",
+        )
+    )
 
     # write all cluster names preceded by counter
     for i, r in enumerate(comparison_results):
         if r["status"] == "ok":
-            csv_writer.writerow((i, r["cluster"], r["status"], r["same_results"],
-                                 r["eq_hits"], r["hits1"], r["hits2"], r["same_hits"],
-                                 r["error"]))
+            csv_writer.writerow(
+                (
+                    i,
+                    r["cluster"],
+                    r["status"],
+                    r["same_results"],
+                    r["eq_hits"],
+                    r["hits1"],
+                    r["hits2"],
+                    r["same_hits"],
+                    r["error"],
+                )
+            )
         else:
             csv_writer.writerow((i, r["cluster"], r["status"], "", "", "", "", "", r["error"]))
 
@@ -900,8 +1069,8 @@ def xlsx_export_redundant_clusters(worksheet, styles, files, title):
 
     # write all cluster names preceded by counter
     for i, cluster in enumerate(files):
-        worksheet.write(i+2, 0, i+1, styles["table_cell"])
-        worksheet.write(i+2, 1, cluster, styles["table_cell"])
+        worksheet.write(i + 2, 0, i + 1, styles["table_cell"])
+        worksheet.write(i + 2, 1, cluster, styles["table_cell"])
 
 
 def xlsx_export_comparison_results(worksheet, styles, comparison_results):
@@ -928,21 +1097,21 @@ def xlsx_export_comparison_results(worksheet, styles, comparison_results):
 
     # write all cluster names preceded by counter
     for i, r in enumerate(comparison_results):
-        worksheet.write(i+2, 0, i, styles["table_cell"])
-        worksheet.write(i+2, 1, r["cluster"], styles["table_cell"])
-        worksheet.write(i+2, 2, r["status"], styles["table_cell"])
+        worksheet.write(i + 2, 0, i, styles["table_cell"])
+        worksheet.write(i + 2, 1, r["cluster"], styles["table_cell"])
+        worksheet.write(i + 2, 2, r["status"], styles["table_cell"])
 
         if r["status"] == "ok":
-            worksheet.write(i+2, 3, r["same_results"], styles["table_cell"])
-            worksheet.write(i+2, 4, r["eq_hits"], styles["table_cell"])
-            worksheet.write(i+2, 5, r["hits1"], styles["table_cell"])
-            worksheet.write(i+2, 6, r["hits2"], styles["table_cell"])
-            worksheet.write(i+2, 7, r["same_hits"], styles["table_cell"])
+            worksheet.write(i + 2, 3, r["same_results"], styles["table_cell"])
+            worksheet.write(i + 2, 4, r["eq_hits"], styles["table_cell"])
+            worksheet.write(i + 2, 5, r["hits1"], styles["table_cell"])
+            worksheet.write(i + 2, 6, r["hits2"], styles["table_cell"])
+            worksheet.write(i + 2, 7, r["same_hits"], styles["table_cell"])
         else:
             for j in range(3, 8):
-                worksheet.write(i+2, j, "", styles["table_cell"])
+                worksheet.write(i + 2, j, "", styles["table_cell"])
 
-        worksheet.write(i+2, 8, r["error"], styles["error_cell"])
+        worksheet.write(i + 2, 8, r["error"], styles["error_cell"])
 
 
 def xlsx_export_recommendations(worksheet, styles, recommendations):
@@ -981,13 +1150,13 @@ def xlsx_export_recommendations(worksheet, styles, recommendations):
         diff_str = "no" if diff == 0 else "yes"
 
         # write info about given rule_selector
-        worksheet.write(i+2, 0, i+1, styles["table_cell"])
-        worksheet.write(i+2, 1, rule_selector.rule_id, styles["table_cell"])
-        worksheet.write(i+2, 2, rule_selector.error_key, styles["table_cell"])
-        worksheet.write(i+2, 3, counter1, styles["table_cell"])
-        worksheet.write(i+2, 4, counter2, styles["table_cell"])
-        worksheet.write(i+2, 5, diff_str, styles["table_cell"])
-        worksheet.write(i+2, 6, diff, styles["table_cell"])
+        worksheet.write(i + 2, 0, i + 1, styles["table_cell"])
+        worksheet.write(i + 2, 1, rule_selector.rule_id, styles["table_cell"])
+        worksheet.write(i + 2, 2, rule_selector.error_key, styles["table_cell"])
+        worksheet.write(i + 2, 3, counter1, styles["table_cell"])
+        worksheet.write(i + 2, 4, counter2, styles["table_cell"])
+        worksheet.write(i + 2, 5, diff_str, styles["table_cell"])
+        worksheet.write(i + 2, 6, diff, styles["table_cell"])
 
 
 # If this script is started from command line, run the `main` function which is
