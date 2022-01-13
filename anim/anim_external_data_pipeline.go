@@ -1,5 +1,5 @@
 /*
-Copyright © 2020 Pavel Tisnovsky
+Copyright © 2020, 2021, 2022 Pavel Tisnovsky
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ import (
 // input image. Animation to be created are based on this source image.
 func readOriginal(filename string) *image.Paletted {
 	// try to open the file specified by its name and check for any error
-	fin, err := os.Open(filename)
+	fin, err := os.Open(filename) // #nosec G304
 	if err != nil {
 		panic(err)
 	}
