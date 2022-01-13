@@ -23,19 +23,20 @@ This script can be used to perform several operations with external data
 pipeline usually deployed on Stage environment and accessible through proxy
 server.
 
-First operation retrieves list of clusters from the external data pipeline
+First operation retrieves a list of clusters from the external data pipeline
 through the standard REST API (and optionally via proxy server). Organization
-ID needs to be provided via CLI option, because list of clusters is filtered by
-organization. This operation is selected by using `-l` command line option.
+ID needs to be provided via CLI option, because the list of clusters is
+filtered by organization. This operation is selected by using `-l` command line
+option.
 
 Second operation retrieves results from the external data pipeline for several
 clusters. List of clusters needs to be stored in a plain text file. Name of
-this text file is to be provided by `-i` command line option. This operation is
-selected by using `-r` command line option.
+this text file is to be provided by the `-i` command line option. This
+operation is selected by using the `-r` command line option.
 
-Third operation compares two sets of results. Each set needs to be stored in
-separate directory. CSV file with detailed comparison of such two sets is
-generated during this operation. This operation is selected by using `-c`
+Third operation compares two sets of results. Each set needs to be stored in a
+separate directory. A CSV file with detailed comparison of such two sets is
+generated during this operation. This operation is selected by using the `-c`
 command line option.
 
 Fourth operation retrieves processing timestamp for both set of results and
