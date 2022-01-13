@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright © 2021 Pavel Tisnovsky
+# Copyright © 2021, 2022 Pavel Tisnovsky
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ Usage
 
 ```
 st.py [-h] [-a ADDRESS] [-x PROXY] [-u USER] [-p PASSWORD]
-           [-o ORGANIZATION] [-l] [-r] [-i INPUT] [-c]
+           [-o ORGANIZATION] [-l] [-r] [-t] [-i INPUT] [-c]
            [-d1 DIRECTORY1] [-d2 DIRECTORY2]
            [-e EXPORT_FILE_NAME] [-d] [-v]
 
@@ -326,6 +326,34 @@ def retrieve_results(address, proxies, auth, input_file, verbose):
 
 def read_cluster_list_from_file(input_file):
     """Read list of clusters from specified input file."""
+    if input_file.endswith(".csv"):
+        return read_cluster_list_from_csv(input_file)
+    else:
+        return read_cluster_list_from_text_file(input_file)
+
+
+def read_cluster_list_from_csv(input_file):
+    """Read list of clusters from specified CSV file."""
+    cluster_list = []
+
+    # input file containing list of clusters
+    with open(input_file, "r") as input_file:
+
+        # read file as csv file
+        csv_reader = csv.reader(input_file)
+
+        # skip header
+        next(csv_reader)
+
+        # iterate over all cluster names
+        for row in csv_reader:
+            cluster_list.append(row[0])
+
+    return cluster_list
+
+
+def read_cluster_list_from_text_file(input_file):
+    """Read list of clusters from specified plain text file."""
     cluster_list = []
 
     # input file containing list of clusters
