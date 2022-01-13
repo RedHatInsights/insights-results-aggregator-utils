@@ -302,29 +302,41 @@ def retrieve_results(address, proxies, auth, input_file, verbose):
     """Retrieve results from the external data pipeline REST API endpoint."""
     errors = {}
 
+    cluster_list = read_cluster_list_from_file(input_file)
+
+    for cluster in cluster_list:
+        if verbose:
+            print("Cluster: ", cluster)
+
+        # construct URL to get report for one specified cluster
+        url = f'{address}/v1/clusters/{cluster}/report'
+
+        if verbose:
+            print("URL to access:", url)
+
+        try:
+            # try to retrieve results for given cluster
+            retrieve_results_for_cluster(url, proxies, auth, cluster, verbose)
+        except Exception as e:
+            # store error to be used later
+            errors[cluster] = e
+
+    display_errors(errors)
+
+
+def read_cluster_list_from_file(input_file):
+    """Read list of clusters from specified input file."""
+    cluster_list = []
+
     # input file containing list of clusters
     with open(input_file, "r") as input_file:
         # iterate over all cluster names
         for line in input_file:
             cluster = line.strip()
+            # append the cluster name into list of clusters
+            cluster_list.append(cluster)
 
-            if verbose:
-                print("Cluster: ", cluster)
-
-            # construct URL to get report for one specified cluster
-            url = f'{address}/v1/clusters/{cluster}/report'
-
-            if verbose:
-                print("URL to access:", url)
-
-            try:
-                # try to retrieve results for given cluster
-                retrieve_results_for_cluster(url, proxies, auth, cluster, verbose)
-            except Exception as e:
-                # store error to be used later
-                errors[cluster] = e
-
-    display_errors(errors)
+    return cluster_list
 
 
 def retrieve_additional_info(address, proxies, auth, verbose):
