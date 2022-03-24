@@ -39,6 +39,7 @@ Utilities for Insights Results Aggregator
 ### Utilities for handling messages to be consumed by aggregator
 
 * [anonymize_ccx_pipeline_log.py](packages/anonymize_ccx_pipeline_log.html)
+* [gen_messages.py](packages/gen_messages.html)
 * [gen_broken_messages.py](packages/gen_broken_messages.html)
 * [gen_broken_jsons.py](packages/gen_broken_jsons.html)
 * [random_payload_generator.py](packages/random_payload_generator.html)
