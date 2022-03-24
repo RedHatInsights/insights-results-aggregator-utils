@@ -87,7 +87,7 @@ def cli_arguments():
         "-o",
         "-output",
         dest="output",
-        default="output{}.json",
+        default="output_{}.json",
         required=False,
         help="Specification of pattern of output file names",
     )
