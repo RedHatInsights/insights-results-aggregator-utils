@@ -227,7 +227,7 @@ The script performs several operations:
 
 #### Generated documentation
 
-* https://redhatinsights.github.io/insights-results-aggregator-utils/packages/gen_broken_messages.html
+* https://redhatinsights.github.io/insights-results-aggregator-utils/packages/fill_in_results.html
 
 #### Usage
 
@@ -240,6 +240,51 @@ The script performs several operations:
 ```shell
 ./fill_in_results.sh external-rules-archives-2020-03-31.tar 11789772 5d5892d3-1f74-4ccf-91af-548dfc9767aa
 ```
+
+------------------------------------------------------------------------------
+
+### `gen_messages.py`
+
+Generates messages to be consumed by Insights Results Aggregator.
+
+#### Description
+
+This script read input message (that should be correct or incorrect, according
+to needs) and generates bunch of new messages derived from input one. Each
+generated message can be updated if needed - Org ID can changed, cluster ID can
+changed as well etc.
+
+Types of possible input message modification:
+    * Org ID (if enabled by CLI flag -g)
+    * Account number (if enabled by CLI flag -a)
+    * Cluster ID (if enabled by CLI flag -c)
+
+It is also possible to specify pattern for output message filenames. For example:
+`generated_message_{}.json`
+
+#### Generated documentation
+
+* https://redhatinsights.github.io/insights-results-aggregator-utils/packages/gen_messages.html
+
+#### Usage
+
+```
+usage: gen_messages.py [-h] [-i INPUT] [-o OUTPUT] [-r REPEAT] [-g] [-a] [-c] [-v]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -i INPUT, --input INPUT
+                        Specification of input file
+  -o OUTPUT, -output OUTPUT
+                        Specification of pattern of output file names
+  -r REPEAT, --repeat REPEAT
+                        Number of generated files
+  -g, --org-id          Enable organization ID modification
+  -a, --account-number  Enable account number modification
+  -c, --cluster-id      Enable cluster ID modification
+  -v, --verbose         Make messages verbose
+```
+
 
 ------------------------------------------------------------------------------
 
