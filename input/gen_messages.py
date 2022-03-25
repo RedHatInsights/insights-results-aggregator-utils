@@ -96,6 +96,7 @@ def cli_arguments():
         "-r",
         "--repeat",
         dest="repeat",
+        type=int,
         default=10,
         required=False,
         help="Number of generated files",
