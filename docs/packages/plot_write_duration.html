@@ -166,7 +166,7 @@ limitations under the License.</p>
       <p>Create new graph</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">records</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Write duration&quot;</span><span class="p">)</span>
+      <div class="highlight"><pre><span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">records</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Write duration (s)&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">records</span><span class="p">,</span> <span class="n">poly1d_fn</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">records</span><span class="p">))),</span> <span class="s2">&quot;y--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Trend&quot;</span><span class="p">)</span></pre></div>
     </div>
   </div>
