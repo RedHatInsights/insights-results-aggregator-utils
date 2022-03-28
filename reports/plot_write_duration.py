@@ -56,7 +56,7 @@ coef = np.polyfit(x, time, 1)
 poly1d_fn = np.poly1d(coef)
 
 # Create new graph
-plt.plot(records, time, "b", label="Write duration")
+plt.bar(records, time, width=2000, label="Write duration (s)")
 plt.plot(records, poly1d_fn(np.arange(0, len(records))), "y--", label="Trend")
 
 # Title of a graph
