@@ -40,7 +40,9 @@ with open(input_csv) as csv_input:
     rows = 0
 
     # Read all rows from the provided CSV file
-    data = [(int(row[0]), int(row[1]), int(row[2]), int(row[3]), int(row[4]), int(row[5]), int(row[6])) for row in csv_reader]
+    data = [(int(row[0]), int(row[1]), int(row[2]),
+             int(row[3]), int(row[4]),
+             int(row[5]), int(row[6])) for row in csv_reader]
     print(data)
 
 
