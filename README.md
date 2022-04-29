@@ -151,9 +151,9 @@ It is needed to provide the correct value for variable `ADDRESS` that should poi
 ## Utilities for handling messages to be consumed by aggregator
 
 These utilities are stored in `input` subdirectory.
- 
- 
- 
+
+
+
 ### `anonymize.py`
 
 Anonymize input data produced by OCP rules engine.
@@ -989,9 +989,9 @@ python3 run_pycodestyle.py
 ## Converters
 
 These utilities are stored in `converters` subdirectory.
- 
- 
- 
+
+
+
 ### `json2edn.py`
 
 Converts structured data from JSON format into EDN format.
@@ -1012,7 +1012,7 @@ on `edn_format` Python package, that needs to be installed by using `pip` or
 python3 json2edn.py input.json > output.edn
 ```
 
- 
+
 ### `edn2json.py`
 
 Converts structured data from EDN format into JSON format.

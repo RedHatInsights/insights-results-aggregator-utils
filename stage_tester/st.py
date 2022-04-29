@@ -315,6 +315,9 @@ def main():
     if verbose:
         print("Auth settings:", auth)
 
+    # get log in token from params
+    token = args.password
+
     # check if at least required argument is provided on CLI
     if not any((args.cluster_list, args.retrieve_results,
                 args.export_times, args.compare_results)):
@@ -322,13 +325,22 @@ def main():
         sys.exit(1)
 
     if args.cluster_list:
-        retrieve_cluster_list(args.organization, args.address, proxies, auth, verbose)
+        clusters = retrieve_cluster_list(args.organization, args.address, token, verbose)
+        for cluster in clusters:
+            print(cluster)
 
     if args.retrieve_results:
-        retrieve_results(args.address, proxies, auth, args.input, verbose)
+        # Use API if specified
+        if args.input:
+            retrieve_results_from_file(args.address, token, args.input, verbose)
+        else:
+            if not args.organization:
+                print("list of clusters or organization needed for this action")
+            clusters = retrieve_cluster_list(args.organization, args.address, token, verbose)
+            retrieve_results(args.address, token, clusters, verbose)
 
     if args.export_times:
-        export_times(args.directory1, args.directory2)
+        export_times(args.directory1)
 
     if args.compare_results:
         assert args.directory1 is not None, \
@@ -339,72 +351,79 @@ def main():
         # retrieve and use additional info about pipeline if user depands to
         info = None
         if args.additional_info:
-            info = retrieve_additional_info(args.address, proxies, auth, verbose)
+            info = retrieve_additional_info(args.address, token, verbose)
 
         compare_results(args.directory1, args.directory2, args.export_file_name, info, verbose)
 
 
-def call_rest_api(url, proxies, auth):
+def call_rest_api(url, token):
     """Call REST API, retrieve payload, and unmarshal it from JSON."""
-    # send request to REST API
-    response = requests.get(url, proxies=proxies, auth=auth)
+
+    headers = {
+        'Accept': 'application/json',
+        'Authorization': f"Bearer {token}",
+    }
+    response = requests.get(url, headers=headers)
 
     # elementary check for response content
     assert response is not None, "Proper response expected"
-    assert response.status_code == requests.codes.ok, \
-        f"Unexpected HTTP code returned: {response.status_code}"
 
     # response should be in JSON format, time to parse it
-    payload = response.json()
-    assert payload is not None, "JSON response expected"
+    try:
+        payload = response.json()
+    except Exception as e:
+        print("Problem converting to json: {}".format(e))
+        payload = response
+
+    assert payload is not None, "response expected"
 
     return payload
 
 
-def retrieve_cluster_list(organization, address, proxies, auth, verbose):
+def retrieve_cluster_list(organization, address, token, verbose):
     """Retrieve list of clusters from the external data pipeline REST API endpoint."""
     # construct URL to get list of clusters for given organization ID
-    url = f'{address}/v1/organizations/{organization}/clusters'
+    url = f'{address}/api/insights-results-aggregator/v1/organizations/{organization}/clusters'
 
     if verbose:
         print("URL to access:", url)
 
-    payload = call_rest_api(url, proxies, auth)
+    payload = call_rest_api(url, token)
 
     # check the payload content
-    assert "status" in payload, "'status' field needs to be present in the payload"
     assert "clusters" in payload, "'clusters' field needs to be present in the payload"
 
     # print list of clusters to standard output
     clusters = sorted(payload["clusters"])
-    for cluster in clusters:
-        print(cluster)
+
+    return clusters
 
 
-def retrieve_results(address, proxies, auth, input_file, verbose):
+def retrieve_results_from_file(address, token, input_file, verbose):
+    cluster_list = read_cluster_list_from_file(input_file)
+    return retrieve_results(address, token, cluster_list, verbose)
+
+
+def retrieve_results(address, token, clusters, verbose):
     """Retrieve results from the external data pipeline REST API endpoint."""
     errors = {}
 
-    cluster_list = read_cluster_list_from_file(input_file)
+    cluster_list = clusters
+
+    results = []
 
     for cluster in cluster_list:
-        if verbose:
-            print("Cluster: ", cluster)
-
-        # construct URL to get report for one specified cluster
-        url = f"{address}/v1/clusters/{cluster}/report"
-
-        if verbose:
-            print("URL to access:", url)
-
         try:
             # try to retrieve results for given cluster
-            retrieve_results_for_cluster(url, proxies, auth, cluster, verbose)
+            results.append(retrieve_results_for_cluster(address, token, cluster))
         except Exception as e:
             # store error to be used later
             errors[cluster] = e
 
-    display_errors(errors)
+    if verbose:
+        display_errors(errors)
+
+    return results
 
 
 def read_cluster_list_from_file(input_file):
@@ -450,19 +469,19 @@ def read_cluster_list_from_text_file(input_file):
     return cluster_list
 
 
-def retrieve_additional_info(address, proxies, auth, verbose):
+def retrieve_additional_info(address, token, verbose):
     """Retrieve additional info about the external data pipeline via REST API endpoint."""
     # construct URL to get info from pipeline
-    url = f"{address}/v1/info"
+    url = f"{address}/api/insights-results-aggregator/v1/info"
 
     if verbose:
         print("URL to access:", url)
 
     # try to access /info endpoint, if it fails, it fails, that's ok -> the
     # pipeline is doomed anyway in this case
-    payload = call_rest_api(url, proxies, auth)
+    payload = call_rest_api(url, token)
 
-    return payload["info"]
+    return payload
 
 
 def display_errors(errors):
@@ -479,9 +498,11 @@ def display_errors(errors):
     print("-" * 60)
 
 
-def retrieve_results_for_cluster(url, proxies, auth, cluster, verbose):
+def retrieve_results_for_cluster(address, token, cluster, verbose=False):
     """Retrieve results for one specified cluster and store it into the file."""
-    payload = call_rest_api(url, proxies, auth)
+    # construct URL to get report for one specified cluster
+    url = f"{address}/api/insights-results-aggregator/v1/clusters/{cluster}/report"
+    payload = call_rest_api(url, token)
 
     # check the payload content
     assert "status" in payload, "'status' field needs to be present in the payload"
@@ -495,13 +516,13 @@ def retrieve_results_for_cluster(url, proxies, auth, cluster, verbose):
     with open(filename, "w") as json_file:
         json_file.write(results)
 
+    return results
 
-def export_times(directory1, directory2):
+
+def export_times(directory1):
     """Export processing times into CSV files to be later analyzed."""
     files1 = read_list_of_clusters_from_directory(directory1)
-    files2 = read_list_of_clusters_from_directory(directory2)
-    export_times_into("times1.csv", directory1, files1)
-    export_times_into("times2.csv", directory2, files2)
+    export_times_into("times.csv", directory1, files1)
 
 
 def export_times_into(filename, directory, clusters):
@@ -520,9 +541,9 @@ def export_times_into(filename, directory, clusters):
                 # try to read both results for given cluster
                 r = read_cluster_results(directory, cluster)
                 meta = r["report"]["meta"]
-                t1 = meta["last_checked_at"]
-                t2 = meta["analyzed_at"]
-                t3 = meta["stored_at"]
+                t1 = meta.get("last_checked_at", None)
+                t2 = meta.get("analyzed_at", None)
+                t3 = meta.get("stored_at", None)
 
                 # store fields as is, to be checked, validated, and analyzed later
                 csv_writer.writerow((i, cluster, t1, t2, t3))
@@ -862,6 +883,17 @@ def export_comparison_results(csv_writer, comparison_results):
             )
         else:
             csv_writer.writerow((i, r["cluster"], r["status"], "", "", "", "", "", r["error"]))
+
+
+def retrieve_custom_action(address, path, token, verbose):
+    url = f'{address}{path}'
+
+    if verbose:
+        print("URL to access:", url)
+
+    payload = call_rest_api(url, token)
+
+    return payload
 
 
 # If this script is started from command line, run the `main` function which is
