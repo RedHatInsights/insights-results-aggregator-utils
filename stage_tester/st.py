@@ -303,7 +303,7 @@ def main():
 
     # setup proxy or proxies
     proxies = {
-       'https': args.proxy
+        'https': args.proxy
     }
 
     if verbose:
@@ -580,8 +580,8 @@ def compare_results_sets(directory1, directory2, common, include_recommendations
     # read from the second set of results. Counter keys are constructed from
     # `rule_id` and `error_key`
     recommendations = {
-            "r1": Counter(),
-            "r2": Counter()
+        "r1": Counter(),
+        "r2": Counter()
     }
 
     # iterate over all clusters

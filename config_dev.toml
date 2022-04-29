@@ -1,0 +1,12 @@
+[load_test]
+
+login_mode="proxy"
+login_url="..."
+offline_token="..."
+client_id="..."
+username= "..."
+password="..."
+proxy="..."
+api_url="https://cloud.stage.redhat.com"
+organization="123456"
+log_level="error"
