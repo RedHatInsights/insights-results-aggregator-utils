@@ -93,7 +93,6 @@ Utilities for Insights Results Aggregator
 * [Testing tools](#testing-tools)
     * [`st.py` (Stage Tester)](#stpy-stage-tester)
     * [`pta.py` (Processing Times Analyser)](#ptapy-processing-times-analyser)
-    * [`Load testing`](load-testing)
 
 * [Package manifest](#package-manifest)
 
@@ -1187,52 +1186,6 @@ pta.py -i times.csv -v -b 100
 #### Generated documentation
 
 * https://redhatinsights.github.io/insights-results-aggregator-utils/packages/pta.html
-
-
-
-### Load testing
-
-#### Description
-
-This utils repository implements [locust](https://www.locust.io/) to perform load testing
-
-#### Instruction
-
-first you need to install, from the project root launch
-
-```
-pip install .
-```
-
-this will install locust along all the packages, and will make available from the command line
-tools like `st`, `pta` and `st_xls`.
-Then we need to set up some environment variables or edit the file `config_dev.toml`. The
-environment variables will overwrite the `config_dev.toml` if present
-
-- `LOAD_TEST_LOGIN_MODE` must be either `proxy` or `token`, usually `proxy` is 
-    used for stage, `token` for production
-- `LOAD_TEST_OFFLINE_TOKEN` mandatory if `login_mode==token` and ignored otherwise
-    refer to [this document](https://access.redhat.com/articles/3626371)
-- `LOAD_TEST_LOGIN_URL`      like above
-- `LOAD_TEST_CLIENT_ID`      like above
-- `LOAD_TEST_OFFLINE_TOKEN`  like above
-- `LOAD_TEST_PROXY` mandatory if `login_mode==proxy` and ignored otherwise,
-    refer to [this document](https://source.redhat.com/groups/public/customer-platform-devops/digital_experience_operations_dxp_ops_wiki/using_squid_proxy_to_access_akamai_preprod_domains_over_vpn)
-- `LOAD_TEST_USERNAME`       like above
-- `LOAD_TEST_PASSWORD`       like above
-
-alternatively we can launch `run.sh`, in this case we can edit additional variables
-
-- `GEVENT_SUPPORT` set to `True` if you plan to debug (http://www.gevent.org/)
-- `LOG_LEVEL` the log level as used by locust ([link to documentation](https://docs.locust.io/en/stable/logging.html))
-- `USERS_NO` how much users will run the test in parallel
-- `TEST_TIME` how much time the test will run
-
-When `run.sh` is done you will find several `locust_*.csv` file inside the `load_testing`
-folder containing performance statistics. If the overall performance is below some threshold
-(more than 10% error rate or average api call time above 5ms) `run.sh` will exit with
-status code 1 
-
 
 
 ------------------------------------------------------------------------------
