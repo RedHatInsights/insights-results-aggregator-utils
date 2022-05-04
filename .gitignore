@@ -2,3 +2,8 @@ issue.py
 *.csv
 reports/organizations.py
 reports/clusters.json
+__pycache__/
+*.egg-info/
+.eggs/
+*.egg
+build
