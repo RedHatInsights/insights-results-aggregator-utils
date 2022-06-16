@@ -34,4 +34,6 @@ But it can be plotted for other fields (reports and recommendations).
 
 For running these tests you may need to deploy a compose with Kafka, Minio and Postgres. If you want to use [duplicate.sql](duplicate.sql) (a super-useful script for duplicating the data in the aggregator database), please use a Postgres 13 (at least) version as it uses a [gen_random_uuid](https://www.postgresql.org/docs/13/functions-uuid.html) function.
 
+You also need to run `./insights-results-aggregator migration latest` and keep `./insights-results-aggregator` running while executing the [meassure_exporter_consumption.sh](meassure_exporter_consumption.sh) script.
+
 You may also need to install `matplotlib`, `numpy`, `pandas` and `tqdm` :) .
