@@ -22,7 +22,7 @@ function measure_usage() {
 
     # Generate N messages
     echo "Generating $n_messages messages . . ."
-    python ../input/gen_messages.py -o output/generated_{}.json -r "$n_messages" -g -a -c
+    python3 ../input/gen_messages.py -o output/generated_{}.json -r "$n_messages" -g -a -c
 
     # Send the messages to Kafka
     echo "Sending the $n_messages messages to Kafka . . ."
