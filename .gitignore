@@ -7,3 +7,7 @@ __pycache__/
 .eggs/
 *.egg
 build
+
+exporter/output/*
+!exporter/results.csv
+exporter/stderr.txt

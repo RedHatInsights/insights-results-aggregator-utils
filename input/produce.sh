@@ -13,17 +13,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
+N_FILES=$(find output -mindepth 1 -type f -name "*.json" -printf x | wc -c)
 # Continuously generate messages
 while true
 do
     # All JSON files in current directory will be sent to Kafka via Kafkacat
-    for file in *.json
+    i=0
+    for file in output/*.json 
     do
-        echo $file
         # Update the port accordingly (this one is for Kafka running inside Docker)
-        kafkacat -b localhost:29092 -P -t ccx.ocp.results $file
+        kafkacat -b localhost:9092 -P -t ccx.ocp.results $file
         # It is possible to change the sleep value (or remove it completely)
-        sleep 1
-    done
+        # sleep 1
+        echo $i
+        i=$((i+1))
+    done | tqdm --total "$N_FILES" >> /dev/null
+    exit 0
 done
