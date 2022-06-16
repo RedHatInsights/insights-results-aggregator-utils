@@ -36,4 +36,6 @@ For running these tests you may need to deploy a compose with Kafka, Minio and P
 
 You also need to run `./insights-results-aggregator migration latest` and keep `./insights-results-aggregator` running while executing the [meassure_exporter_consumption.sh](meassure_exporter_consumption.sh) script.
 
+Download [05_rules_hits.json](https://raw.githubusercontent.com/RedHatInsights/insights-results-aggregator-data/master/messages/normal/05_rules_hits.json) and store it as `input.json`. If you use a file with more rule hits, make sure to change the number in the [meassure_exporter_consumption.sh](meassure_exporter_consumption.sh) script, as it expects only 5.
+
 You may also need to install `matplotlib`, `numpy`, `pandas` and `tqdm` :) .

@@ -11,3 +11,4 @@ build
 exporter/output/*
 !exporter/results.csv
 exporter/stderr.txt
+exporter/input.json
