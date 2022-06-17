@@ -56,7 +56,7 @@ import random
 import uuid
 
 from argparse import ArgumentParser
-
+from tqdm import tqdm
 
 # ranges for attributes that can be modified
 MIN_ORG_ID = 0
@@ -150,11 +150,12 @@ def load_json(filename):
         return json.load(fin)
 
 
-def generate_output(filename, payload):
+def generate_output(filename, payload, verbose=False):
     """Generate output JSON file with indentation."""
-    with open(filename, 'w') as f:
+    with open(filename, "w") as f:
         json.dump(payload, f, indent=4)
-        print("Generated file {}".format(filename))
+        if verbose:
+            print("Generated file {}".format(filename))
 
 
 def modify_org_id(payload):
@@ -184,7 +185,7 @@ def main():
     payload = load_json(args.input)
 
     # Generate specified number of output messages
-    for i in range(args.repeat):
+    for i in tqdm(range(args.repeat)):
 
         # optional modifications
         if args.org_id:
@@ -197,7 +198,7 @@ def main():
             modify_cluster_id(payload)
 
         output_filename = args.output.format(i)
-        generate_output(output_filename, payload)
+        generate_output(output_filename, payload, args.verbose)
 
 
 # If this script is started from command line, run the `main` function which is
