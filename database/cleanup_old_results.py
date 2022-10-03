@@ -101,9 +101,16 @@ with open(input_csv) as csv_input:
         # If the record is older than specified offset (relative time), add
         # that record into generated script
         if offset.days >= offset_in_days:
-            print("-- {} {} {} {}".format(org_id, cluster_id, reported_at, last_checked_at))
-            print("delete from reports where org_id={} and cluster_id='{}'".format(
-                org_id, cluster_id))
+            print(
+                "-- {} {} {} {}".format(
+                    org_id, cluster_id, reported_at, last_checked_at
+                )
+            )
+            print(
+                "delete from reports where org_id={} and cluster_id='{}'".format(
+                    org_id, cluster_id
+                )
+            )
             print()
 
 # Finito

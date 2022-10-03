@@ -58,7 +58,7 @@ def load_input(filename, verbose):
 def generate_output(filename, payload, verbose):
     """Generate output file."""
     # Try to open output file for writing and store the payload line by line.
-    with open(filename, 'w') as fout:
+    with open(filename, "w") as fout:
         for line in payload:
             fout.write(line)
         if verbose:
@@ -82,7 +82,7 @@ def add_random_lines(payload, new_line_probability, verbose):
     for line in payload:
         res.append(line)
         # Add wrong line into new payload, but only with some probability.
-        if random.random()*100 < new_line_probability:
+        if random.random() * 100 < new_line_probability:
             if verbose:
                 print("    appending error line at position", i)
             res.append("ERROR_LINE\n")
@@ -104,7 +104,7 @@ def delete_random_lines(payload, delete_line_probability, verbose):
     # Iterate over the original payload.
     for line in payload:
         # Skip some line in new payload, but only with some probability.
-        if random.random()*100 < delete_line_probability and is_structure_line(line):
+        if random.random() * 100 < delete_line_probability and is_structure_line(line):
             if verbose:
                 print("    deleting line from position", i)
         else:
@@ -122,7 +122,7 @@ def mutate_lines(payload, mutate_line_probability, verbose):
     # Iterate over the original payload.
     for line in payload:
         # Mutate some line in new payload, but only with some probability.
-        if random.random()*100 < mutate_line_probability:
+        if random.random() * 100 < mutate_line_probability:
             i = int(len(line) * random.random())
             line = line[:i] + "***FOO***" + line[i:]
             if verbose:
@@ -149,37 +149,99 @@ def cli_arguments():
     # recognized by this tool.
     parser = ArgumentParser()
 
-    parser.add_argument("-i", "--input", dest="input", help="name of input file",
-                        action="store", default=None, type=str, required=True)
-    parser.add_argument("-o", "--output", dest="output",
-                        help="template for output file name (default out_{}.json)",
-                        action="store", default="out_{}.json", type=str)
-    parser.add_argument("-e", "--exported", dest="exported",
-                        help="number of JSONs to be exported (10 by default)",
-                        action="store", default=10, type=int, required=False)
-    parser.add_argument("-v", "--verbose", dest="verbose", help="make it verbose",
-                        action="store_true", default=None)
-    parser.add_argument("-s", "--shuffle_lines", dest="shuffle_lines",
-                        help="shufffle lines to produce improper JSON",
-                        action="store_true", default=None)
-    parser.add_argument("-a", "--add_lines", dest="add_lines",
-                        help="add random lines to produce improper JSON",
-                        action="store_true", default=None)
-    parser.add_argument("-d", "--delete_lines", dest="delete_lines",
-                        help="delete randomly selected lines to produce improper JSON",
-                        action="store_true", default=None)
-    parser.add_argument("-m", "--mutate_lines", dest="mutate_lines",
-                        help="mutate lines individually",
-                        action="store_true", default=None)
-    parser.add_argument("-ap", "--add_line_probability", dest="add_line_probability",
-                        help="probability of new line to be added (0-100)",
-                        default=DEFAULT_NEW_LINE_PROBABILITY, type=int)
-    parser.add_argument("-dp", "--delete_line_probability", dest="delete_line_probability",
-                        help="probability of line to be deleted (0-100)",
-                        default=DEFAULT_DELETE_LINE_PROBABILITY, type=int)
-    parser.add_argument("-mp", "--mutate_line_probability", dest="mutate_line_probability",
-                        help="probability of line to be mutate (0-100)",
-                        default=DEFAULT_MUTATE_LINE_PROBABILITY, type=int)
+    parser.add_argument(
+        "-i",
+        "--input",
+        dest="input",
+        help="name of input file",
+        action="store",
+        default=None,
+        type=str,
+        required=True,
+    )
+    parser.add_argument(
+        "-o",
+        "--output",
+        dest="output",
+        help="template for output file name (default out_{}.json)",
+        action="store",
+        default="out_{}.json",
+        type=str,
+    )
+    parser.add_argument(
+        "-e",
+        "--exported",
+        dest="exported",
+        help="number of JSONs to be exported (10 by default)",
+        action="store",
+        default=10,
+        type=int,
+        required=False,
+    )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        dest="verbose",
+        help="make it verbose",
+        action="store_true",
+        default=None,
+    )
+    parser.add_argument(
+        "-s",
+        "--shuffle_lines",
+        dest="shuffle_lines",
+        help="shufffle lines to produce improper JSON",
+        action="store_true",
+        default=None,
+    )
+    parser.add_argument(
+        "-a",
+        "--add_lines",
+        dest="add_lines",
+        help="add random lines to produce improper JSON",
+        action="store_true",
+        default=None,
+    )
+    parser.add_argument(
+        "-d",
+        "--delete_lines",
+        dest="delete_lines",
+        help="delete randomly selected lines to produce improper JSON",
+        action="store_true",
+        default=None,
+    )
+    parser.add_argument(
+        "-m",
+        "--mutate_lines",
+        dest="mutate_lines",
+        help="mutate lines individually",
+        action="store_true",
+        default=None,
+    )
+    parser.add_argument(
+        "-ap",
+        "--add_line_probability",
+        dest="add_line_probability",
+        help="probability of new line to be added (0-100)",
+        default=DEFAULT_NEW_LINE_PROBABILITY,
+        type=int,
+    )
+    parser.add_argument(
+        "-dp",
+        "--delete_line_probability",
+        dest="delete_line_probability",
+        help="probability of line to be deleted (0-100)",
+        default=DEFAULT_DELETE_LINE_PROBABILITY,
+        type=int,
+    )
+    parser.add_argument(
+        "-mp",
+        "--mutate_line_probability",
+        dest="mutate_line_probability",
+        help="probability of line to be mutate (0-100)",
+        default=DEFAULT_MUTATE_LINE_PROBABILITY,
+        type=int,
+    )
 
     # Now it is time to parse flags, check the actual content of command line
     # and fill in the object named `args`.
@@ -200,7 +262,9 @@ def mutate_payload(args):
 
     # Delete random lines from the payload to produce possible broken JSON.
     if args.delete_lines:
-        payload = delete_random_lines(payload, args.delete_line_probability, args.verbose)
+        payload = delete_random_lines(
+            payload, args.delete_line_probability, args.verbose
+        )
 
     # Mutate lines in the payload to produce possible broken JSON.
     if args.mutate_lines:
@@ -221,7 +285,7 @@ def main(filename):
     while exported < max_exported:
         payload = mutate_payload(args)
         if not is_proper_json(payload):
-            filename = args.output.format(exported+1)
+            filename = args.output.format(exported + 1)
             if verbose:
                 print("Generating", filename)
             generate_output(filename, payload, verbose)

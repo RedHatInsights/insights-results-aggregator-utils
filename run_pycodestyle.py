@@ -32,7 +32,7 @@ def main():
     # have global configuration file 'setup.cfg' that can be used. Also verbose
     # mode would be useful for our purposes, so we set `quiet` to `False` to
     # enable verbose output.
-    style = pycodestyle.StyleGuide(quiet=False, config_file='setup.cfg')
+    style = pycodestyle.StyleGuide(quiet=False, config_file="setup.cfg")
 
     # Check the style for all Python sources found in current directory and all
     # subdirectories too. All detected issues are displayed in the meantime.

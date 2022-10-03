@@ -53,7 +53,7 @@ def load_json(filename):
 
 def generate_output(filename, payload):
     """Generate output JSON file with indentation."""
-    with open(filename, 'w') as f:
+    with open(filename, "w") as f:
         json.dump(payload, f, indent=4)
         print("Generated file {}".format(filename))
 
@@ -81,8 +81,7 @@ def filename_mutated_items():
     return "broken_mutated_items_{:03d}.json".format(mutated_counter)
 
 
-def remove_items_one_iter(original_payload, items_count, remove_flags,
-                          selector=None):
+def remove_items_one_iter(original_payload, items_count, remove_flags, selector=None):
     """One iteration of algorithm to remove items from original payload."""
     if selector is None:
         keys = list(original_payload.keys())
@@ -113,15 +112,13 @@ def remove_items(original_payload, selector=None):
         items_count = len(original_payload[selector])
 
     # lexicographics ordering
-    remove_flags_list = list(itertools.product([True, False],
-                             repeat=items_count))
+    remove_flags_list = list(itertools.product([True, False], repeat=items_count))
     # the last item contains (False, False, False...) and we are not interested
     # in removing ZERO items
     remove_flags_list = remove_flags_list[:-1]
 
     for remove_flags in remove_flags_list:
-        remove_items_one_iter(original_payload, items_count, remove_flags,
-                              selector)
+        remove_items_one_iter(original_payload, items_count, remove_flags, selector)
 
 
 def add_items_one_iter(original_payload, how_many):
