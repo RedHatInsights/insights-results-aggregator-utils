@@ -85,15 +85,25 @@ def check_description_for_method(path, method, m):
     """Check if description is provided for a method (endpoint + HTTP method)."""
     # Check if description attribute exists.
     if "description" not in m:
-        print("            No description found for endpoint `" +
-              path + "` and method `" + method + "`")
+        print(
+            "            No description found for endpoint `"
+            + path
+            + "` and method `"
+            + method
+            + "`"
+        )
         # Value to be added into error accumulator (new error has been found).
         return 1
 
     # Check if description attribute contains any text.
     elif empty_attribute(m, "description"):
-        print("            Empty description found for endpoint `" +
-              path + "` and method `" + method + "`")
+        print(
+            "            Empty description found for endpoint `"
+            + path
+            + "` and method `"
+            + method
+            + "`"
+        )
         # Value to be added into error accumulator (new error has been found).
         return 1
 
@@ -114,16 +124,28 @@ def check_description_for_method_parameters(path, method, m):
 
             # Check if description attribute exists.
             if "description" not in parameter:
-                print("            No description found for endpoint `" +
-                      path + "` method `" + method + "` and parameter `" +
-                      parameter["name"] + "`")
+                print(
+                    "            No description found for endpoint `"
+                    + path
+                    + "` method `"
+                    + method
+                    + "` and parameter `"
+                    + parameter["name"]
+                    + "`"
+                )
                 # Increase number of errors found.
                 failures += 1
             # Check if description attribute contains any text.
             elif empty_attribute(parameter, "description"):
-                print("            Empty description found for endpoint `" +
-                      path + "` method `" + method + "` and parameter `" +
-                      parameter["name"] + "`")
+                print(
+                    "            Empty description found for endpoint `"
+                    + path
+                    + "` method `"
+                    + method
+                    + "` and parameter `"
+                    + parameter["name"]
+                    + "`"
+                )
                 # Increase number of errors found.
                 failures += 1
 
@@ -144,16 +166,28 @@ def check_description_for_method_responses(path, method, m):
             r = responses[response]
             # Check if description attribute exists.
             if "description" not in r:
-                print("            No description found for endpoint `" +
-                      path + "` method `" + method +
-                      "` and response `" + response + "`")
+                print(
+                    "            No description found for endpoint `"
+                    + path
+                    + "` method `"
+                    + method
+                    + "` and response `"
+                    + response
+                    + "`"
+                )
                 # Increase number of errors found.
                 failures += 1
             # Check if description attribute contains any text.
             elif empty_attribute(r, "description"):
-                print("            Empty description found for endpoint `" +
-                      path + "` method `" + method +
-                      "` and response `" + response + "`")
+                print(
+                    "            Empty description found for endpoint `"
+                    + path
+                    + "` method `"
+                    + method
+                    + "` and response `"
+                    + response
+                    + "`"
+                )
                 # Increase number of errors found.
                 failures += 1
 
@@ -225,7 +259,7 @@ def check_openapi_json(verbose, directory):
     filename = directory + "openapi.json"
 
     # If the file can be opened and loaded as JSON, everything is fine.
-    with open(filename, 'r') as fin:
+    with open(filename, "r") as fin:
         try:
             # Try to load and parse the content of JSON file.
             obj = load(fin)
@@ -276,14 +310,23 @@ def display_report(passes, failures, nocolors):
     # 4. some files can be read and parsed, some can not
     if failures == 0:
         if passes == 0:
-            print("{}[WARN]{}: no JSON files with OpenAPI detected".format(
-                magenta_background, no_color))
+            print(
+                "{}[WARN]{}: no JSON files with OpenAPI detected".format(
+                    magenta_background, no_color
+                )
+            )
         else:
-            print("{}[OK]{}: OpenAPI file seems to have proper format and content".format(
-                green_background, no_color))
+            print(
+                "{}[OK]{}: OpenAPI file seems to have proper format and content".format(
+                    green_background, no_color
+                )
+            )
     else:
-        print("{}[FAIL]{}: file with invalid format and/or content detected".format(
-            red_background, no_color))
+        print(
+            "{}[FAIL]{}: file with invalid format and/or content detected".format(
+                red_background, no_color
+            )
+        )
 
     # Print just number of passes and failures at the end, as this information
     # can be processed on CI.
@@ -296,13 +339,30 @@ def main():
     # First of all, we need to specify all command line flags that are
     # recognized by this tool.
     parser = ArgumentParser()
-    parser.add_argument("-v", "--verbose", dest="verbose", help="make it verbose",
-                        action="store_true", default=None)
-    parser.add_argument("-n", "--no-colors", dest="nocolors", help="disable color output",
-                        action="store_true", default=None)
-    parser.add_argument("-d", "--directory", dest="directory",
-                        help="directory OpenAPI JSON file to check",
-                        action="store", default="./")
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        dest="verbose",
+        help="make it verbose",
+        action="store_true",
+        default=None,
+    )
+    parser.add_argument(
+        "-n",
+        "--no-colors",
+        dest="nocolors",
+        help="disable color output",
+        action="store_true",
+        default=None,
+    )
+    parser.add_argument(
+        "-d",
+        "--directory",
+        dest="directory",
+        help="directory OpenAPI JSON file to check",
+        action="store",
+        default="./",
+    )
     # Now it is time to parse flags, check the actual content of command line
     # and fill in the object named `args`.
     args = parser.parse_args()
