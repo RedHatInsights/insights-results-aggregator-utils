@@ -9,7 +9,7 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-const filePermissions fs.FileMode = 0700
+const filePermissions fs.FileMode = 0o0700
 
 func writeToPath(path string, content []byte) error {
 	filePath := fmt.Sprintf("%s/%s", downloadsFolder, path)
