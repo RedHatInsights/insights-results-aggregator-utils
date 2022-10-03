@@ -61,7 +61,7 @@ def decode(b64):
     be thrown when the input data are not encoded properly.
     """
     barray = base64.b64decode(b64)
-    return barray.decode('ascii')
+    return barray.decode("ascii")
 
 
 def generate_cert_and_key_files(input_file):
@@ -70,7 +70,9 @@ def generate_cert_and_key_files(input_file):
         payload = yaml.load(f)
         if payload is not None:
             user_data = get_data_for_user(payload, "admin")
-            encoded_certificate = get_value_assigned_to_user(user_data, "client-certificate-data")
+            encoded_certificate = get_value_assigned_to_user(
+                user_data, "client-certificate-data"
+            )
             encoded_key = get_value_assigned_to_user(user_data, "client-key-data")
             decoded_certificate = decode(encoded_certificate)
             decoded_key = decode(encoded_key)
