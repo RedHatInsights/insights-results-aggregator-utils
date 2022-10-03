@@ -29,9 +29,11 @@ from argparse import ArgumentParser
 def connect_to_s3(aws_access_key_id, aws_secret_access_key, region_name):
     """Try to connect into AWS S3 and initialize new session."""
     # Construction and initialization of session into AWS S3.
-    session = boto3.session.Session(aws_access_key_id=aws_access_key_id,
-                                    aws_secret_access_key=aws_secret_access_key,
-                                    region_name=region_name)
+    session = boto3.session.Session(
+        aws_access_key_id=aws_access_key_id,
+        aws_secret_access_key=aws_secret_access_key,
+        region_name=region_name,
+    )
 
     # These two configuration options are set to constants, but it might be
     # possible that it will be configurable later.
@@ -39,9 +41,12 @@ def connect_to_s3(aws_access_key_id, aws_secret_access_key, region_name):
     endpoint_url = None
 
     # Retrieve the 's3' resource which represents the real session object.
-    return session.resource('s3',
-                            config=botocore.client.Config(signature_version='s3v4'),
-                            use_ssl=use_ssl, endpoint_url=endpoint_url)
+    return session.resource(
+        "s3",
+        config=botocore.client.Config(signature_version="s3v4"),
+        use_ssl=use_ssl,
+        endpoint_url=endpoint_url,
+    )
 
 
 def get_list_of_timestamps(s3_session, bucket_name, max_records=None):
@@ -70,7 +75,7 @@ def get_list_of_timestamps(s3_session, bucket_name, max_records=None):
 def export_timestamps_into_csv(csv_file_name, timestamps):
     """Export timestamps into CSV file."""
     # Try to open new file for writing.
-    with open(csv_file_name, 'w') as csvfile:
+    with open(csv_file_name, "w") as csvfile:
         # Initialize CSV writer.
         writer = csv.writer(csvfile, quoting=csv.QUOTE_NONNUMERIC)
 
@@ -88,15 +93,26 @@ def cli_arguments():
     # recognized by this tool.
     parser = ArgumentParser()
     parser.add_argument("-k", "--access_key", help="AWS access key ID", required=True)
-    parser.add_argument("-s", "--secret_key", help="AWS secret access key", required=True)
-    parser.add_argument("-r", "--region", help="AWS region, us-east-1 by default",
-                        default="us-east-1")
-    parser.add_argument("-b", "--bucket",
-                        help="bucket name, insights-buck-it-openshift by default",
-                        default="insights-buck-it-openshift")
+    parser.add_argument(
+        "-s", "--secret_key", help="AWS secret access key", required=True
+    )
+    parser.add_argument(
+        "-r", "--region", help="AWS region, us-east-1 by default", default="us-east-1"
+    )
+    parser.add_argument(
+        "-b",
+        "--bucket",
+        help="bucket name, insights-buck-it-openshift by default",
+        default="insights-buck-it-openshift",
+    )
     parser.add_argument("-o", "--output", help="output file name", required=True)
-    parser.add_argument("-m", "--max_records", help="max records to export (default=all)",
-                        default=None, type=int)
+    parser.add_argument(
+        "-m",
+        "--max_records",
+        help="max records to export (default=all)",
+        default=None,
+        type=int,
+    )
 
     # Now it is time to parse flags, check the actual content of command line
     # and fill in the object named `args`.
