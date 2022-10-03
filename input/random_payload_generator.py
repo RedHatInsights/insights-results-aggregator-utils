@@ -24,8 +24,13 @@ import random
 class RandomPayloadGenerator:
     """Generator of random payload for testing API."""
 
-    def __init__(self, max_iteration_deep=2, max_dict_key_length=5, max_list_length=5,
-                 max_string_length=10):
+    def __init__(
+        self,
+        max_iteration_deep=2,
+        max_dict_key_length=5,
+        max_list_length=5,
+        max_string_length=10,
+    ):
         """Initialize the random payload generator."""
         # Parameters that affect payload generator behaviour.
         self.iteration_deep = 0
@@ -39,8 +44,13 @@ class RandomPayloadGenerator:
         self.dict_key_characters = string.ascii_lowercase + string.ascii_uppercase + "_"
 
         # Dtto for string contents.
-        self.string_value_characters = (string.ascii_lowercase + string.ascii_uppercase +
-                                        "_" + string.punctuation + " ")
+        self.string_value_characters = (
+            string.ascii_lowercase
+            + string.ascii_uppercase
+            + "_"
+            + string.punctuation
+            + " "
+        )
 
     def generate_random_string(self, n, uppercase=False, punctuations=False):
         """Generate random string of length=n."""
@@ -56,7 +66,7 @@ class RandomPayloadGenerator:
         if punctuations:
             mix += string.punctuation
 
-        suffix = ''.join(random.choice(mix) for _ in range(n - 1))
+        suffix = "".join(random.choice(mix) for _ in range(n - 1))
         return prefix + suffix
 
     def generate_random_key_for_dict(self, data):
@@ -73,7 +83,10 @@ class RandomPayloadGenerator:
         """Generate list filled in with random values."""
         # Generate random list which is to be heterogenous - it's items can
         # have (almost) any data type.
-        return [self.generate_random_payload((int, str, float, bool, list, dict)) for i in range(n)]
+        return [
+            self.generate_random_payload((int, str, float, bool, list, dict))
+            for i in range(n)
+        ]
 
     def generate_random_dict(self, n):
         """Generate dictionary filled in with random values."""
@@ -81,9 +94,12 @@ class RandomPayloadGenerator:
         # should have the same number of items. Then construct dictionary by
         # zipping these two data structures.
         dict_content = (int, str, list, dict)
-        return {self.generate_random_string(self.max_string_length):
-                self.generate_random_payload(dict_content)
-                for i in range(n)}
+        return {
+            self.generate_random_string(
+                self.max_string_length
+            ): self.generate_random_payload(dict_content)
+            for i in range(n)
+        }
 
     def generate_random_list_or_string(self):
         """Generate list filled in with random strings."""
@@ -116,13 +132,14 @@ class RandomPayloadGenerator:
         # Create generators for all possible data types. Each generator is able
         # to generate random values of given data type.
         generators = {
-            str: lambda: self.generate_random_string(self.max_string_length, uppercase=True,
-                                                     punctuations=True),
+            str: lambda: self.generate_random_string(
+                self.max_string_length, uppercase=True, punctuations=True
+            ),
             int: lambda: random.randrange(100000),
             float: lambda: random.random() * 100000.0,
             bool: lambda: bool(random.getrandbits(1)),
             list: lambda: self.generate_random_list_or_string(),
-            dict: lambda: self.generate_random_dict_or_string()
+            dict: lambda: self.generate_random_dict_or_string(),
         }
 
         # Select the generator specified by `type` argument.
