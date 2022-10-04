@@ -40,23 +40,32 @@ with open(input_csv) as csv_input:
     rows = 0
 
     # Read all rows from the provided CSV file
-    data = [(int(row[0]), int(row[1]), int(row[2]),
-             int(row[3]), int(row[4]),
-             int(row[5]), int(row[6])) for row in csv_reader]
+    data = [
+        (
+            int(row[0]),
+            int(row[1]),
+            int(row[2]),
+            int(row[3]),
+            int(row[4]),
+            int(row[5]),
+            int(row[6]),
+        )
+        for row in csv_reader
+    ]
     print(data)
 
 
 # data to be plotted
 records = [item[0] for item in data]
 
-time1 = [item[1]*60+item[2] for item in data]
-durations1 = [1000/item for item in time1]
+time1 = [item[1] * 60 + item[2] for item in data]
+durations1 = [1000 / item for item in time1]
 
-time2 = [item[3]*60+item[4] for item in data]
-durations2 = [1000/item for item in time2]
+time2 = [item[3] * 60 + item[4] for item in data]
+durations2 = [1000 / item for item in time2]
 
-time3 = [item[5]*60+item[6] for item in data]
-durations3 = [1000/item for item in time3]
+time3 = [item[5] * 60 + item[6] for item in data]
+durations3 = [1000 / item for item in time3]
 
 # Create new graph
 plt.plot(records, durations1, label="Original")
