@@ -59,7 +59,7 @@ days = sorted(days_stat.keys())
 counts = [days_stat[day] for day in days]
 
 # Create new line x-y plot
-plt.plot(days, counts, '-', markersize=2)
+plt.plot(days, counts, "-", markersize=2)
 
 # Add a label to x-axis
 plt.xlabel("Result age (days)")
