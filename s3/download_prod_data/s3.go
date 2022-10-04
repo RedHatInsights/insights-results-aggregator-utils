@@ -9,7 +9,7 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-func getClient(s3config S3config) (*s3.S3, error) {
+func getClient(s3config *S3config) (*s3.S3, error) {
 	sess, err := session.NewSession(&aws.Config{
 		Credentials: credentials.NewStaticCredentials(s3config.AccessKey, s3config.SecretKey, ""),
 		Endpoint:    aws.String(s3config.Endpoint),
@@ -22,7 +22,7 @@ func getClient(s3config S3config) (*s3.S3, error) {
 	}
 	s3Client := s3.New(sess)
 	_, err = s3Client.HeadBucket(&s3.HeadBucketInput{
-		Bucket: &s3config.Bucket,
+		Bucket: &(s3config.Bucket),
 	})
 	if err != nil {
 		log.Error().Err(err).Msg("cannot connect to bucket")
@@ -32,7 +32,7 @@ func getClient(s3config S3config) (*s3.S3, error) {
 }
 
 // getClusters expects the bucket to have a format `s3://BUCKET/SUPER_FOLDER/CLUSTER/...`.
-func getClusters(s3client *s3.S3, s3config S3config, nClusters int) ([]string, error) {
+func getClusters(s3client *s3.S3, s3config *S3config, nClusters int) ([]string, error) {
 	log.Debug().Msg("Reading clusters")
 	var clusters = []string{}
 
@@ -67,7 +67,7 @@ func getClusters(s3client *s3.S3, s3config S3config, nClusters int) ([]string, e
 	return clusters, nil
 }
 
-func downloadTarball(s3client *s3.S3, s3config S3config, tarBall string) error {
+func downloadTarball(s3client *s3.S3, s3config *S3config, tarBall string) error {
 	log.Debug().Str("archive_path", tarBall).Msg("Downloading tarball")
 	body, err := s3util.DownloadObject(s3client, s3config.Bucket, tarBall)
 	if err != nil {
@@ -83,7 +83,7 @@ func downloadTarball(s3client *s3.S3, s3config S3config, tarBall string) error {
 	return nil
 }
 
-func getNTarBalls(s3client *s3.S3, s3config S3config, cluster string, nTarballs int) (tarBalls []string, err error) {
+func getNTarBalls(s3client *s3.S3, s3config *S3config, cluster string, nTarballs int) (tarBalls []string, err error) {
 	log.Debug().Str("cluster", cluster).Msg("Listing tarballs")
 	if nTarballs > maxKeys {
 		tarBalls, err = s3util.ListBucket(s3client, s3config.Bucket, cluster, "", maxKeys)
