@@ -145,8 +145,14 @@ print("Top " + str(MOST_USED_ORGS) + " organizations")
 print("Organization ID", "Domain", "Clusters", "Hit", "Hit/no tutorial", sep=",")
 
 for org in orgs.most_common(MOST_USED_ORGS):
-    print(org[0], readOrganization(org[0]), org[1], clusters_hits[org[0]],
-          clusters_hits_no_tutorial[org[0]], sep=",")
+    print(
+        org[0],
+        readOrganization(org[0]),
+        org[1],
+        clusters_hits[org[0]],
+        clusters_hits_no_tutorial[org[0]],
+        sep=",",
+    )
 
 # Info about organizations w/o Red Hat
 print()
@@ -157,8 +163,14 @@ i = 0
 for org in orgs.most_common(1000000000000):
     name = readOrganization(org[0])
     if name != "***unknown***" and name != "redhat.com":
-        print(org[0], readOrganization(org[0]), org[1], clusters_hits[org[0]],
-              clusters_hits_no_tutorial[org[0]], sep=",")
+        print(
+            org[0],
+            readOrganization(org[0]),
+            org[1],
+            clusters_hits[org[0]],
+            clusters_hits_no_tutorial[org[0]],
+            sep=",",
+        )
         i += 1
     if i > MOST_USED_ORGS:
         break
