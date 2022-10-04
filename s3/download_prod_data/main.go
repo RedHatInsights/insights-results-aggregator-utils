@@ -25,10 +25,10 @@ func main() {
 		Interface("s3 config", config.s3config).
 		Msg("Configuration")
 
-	s3client, err := getClient(config.s3config)
+	s3client, err := getClient(&config.s3config)
 	checkError(err)
 
-	clusters, err := getClusters(s3client, config.s3config, config.NClusters)
+	clusters, err := getClusters(s3client, &config.s3config, config.NClusters)
 	checkError(err)
 
 	f, w, err := initCSV(config.CSVpath)
@@ -38,10 +38,10 @@ func main() {
 	log.Debug().Strs("selected clusters", clusters).Msg("Clusters")
 
 	for i := range clusters {
-		tarBalls, err := getNTarBalls(s3client, config.s3config, clusters[i], config.NTarballs)
+		tarBalls, err := getNTarBalls(s3client, &config.s3config, clusters[i], config.NTarballs)
 		checkError(err)
 		for j := range tarBalls {
-			err = downloadTarball(s3client, config.s3config, tarBalls[j])
+			err = downloadTarball(s3client, &config.s3config, tarBalls[j])
 			checkError(err)
 			splittedClusters := strings.Split(clusters[i], "/")
 			clusterWithoutSuperFolder := splittedClusters[len(splittedClusters)-2]
