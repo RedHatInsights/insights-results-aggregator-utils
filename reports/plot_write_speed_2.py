@@ -46,8 +46,8 @@ with open(input_csv) as csv_input:
 
 # data to be plotted
 records = [item[0] for item in data]
-time = [item[1]*60+item[2] for item in data]
-durations = [1000/item for item in time]
+time = [item[1] * 60 + item[2] for item in data]
+durations = [1000 / item for item in time]
 
 # Linear regression
 x = np.arange(0, len(records))

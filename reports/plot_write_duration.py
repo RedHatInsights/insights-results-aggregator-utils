@@ -45,7 +45,7 @@ with open(input_csv) as csv_input:
 
 # Linear regression
 records = [item[0] for item in data]
-time = [item[1]*60+item[2] for item in data]
+time = [item[1] * 60 + item[2] for item in data]
 
 print(records)
 print(time)

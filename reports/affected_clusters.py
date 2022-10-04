@@ -47,7 +47,9 @@ if len(sys.argv) < 3:
     print("Usage:")
     print("  affected_clusters.py rule_name input_file.csv")
     print("Example:")
-    print("  affected_clusters.py ccx_rules_ocp.external.bug_rules.bug_12345678.report report.csv")
+    print(
+        "  affected_clusters.py ccx_rules_ocp.external.bug_rules.bug_12345678.report report.csv"
+    )
     sys.exit(1)
 
 # First command line argument should contain rule name.
@@ -101,7 +103,7 @@ with open(input_csv) as csv_input:
                     for r in reports:
                         rule = r["component"]
                         if rule == rule_name:
-                            print(org_id, ',"'+cluster_id+'"', sep="")
+                            print(org_id, ',"' + cluster_id + '"', sep="")
                             orgs[org_id] += 1
 
 # Start the processing.

@@ -46,8 +46,8 @@ with open(input_csv) as csv_input:
 
 # data to be plotted
 records = [item[0] for item in data]
-time = [item[1]*60+item[2] for item in data]
-durations = [1000/item for item in time]
+time = [item[1] * 60 + item[2] for item in data]
+durations = [1000 / item for item in time]
 
 # Create new graph
 plt.plot(records, durations, "b", label="Write speed")
