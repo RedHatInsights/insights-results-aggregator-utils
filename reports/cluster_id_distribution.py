@@ -60,10 +60,10 @@ for i, v in enumerate(hist):
 plt.hist(digits, bins=bins, range=None, density=False, rwidth=0.9)
 
 # Dirty trick - move ticks by 1/2 so they are displayed in middle of columns
-plt.xticks(numpy.arange(0, 16)+0.5, range(0, 16), fontsize=7)
+plt.xticks(numpy.arange(0, 16) + 0.5, range(0, 16), fontsize=7)
 
 # Add a grid
-plt.grid(axis='y', alpha=0.50)
+plt.grid(axis="y", alpha=0.50)
 
 # Title of a graph
 plt.title("Distribution of the first digit in cluster IDs")
