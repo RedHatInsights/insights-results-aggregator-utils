@@ -52,7 +52,7 @@ input_csv = sys.argv[1]
 df = pd.read_csv(input_csv)
 
 # Add a standard moving average column
-df['SMA'] = df.iloc[:, 1].rolling(window=sma_window).mean()
+df["SMA"] = df.iloc[:, 1].rolling(window=sma_window).mean()
 
 # Print the data frame and its description as well
 print(df.info())
@@ -70,7 +70,7 @@ coef = np.polyfit(x, messages, 1)
 poly1d_fn = np.poly1d(coef)
 
 # Create new graph
-plt.plot(messages, "-", poly1d_fn(np.arange(0, len(messages))), 'r-')
+plt.plot(messages, "-", poly1d_fn(np.arange(0, len(messages))), "r-")
 
 # Title of a graph
 plt.title("Messages in Kafka")
@@ -94,7 +94,7 @@ plt.savefig("kafka_lags_pandas.svg")
 plt.show()
 
 # Create new graph
-plt.plot(sma, "-", poly1d_fn(np.arange(0, len(messages))), 'r-')
+plt.plot(sma, "-", poly1d_fn(np.arange(0, len(messages))), "r-")
 
 # Title of a graph
 plt.title("Messages in Kafka")
