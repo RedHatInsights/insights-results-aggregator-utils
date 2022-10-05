@@ -32,13 +32,13 @@ from prometheus_client.parser import text_string_to_metric_families
 
 # Tuple containing all exported metrics.
 exported_metrics = (
-        "go_gc_duration_seconds_sum",
-        "go_gc_duration_seconds_count",
-        "go_memstats_alloc_bytes",
-        "go_memstats_sys_bytes",
-        "go_memstats_mallocs_total",
-        "go_memstats_frees_total",
-        )
+    "go_gc_duration_seconds_sum",
+    "go_gc_duration_seconds_count",
+    "go_memstats_alloc_bytes",
+    "go_memstats_sys_bytes",
+    "go_memstats_mallocs_total",
+    "go_memstats_frees_total",
+)
 
 
 def parse_metrics(exported_metrics, payload):
@@ -61,7 +61,7 @@ def parse_metrics(exported_metrics, payload):
 def monitor_service(exported_metric, url, csv_filename, sleep_amount, max_records):
     """Monitor selected service and export retrieved metrics into CSV file."""
     # Try to open new file for writing.
-    with open(csv_filename, 'w') as csvfile:
+    with open(csv_filename, "w") as csvfile:
         # Initialize CSV writer.
         writer = csv.writer(csvfile, quoting=csv.QUOTE_NONNUMERIC)
 
@@ -98,13 +98,24 @@ def cli_arguments():
     # First of all, we need to specify all command line flags that are
     # recognized by this tool.
     parser = ArgumentParser()
-    parser.add_argument("-u", "--url", help="URL to get metrics",
-                        default="http://localhost:8080/api/v1/metrics", type=str)
+    parser.add_argument(
+        "-u",
+        "--url",
+        help="URL to get metrics",
+        default="http://localhost:8080/api/v1/metrics",
+        type=str,
+    )
     parser.add_argument("-o", "--output", help="output file name", required=True)
-    parser.add_argument("-d", "--delay", help="Delay in seconds between records",
-                        default=5, type=int)
-    parser.add_argument("-m", "--max_records", help="max records to export (default=all)",
-                        default=None, type=int)
+    parser.add_argument(
+        "-d", "--delay", help="Delay in seconds between records", default=5, type=int
+    )
+    parser.add_argument(
+        "-m",
+        "--max_records",
+        help="max records to export (default=all)",
+        default=None,
+        type=int,
+    )
 
     # Now it is time to parse flags, check the actual content of command line
     # and fill in the object named `args`.
@@ -117,7 +128,9 @@ def main():
     args = cli_arguments()
 
     # Start the monitoring of service with the provided configuration.
-    monitor_service(exported_metrics, args.url, args.output, args.delay, args.max_records)
+    monitor_service(
+        exported_metrics, args.url, args.output, args.delay, args.max_records
+    )
 
 
 # If this script is started from command line, run the `main` function which is
