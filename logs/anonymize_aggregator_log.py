@@ -55,16 +55,16 @@ def split_by_two_strings(line, str1, str2):
 def hash_org_id(line, salt):
     """Hash organization ID and return new line with encrypted value."""
     # First we need to retrieve the organization ID from input line.
-    beginning, org_id, ending = split_by_two_strings(line,
-                                                     '"organization":',
-                                                     ',"cluster":"')
+    beginning, org_id, ending = split_by_two_strings(
+        line, '"organization":', ',"cluster":"'
+    )
 
     # Initialize hashing algorithm. Hash to 8 bytes might be enough for
     # organization ID (`long int` originally).
     h = blake2b(digest_size=8, salt=salt)
 
     # Convert string with organization ID to bytes and perform the hashing.
-    h.update(org_id.encode('utf-8'))
+    h.update(org_id.encode("utf-8"))
 
     # Now it is possible to retrieve the hash in hex format and convert it
     # back to integer.
@@ -77,26 +77,27 @@ def hash_org_id(line, salt):
 def hash_cluster_id(line, salt):
     """Hash cluster ID and return new line with encrypted value."""
     # First we need to retrieve the cluster ID from input line.
-    beginning, cluster_id, ending = split_by_two_strings(line,
-                                                         '"cluster":"',
-                                                         '","time":"')
+    beginning, cluster_id, ending = split_by_two_strings(
+        line, '"cluster":"', '","time":"'
+    )
 
     # Initialize hashing algorithm. Hash to 16 bytes is enough for
     # cluster ID (32 hexa characters).
     h = blake2b(digest_size=16, salt=salt)
 
     # Convert string with cluster ID to bytes and perform the hashing.
-    h.update(cluster_id.encode('utf-8'))
+    h.update(cluster_id.encode("utf-8"))
 
     # Now it is possible to retrieve the hash in hex format.
     x = h.hexdigest()
 
     # Format all parts of log entry into expected output.
-    return "{}{}-{}-{}-{}-{}{}".format(beginning, x[0:8], x[8:12], x[12:16],
-                                       x[16:20], x[20:], ending)
+    return "{}{}-{}-{}-{}-{}{}".format(
+        beginning, x[0:8], x[8:12], x[12:16], x[16:20], x[20:], ending
+    )
 
 
-def hash_sensitive_values(line, salt=b'foo'):
+def hash_sensitive_values(line, salt=b"foo"):
     """Hash all sensitive values on line."""
     return hash_cluster_id(hash_org_id(line, salt), salt)
 
@@ -106,16 +107,22 @@ def main():
     # First of all, we need to specify all command line flags that are
     # recognized by this tool.
     parser = ArgumentParser()
-    parser.add_argument("-s", "--salt", dest="salt",
-                        help="salt for hashing algorithm",
-                        action="store", default="foo", required=True)
+    parser.add_argument(
+        "-s",
+        "--salt",
+        dest="salt",
+        help="salt for hashing algorithm",
+        action="store",
+        default="foo",
+        required=True,
+    )
 
     # Now it is time to parse flags, check the actual content of command line
     # and fill in the object named `args`.
     args = parser.parse_args()
 
     # Retrieve the salt to be used by hashing algorithm.
-    salt = args.salt.encode('utf-8')
+    salt = args.salt.encode("utf-8")
 
     # This script works as a standard Unix filter (input->output), so we have
     # to process input in line-by-line basis.
