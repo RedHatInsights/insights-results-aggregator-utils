@@ -324,9 +324,7 @@ def main():
     verbose = args.verbose
 
     # setup proxy or proxies
-    proxies = {
-       'https': args.proxy
-    }
+    proxies = {"https": args.proxy}
 
     if verbose:
         print("Proxy settings:", proxies)
@@ -359,10 +357,12 @@ def main():
         export_times(args.directory1, args.directory2)
 
     if args.compare_results:
-        assert args.directory1 is not None, \
-            "-d1/--directory1 CLI option needs to be provided in order to compare results"
-        assert args.directory2 is not None, \
-            "-d2/--directory2 CLI option needs to be provided in order to compare results"
+        assert (
+            args.directory1 is not None
+        ), "-d1/--directory1 CLI option needs to be provided in order to compare results"
+        assert (
+            args.directory2 is not None
+        ), "-d2/--directory2 CLI option needs to be provided in order to compare results"
 
         # retrieve and use additional info about pipeline if user depands to
         info = None
@@ -386,8 +386,9 @@ def call_rest_api(url, proxies, auth):
 
     # elementary check for response content
     assert response is not None, "Proper response expected"
-    assert response.status_code == requests.codes.ok, \
-        f"Unexpected HTTP code returned: {response.status_code}"
+    assert (
+        response.status_code == requests.codes.ok
+    ), f"Unexpected HTTP code returned: {response.status_code}"
 
     # response should be in JSON format, time to parse it
     payload = response.json()
@@ -579,8 +580,9 @@ def compare_results(directory1, directory2, filename, xlsx_output, info, verbose
     redundant_d2 = sorted(list(files2 - common))
 
     # compute difference in results
-    comparison_results, recommendations = compare_results_sets(directory1, directory2, common,
-                                                               verbose)
+    comparison_results, recommendations = compare_results_sets(
+        directory1, directory2, common, verbose
+    )
 
     # check we did it right
     assert comparison_results is not None
@@ -626,10 +628,7 @@ def compare_results_sets(directory1, directory2, common, include_recommendations
     # read from first set of results, second set is created for recommendations
     # read from the second set of results. Counter keys are constructed from
     # `rule_id` and `error_key`
-    recommendations = {
-            "r1": Counter(),
-            "r2": Counter()
-    }
+    recommendations = {"r1": Counter(), "r2": Counter()}
 
     # iterate over all clusters
     for cluster in sorted(common):
@@ -699,7 +698,9 @@ def update_recommendations_for_results(counters, results):
         # preliminary check if all attributes are there
         assert "rule_id" in hit, "Expected 'rule_id' attribute"
         assert "extra_data" in hit, "Expected 'extra_data' containing a map"
-        assert "error_key" in hit["extra_data"], "Expected 'extra_data' containing a map"
+        assert (
+            "error_key" in hit["extra_data"]
+        ), "Expected 'extra_data' containing a map"
 
         # construct the full rule selector
         rule_id = hit["rule_id"]
@@ -772,9 +773,20 @@ def read_list_of_clusters_from_directory(directory):
     return [f[:-5] for f in files if f.endswith(".json")]
 
 
-def export_to_csv(filename, info, directory1, directory2, files1, files2, common,
-                  redundant_d1, redundant_d2, comparison_results, recommendations,
-                  verbose):
+def export_to_csv(
+    filename,
+    info,
+    directory1,
+    directory2,
+    files1,
+    files2,
+    common,
+    redundant_d1,
+    redundant_d2,
+    comparison_results,
+    recommendations,
+    verbose,
+):
     """Create a new CSV file with detailed report of differences between two sets of results."""
     with open(filename, "w") as csvfile:
         # create a CSV writer object
@@ -783,12 +795,16 @@ def export_to_csv(filename, info, directory1, directory2, files1, files2, common
 
         # export all required information into CSV file
         csv_export_additional_info(csv_writer, info)
-        csv_export_basic_info(csv_writer, directory1, directory2, files1, files2, common)
+        csv_export_basic_info(
+            csv_writer, directory1, directory2, files1, files2, common
+        )
 
-        csv_export_redundant_clusters(csv_writer, redundant_d1,
-                                      "Redundand clusters in 1st directory")
-        csv_export_redundant_clusters(csv_writer, redundant_d2,
-                                      "Redundand clusters in 2nd directory")
+        csv_export_redundant_clusters(
+            csv_writer, redundant_d1, "Redundand clusters in 1st directory"
+        )
+        csv_export_redundant_clusters(
+            csv_writer, redundant_d2, "Redundand clusters in 2nd directory"
+        )
 
         csv_export_comparison_results(csv_writer, comparison_results)
 
@@ -796,9 +812,20 @@ def export_to_csv(filename, info, directory1, directory2, files1, files2, common
             csv_export_recommendations(csv_writer, recommendations)
 
 
-def export_to_xlsx(filename, info, directory1, directory2, files1, files2, common,
-                   redundant_d1, redundant_d2, comparison_results, recommendations,
-                   verbose):
+def export_to_xlsx(
+    filename,
+    info,
+    directory1,
+    directory2,
+    files1,
+    files2,
+    common,
+    redundant_d1,
+    redundant_d2,
+    comparison_results,
+    recommendations,
+    verbose,
+):
     """Create a new XLSX file with detailed report of differences between two sets of results."""
     with xlsxwriter.Workbook(filename) as workbook:
         # define styles
@@ -826,8 +853,12 @@ def export_to_xlsx(filename, info, directory1, directory2, files1, files2, commo
         # create worksheets
         info_worksheet = workbook.add_worksheet("Pipeline info")
         basic_worksheet = workbook.add_worksheet("Basic info")
-        redundant_clusters_worksheet_1 = workbook.add_worksheet("Redundant clusters in d1")
-        redundant_clusters_worksheet_2 = workbook.add_worksheet("Redundant clusters in d2")
+        redundant_clusters_worksheet_1 = workbook.add_worksheet(
+            "Redundant clusters in d1"
+        )
+        redundant_clusters_worksheet_2 = workbook.add_worksheet(
+            "Redundant clusters in d2"
+        )
         comparison_results_worksheet = workbook.add_worksheet("Comarison results")
         recommendations_worksheet = workbook.add_worksheet("Recommendations")
 
@@ -851,8 +882,9 @@ def export_to_xlsx(filename, info, directory1, directory2, files1, files2, commo
 
         # export all required information into workbook
         xlsx_export_additional_info(info_worksheet, styles, info)
-        xlsx_export_basic_info(basic_worksheet, styles, directory1, directory2, files1, files2,
-                               common)
+        xlsx_export_basic_info(
+            basic_worksheet, styles, directory1, directory2, files1, files2, common
+        )
 
         xlsx_export_redundant_clusters(
             redundant_clusters_worksheet_1,
@@ -867,17 +899,22 @@ def export_to_xlsx(filename, info, directory1, directory2, files1, files2, commo
             "Redundand clusters in 2nd directory",
         )
 
-        xlsx_export_comparison_results(comparison_results_worksheet, styles, comparison_results)
+        xlsx_export_comparison_results(
+            comparison_results_worksheet, styles, comparison_results
+        )
 
         if verbose:
-            xlsx_export_recommendations(recommendations_worksheet, styles, recommendations)
+            xlsx_export_recommendations(
+                recommendations_worksheet, styles, recommendations
+            )
 
 
 def csv_export_recommendations(csv_writer, recommendations):
     """Export recommendations taken from both results sets into CSV file."""
     # all rule selectors
-    rule_selectors = sorted(list(set(recommendations["r1"].keys()) |
-                                 set(recommendations["r2"].keys())))
+    rule_selectors = sorted(
+        list(set(recommendations["r1"].keys()) | set(recommendations["r2"].keys()))
+    )
 
     # empty row
     csv_writer.writerow(())
@@ -1009,7 +1046,9 @@ def csv_export_comparison_results(csv_writer, comparison_results):
                 )
             )
         else:
-            csv_writer.writerow((i, r["cluster"], r["status"], "", "", "", "", "", r["error"]))
+            csv_writer.writerow(
+                (i, r["cluster"], r["status"], "", "", "", "", "", r["error"])
+            )
 
 
 def xlsx_export_additional_info(worksheet, styles, info):
@@ -1041,13 +1080,17 @@ def xlsx_export_dictionary(worksheet, row, dictionary, style):
         worksheet.write(row + i, 1, dictionary[key], style)
 
 
-def xlsx_export_basic_info(worksheet, styles, directory1, directory2, files1, files2, common):
+def xlsx_export_basic_info(
+    worksheet, styles, directory1, directory2, files1, files2, common
+):
     """Export basic info into XLSX file."""
     worksheet.write("A1", "Basic info about test results", styles["title_line"])
     worksheet.write("B1", "", styles["title_line"])
 
     worksheet.write("A2", "Tested on", styles["table_header"])
-    worksheet.write("B2", datetime.now().isoformat().replace("T", " "), styles["table_cell"])
+    worksheet.write(
+        "B2", datetime.now().isoformat().replace("T", " "), styles["table_cell"]
+    )
     worksheet.write("A3", "1st directory with results", styles["table_header"])
     worksheet.write("B3", directory1, styles["table_cell"])
     worksheet.write("A4", "2nd directory with results", styles["table_header"])
@@ -1117,8 +1160,9 @@ def xlsx_export_comparison_results(worksheet, styles, comparison_results):
 def xlsx_export_recommendations(worksheet, styles, recommendations):
     """Export recommendations taken from both results sets into XLSX worksheet."""
     # all rule selectors
-    rule_selectors = sorted(list(set(recommendations["r1"].keys()) |
-                                 set(recommendations["r2"].keys())))
+    rule_selectors = sorted(
+        list(set(recommendations["r1"].keys()) | set(recommendations["r2"].keys()))
+    )
 
     # table title + row headers
     worksheet.write("A1", "Recommendations", styles["title_line"])

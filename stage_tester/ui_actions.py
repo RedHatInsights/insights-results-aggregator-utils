@@ -143,10 +143,10 @@ RULE_SELECTOR = r"[a-zA-Z_0-9]+\.[a-zA-Z_0-9.]+\|[A-Z_0-9]+$"
 
 
 def register_operation(op, func, data=None):
-    print(f"{sys.argv[0]}: info: registering {op}", f"with data: {data}" if data else "")
-    REGISTERED_OPERATIONS.update(
-        {op: [func, data]}
+    print(
+        f"{sys.argv[0]}: info: registering {op}", f"with data: {data}" if data else ""
     )
+    REGISTERED_OPERATIONS.update({op: [func, data]})
 
 
 def cli_arguments():
@@ -281,8 +281,10 @@ def main():
 
     # check -c and -l args are not both provided
     if args.cluster and args.cluster_list_file:
-        print(f"{sys.argv[0]}: "
-              f"error: Please provide cluster UUID through either -c or -l, not both.")
+        print(
+            f"{sys.argv[0]}: "
+            f"error: Please provide cluster UUID through either -c or -l, not both."
+        )
         sys.exit(1)
 
     # validate the recommendation to work with
@@ -293,7 +295,9 @@ def main():
     numbers, or underscores ("_")
     """
     if not re.match(RULE_SELECTOR, selector):
-        print(f"{sys.argv[0]}: error: Please provide a valid rule selector (rule_id|ek)")
+        print(
+            f"{sys.argv[0]}: error: Please provide a valid rule selector (rule_id|ek)"
+        )
         sys.exit(1)
 
     # validate operation(s) to execute
@@ -307,8 +311,10 @@ def main():
                 register_operation(op, requests.put)
         else:
             # Only OK if it is the feedback for disable_feedback
-            if not ("disable_feedback" in REGISTERED_OPERATIONS
-                    and REGISTERED_OPERATIONS["disable_feedback"][1] is None):
+            if not (
+                "disable_feedback" in REGISTERED_OPERATIONS
+                and REGISTERED_OPERATIONS["disable_feedback"][1] is None
+            ):
                 print(f"{sys.argv[0]}: error: Received operation: {op}.")
                 print(f"{sys.argv[0]}: error: Expected one of {ALLOWED_OPERATIONS}.")
                 print(f"{sys.argv[0]}: error: Please provide a valid operation.")
