@@ -302,9 +302,7 @@ def main():
     verbose = args.verbose
 
     # setup proxy or proxies
-    proxies = {
-        'https': args.proxy
-    }
+    proxies = {"https": args.proxy}
 
     if verbose:
         print("Proxy settings:", proxies)
@@ -316,8 +314,14 @@ def main():
         print("Auth settings:", auth)
 
     # check if at least required argument is provided on CLI
-    if not any((args.cluster_list, args.retrieve_results,
-                args.export_times, args.compare_results)):
+    if not any(
+        (
+            args.cluster_list,
+            args.retrieve_results,
+            args.export_times,
+            args.compare_results,
+        )
+    ):
         print("No action requested, add -l, -r, -t, or -c")
         sys.exit(1)
 
@@ -331,17 +335,21 @@ def main():
         export_times(args.directory1, args.directory2)
 
     if args.compare_results:
-        assert args.directory1 is not None, \
-            "-d1/--directory1 CLI option needs to be provided in order to compare results"
-        assert args.directory2 is not None, \
-            "-d2/--directory2 CLI option needs to be provided in order to compare results"
+        assert (
+            args.directory1 is not None
+        ), "-d1/--directory1 CLI option needs to be provided in order to compare results"
+        assert (
+            args.directory2 is not None
+        ), "-d2/--directory2 CLI option needs to be provided in order to compare results"
 
         # retrieve and use additional info about pipeline if user depands to
         info = None
         if args.additional_info:
             info = retrieve_additional_info(args.address, proxies, auth, verbose)
 
-        compare_results(args.directory1, args.directory2, args.export_file_name, info, verbose)
+        compare_results(
+            args.directory1, args.directory2, args.export_file_name, info, verbose
+        )
 
 
 def call_rest_api(url, proxies, auth):
@@ -351,8 +359,9 @@ def call_rest_api(url, proxies, auth):
 
     # elementary check for response content
     assert response is not None, "Proper response expected"
-    assert response.status_code == requests.codes.ok, \
-        f"Unexpected HTTP code returned: {response.status_code}"
+    assert (
+        response.status_code == requests.codes.ok
+    ), f"Unexpected HTTP code returned: {response.status_code}"
 
     # response should be in JSON format, time to parse it
     payload = response.json()
@@ -364,7 +373,7 @@ def call_rest_api(url, proxies, auth):
 def retrieve_cluster_list(organization, address, proxies, auth, verbose):
     """Retrieve list of clusters from the external data pipeline REST API endpoint."""
     # construct URL to get list of clusters for given organization ID
-    url = f'{address}/v1/organizations/{organization}/clusters'
+    url = f"{address}/v1/organizations/{organization}/clusters"
 
     if verbose:
         print("URL to access:", url)
@@ -544,8 +553,9 @@ def compare_results(directory1, directory2, filename, info, verbose):
     redundant_d2 = sorted(list(files2 - common))
 
     # compute difference in results
-    comparison_results, recommendations = compare_results_sets(directory1, directory2, common,
-                                                               verbose)
+    comparison_results, recommendations = compare_results_sets(
+        directory1, directory2, common, verbose
+    )
 
     # check we did it right
     assert comparison_results is not None
@@ -562,8 +572,12 @@ def compare_results(directory1, directory2, filename, info, verbose):
         export_additional_info(csv_writer, info)
         export_basic_info(csv_writer, directory1, directory2, files1, files2, common)
 
-        export_redundant_clusters(csv_writer, redundant_d1, "Redundand clusters in 1st directory")
-        export_redundant_clusters(csv_writer, redundant_d2, "Redundand clusters in 2nd directory")
+        export_redundant_clusters(
+            csv_writer, redundant_d1, "Redundand clusters in 1st directory"
+        )
+        export_redundant_clusters(
+            csv_writer, redundant_d2, "Redundand clusters in 2nd directory"
+        )
 
         export_comparison_results(csv_writer, comparison_results)
 
@@ -579,10 +593,7 @@ def compare_results_sets(directory1, directory2, common, include_recommendations
     # read from first set of results, second set is created for recommendations
     # read from the second set of results. Counter keys are constructed from
     # `rule_id` and `error_key`
-    recommendations = {
-        "r1": Counter(),
-        "r2": Counter()
-    }
+    recommendations = {"r1": Counter(), "r2": Counter()}
 
     # iterate over all clusters
     for cluster in sorted(common):
@@ -652,7 +663,9 @@ def update_recommendations_for_results(counters, results):
         # preliminary check if all attributes are there
         assert "rule_id" in hit, "Expected 'rule_id' attribute"
         assert "extra_data" in hit, "Expected 'extra_data' containing a map"
-        assert "error_key" in hit["extra_data"], "Expected 'extra_data' containing a map"
+        assert (
+            "error_key" in hit["extra_data"]
+        ), "Expected 'extra_data' containing a map"
 
         # construct the full rule selector
         rule_id = hit["rule_id"]
@@ -729,8 +742,9 @@ def export_recommendations(csv_writer, recommendations):
     """Export recommendations taken from both results sets."""
 
     # all rule selectors
-    rule_selectors = sorted(list(set(recommendations["r1"].keys()) |
-                                 set(recommendations["r2"].keys())))
+    rule_selectors = sorted(
+        list(set(recommendations["r1"].keys()) | set(recommendations["r2"].keys()))
+    )
 
     # empty row
     csv_writer.writerow(())
@@ -861,7 +875,9 @@ def export_comparison_results(csv_writer, comparison_results):
                 )
             )
         else:
-            csv_writer.writerow((i, r["cluster"], r["status"], "", "", "", "", "", r["error"]))
+            csv_writer.writerow(
+                (i, r["cluster"], r["status"], "", "", "", "", "", r["error"])
+            )
 
 
 # If this script is started from command line, run the `main` function which is
