@@ -11,4 +11,4 @@ print(f"Processing speed: {processing_speed} messages per hour")
 
 processing_time = l2 / processing_speed
 
-print(f"Processing time: {processing_time}")
+print(f"Processing time: {processing_time} hours")
