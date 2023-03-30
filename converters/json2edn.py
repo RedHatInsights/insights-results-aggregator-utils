@@ -26,9 +26,9 @@ import edn_format
 # Check if command line argument is specified (it is mandatory).
 if len(sys.argv) < 2:
     print("Usage:")
-    print("  json2edn.py input_file.csv")
+    print("  json2edn.py input_file.json")
     print("Example:")
-    print("  json2edn.py report.csv")
+    print("  json2edn.py report.json")
     sys.exit(1)
 
 # First command line argument should contain name of input JSON file.
