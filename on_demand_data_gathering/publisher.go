@@ -67,5 +67,14 @@ func generateRuleHits() []RuleHit {
 	return hits
 }
 
+func generateRecord() string {
+	ruleHits := generateRuleHits()
+	asJSON, err := json.MarshalIndent(ruleHits, "", "\t")
+	if err != nil {
+		log.Fatal(err)
+	}
+	return string(asJSON)
+}
+
 func main() {
 }
