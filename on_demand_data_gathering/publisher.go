@@ -21,14 +21,19 @@ import (
 	"log"
 	"math/rand"
 	"strconv"
+	"time"
 
+	"github.com/go-redis/redis/v8"
 	"github.com/google/uuid"
 )
 
 // configuration
 const (
-	minRuleHits = 1
-	maxRuleHits = 10
+	redisAddress   = "localhost:6379"
+	recordDuration = "10s"
+	recordingDelay = 1500 * time.Millisecond
+	minRuleHits    = 1
+	maxRuleHits    = 10
 )
 
 type RuleHit struct {
@@ -116,4 +121,45 @@ func generateReportKey() string {
 }
 
 func main() {
+	// construct new Redis client
+	client := redis.NewClient(&redis.Options{
+		Addr:     redisAddress,
+		Password: "", // no password set
+		DB:       0,  // use default DB
+	})
+
+	// close Redis client properly at the end
+	defer func() {
+		err := client.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	// retrieve context
+	context := client.Context()
+
+	expiration, err := time.ParseDuration(recordDuration)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// write records to database continuously
+	for {
+		// generate report
+		key := generateReportKey()
+		record := generateRecord()
+
+		// write one record to database
+		err = client.Set(context, key, record, expiration).Err()
+		log.Println("Generated report for key", key)
+
+		// check for error
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		time.Sleep(recordingDelay)
+	}
+
 }
