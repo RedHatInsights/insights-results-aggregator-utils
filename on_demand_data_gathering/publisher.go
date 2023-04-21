@@ -54,5 +54,18 @@ var ruleHits = []RuleHit{
 	},
 }
 
+func generateRuleHits() []RuleHit {
+	// construct slice with required capacity first
+	hitsCount := minRuleHits + rand.Int()%maxRuleHits
+	hits := make([]RuleHit, hitsCount)
+
+	// add random rule hits into the slice
+	// (hits will be repeated, but we don't care at this moment)
+	for i := 0; i < hitsCount; i++ {
+		hits[i] = ruleHits[rand.Int()%len(ruleHits)]
+	}
+	return hits
+}
+
 func main() {
 }
