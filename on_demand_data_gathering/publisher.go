@@ -1,5 +1,14 @@
 package main
 
+import (
+	"encoding/json"
+	"log"
+	"math/rand"
+	"strconv"
+
+	"github.com/google/uuid"
+)
+
 // configuration
 const (
 	minRuleHits = 1
@@ -74,6 +83,20 @@ func generateRecord() string {
 		log.Fatal(err)
 	}
 	return string(asJSON)
+}
+
+func generateClusterName() string {
+	return uuid.New().String()
+}
+
+func generateTrackerID() string {
+	r1 := rand.Uint64()
+	r2 := rand.Uint64()
+	return strconv.FormatUint(r1, 36) + strconv.FormatUint(r2, 36)
+}
+
+func generateReportKey() string {
+	return generateClusterName() + "." + generateTrackerID()
 }
 
 func main() {
