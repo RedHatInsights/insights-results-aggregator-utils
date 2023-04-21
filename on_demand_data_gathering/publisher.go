@@ -18,6 +18,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"math/rand"
 	"strconv"
@@ -29,11 +30,12 @@ import (
 
 // configuration
 const (
-	redisAddress   = "localhost:6379"
-	recordDuration = "10s"
-	recordingDelay = 1500 * time.Millisecond
-	minRuleHits    = 1
-	maxRuleHits    = 10
+	redisAddress       = "localhost:6379"
+	recordDuration     = "10s"
+	recordingDelay     = 1500 * time.Millisecond
+	minRuleHits        = 1
+	maxRuleHits        = 10
+	uniqueClusterNames = 10
 )
 
 type RuleHit struct {
@@ -84,6 +86,14 @@ var ruleHits = []RuleHit{
 	},
 }
 
+var clusterNames [uniqueClusterNames]string
+
+func init() {
+	for i := 0; i < uniqueClusterNames; i++ {
+		clusterNames[i] = uuid.New().String()
+	}
+}
+
 func generateRuleHits() []RuleHit {
 	// construct slice with required capacity first
 	hitsCount := minRuleHits + rand.Int()%maxRuleHits
@@ -107,7 +117,8 @@ func generateRecord() string {
 }
 
 func generateClusterName() string {
-	return uuid.New().String()
+	i := rand.Int() % len(clusterNames)
+	return clusterNames[i]
 }
 
 func generateTrackerID() string {
@@ -121,6 +132,14 @@ func generateReportKey() string {
 }
 
 func main() {
+	fmt.Println("Cluster names")
+	for _, clusterName := range clusterNames {
+		fmt.Println(clusterName)
+	}
+	fmt.Println("Enter to continue...")
+
+	fmt.Scanln()
+
 	// construct new Redis client
 	client := redis.NewClient(&redis.Options{
 		Addr:     redisAddress,
