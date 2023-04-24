@@ -14,6 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+// This tool start producing (storing) rule hits into Redis with frequency defined
+// by recordingDelay value. Multiple rule hits can be stored for given cluster
+// which means that On Demand Data Gathering functionality can be simulated by this
+// tool.
 package main
 
 import (
