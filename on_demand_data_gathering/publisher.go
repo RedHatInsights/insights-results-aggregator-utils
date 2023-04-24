@@ -17,25 +17,26 @@ limitations under the License.
 package main
 
 import (
+	"bufio"
 	"encoding/json"
 	"fmt"
 	"log"
 	"math/rand"
+	"os"
 	"strconv"
 	"time"
 
 	"github.com/go-redis/redis/v8"
-	"github.com/google/uuid"
 )
 
 // configuration
 const (
-	redisAddress       = "localhost:6379"
-	recordDuration     = "10s"
-	recordingDelay     = 1500 * time.Millisecond
-	minRuleHits        = 1
-	maxRuleHits        = 10
-	uniqueClusterNames = 10
+	redisAddress         = "localhost:6379"
+	recordDuration       = "10000s"
+	recordingDelay       = 1500 * time.Millisecond
+	minRuleHits          = 1
+	maxRuleHits          = 10
+	clusterNamesFilename = "cluster_names.txt"
 )
 
 type RuleHit struct {
@@ -123,7 +124,35 @@ func generateReportKey(clusterNames []string) string {
 	return generateClusterName(clusterNames) + "." + generateTrackerID()
 }
 
+func readClusterNames(filename string) []string {
+	clusterNames := []string{}
+
+	fin, err := os.Open(filename)
+	if err != nil {
+		log.Fatal(err)
+	}
+	// close fi on exit and check for its returned error
+	defer func() {
+		err := fin.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	scanner := bufio.NewScanner(fin)
+	for scanner.Scan() {
+		clusterName := scanner.Text()
+		log.Print(clusterName)
+		clusterNames = append(clusterNames, clusterName)
+	}
+
+	return clusterNames
+}
+
 func main() {
+	fmt.Println("Reading cluster names")
+	clusterNames := readClusterNames(clusterNamesFilename)
+
 	fmt.Println("Cluster names")
 	for _, clusterName := range clusterNames {
 		fmt.Println(clusterName)
