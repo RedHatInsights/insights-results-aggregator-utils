@@ -14,28 +14,33 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+// This tool start producing (storing) rule hits into Redis with frequency defined
+// by recordingDelay value. Multiple rule hits can be stored for given cluster
+// which means that On Demand Data Gathering functionality can be simulated by this
+// tool.
 package main
 
 import (
+	"bufio"
 	"encoding/json"
 	"fmt"
 	"log"
 	"math/rand"
+	"os"
 	"strconv"
 	"time"
 
 	"github.com/go-redis/redis/v8"
-	"github.com/google/uuid"
 )
 
 // configuration
 const (
-	redisAddress       = "localhost:6379"
-	recordDuration     = "10s"
-	recordingDelay     = 1500 * time.Millisecond
-	minRuleHits        = 1
-	maxRuleHits        = 10
-	uniqueClusterNames = 10
+	redisAddress         = "localhost:6379"
+	recordDuration       = "10000s"
+	recordingDelay       = 1500 * time.Millisecond
+	minRuleHits          = 1
+	maxRuleHits          = 10
+	clusterNamesFilename = "cluster_names.txt"
 )
 
 type RuleHit struct {
@@ -86,14 +91,6 @@ var ruleHits = []RuleHit{
 	},
 }
 
-var clusterNames [uniqueClusterNames]string
-
-func init() {
-	for i := 0; i < uniqueClusterNames; i++ {
-		clusterNames[i] = uuid.New().String()
-	}
-}
-
 func generateRuleHits() []RuleHit {
 	// construct slice with required capacity first
 	hitsCount := minRuleHits + rand.Int()%maxRuleHits
@@ -116,7 +113,7 @@ func generateRecord() string {
 	return string(asJSON)
 }
 
-func generateClusterName() string {
+func generateClusterName(clusterNames []string) string {
 	i := rand.Int() % len(clusterNames)
 	return clusterNames[i]
 }
@@ -127,11 +124,39 @@ func generateTrackerID() string {
 	return strconv.FormatUint(r1, 36) + strconv.FormatUint(r2, 36)
 }
 
-func generateReportKey() string {
-	return generateClusterName() + "." + generateTrackerID()
+func generateReportKey(clusterNames []string) string {
+	return generateClusterName(clusterNames) + "." + generateTrackerID()
+}
+
+func readClusterNames(filename string) []string {
+	clusterNames := []string{}
+
+	fin, err := os.Open(filename)
+	if err != nil {
+		log.Fatal(err)
+	}
+	// close fi on exit and check for its returned error
+	defer func() {
+		err := fin.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	scanner := bufio.NewScanner(fin)
+	for scanner.Scan() {
+		clusterName := scanner.Text()
+		log.Print(clusterName)
+		clusterNames = append(clusterNames, clusterName)
+	}
+
+	return clusterNames
 }
 
 func main() {
+	fmt.Println("Reading cluster names")
+	clusterNames := readClusterNames(clusterNamesFilename)
+
 	fmt.Println("Cluster names")
 	for _, clusterName := range clusterNames {
 		fmt.Println(clusterName)
@@ -166,7 +191,7 @@ func main() {
 	// write records to database continuously
 	for {
 		// generate report
-		key := generateReportKey()
+		key := generateReportKey(clusterNames)
 		record := generateRecord()
 
 		// write one record to database
