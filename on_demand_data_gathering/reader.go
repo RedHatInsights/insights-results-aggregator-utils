@@ -17,8 +17,11 @@ limitations under the License.
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"log"
+	"math/rand"
+	"os"
 	"time"
 
 	"github.com/go-redis/redis/v8"
@@ -28,11 +31,51 @@ import (
 const (
 	redisAddress = "localhost:6379"
 	readingDelay = 1000 * time.Millisecond
-	clusterName  = "a4d1525e-a56f-4f3f-9451-e5cc628157b4"
+
+	clusterNamesFilename = "cluster_names.txt"
 )
 
+func readClusterNames(filename string) []string {
+	clusterNames := []string{}
+
+	fin, err := os.Open(filename)
+	if err != nil {
+		log.Fatal(err)
+	}
+	// close fi on exit and check for its returned error
+	defer func() {
+		err := fin.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	scanner := bufio.NewScanner(fin)
+	for scanner.Scan() {
+		clusterName := scanner.Text()
+		log.Print(clusterName)
+		clusterNames = append(clusterNames, clusterName)
+	}
+
+	return clusterNames
+}
+
+func chooseClusterName(clusterNames []string) string {
+	i := rand.Int() % len(clusterNames)
+	return clusterNames[i]
+}
+
 func main() {
+	fmt.Println("Reading cluster names")
+	clusterNames := readClusterNames(clusterNamesFilename)
+
+	fmt.Println("Cluster names")
+	for _, clusterName := range clusterNames {
+		fmt.Println(clusterName)
+	}
+
 	// construct new Redis client
+	log.Print("Construction Redis client")
 	client := redis.NewClient(&redis.Options{
 		Addr:     redisAddress,
 		Password: "", // no password set
@@ -48,16 +91,38 @@ func main() {
 	}()
 
 	// retrieve context
+	log.Print("Retrieving context for Redis connection")
 	context := client.Context()
 
+	log.Print("Starting query loop")
+
 	for {
+		// randomly choose one cluster name
+		clusterName := chooseClusterName(clusterNames)
+
+		t1 := time.Now()
+
+		// read all keys for all rule hits for given cluster name
 		iter := client.Scan(context, 0, clusterName+".*", 0).Iterator()
+
+		// read all values (rule hits)
 		for iter.Next(context) {
-			fmt.Println(iter.Val())
+			key := iter.Val()
+			log.Println(key)
+			ruleHits := client.Get(context, key)
+			log.Println(ruleHits)
 		}
+		// are we still ok?
 		if err := iter.Err(); err != nil {
 			log.Fatal(err)
 		}
+
+		t2 := time.Now()
+		duration := t2.Sub(t1)
+		log.Println("Duration", duration)
+
 		time.Sleep(readingDelay)
+
+		log.Println()
 	}
 }
