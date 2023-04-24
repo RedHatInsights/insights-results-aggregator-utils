@@ -86,14 +86,6 @@ var ruleHits = []RuleHit{
 	},
 }
 
-var clusterNames [uniqueClusterNames]string
-
-func init() {
-	for i := 0; i < uniqueClusterNames; i++ {
-		clusterNames[i] = uuid.New().String()
-	}
-}
-
 func generateRuleHits() []RuleHit {
 	// construct slice with required capacity first
 	hitsCount := minRuleHits + rand.Int()%maxRuleHits
@@ -116,7 +108,7 @@ func generateRecord() string {
 	return string(asJSON)
 }
 
-func generateClusterName() string {
+func generateClusterName(clusterNames []string) string {
 	i := rand.Int() % len(clusterNames)
 	return clusterNames[i]
 }
@@ -127,8 +119,8 @@ func generateTrackerID() string {
 	return strconv.FormatUint(r1, 36) + strconv.FormatUint(r2, 36)
 }
 
-func generateReportKey() string {
-	return generateClusterName() + "." + generateTrackerID()
+func generateReportKey(clusterNames []string) string {
+	return generateClusterName(clusterNames) + "." + generateTrackerID()
 }
 
 func main() {
@@ -166,7 +158,7 @@ func main() {
 	// write records to database continuously
 	for {
 		// generate report
-		key := generateReportKey()
+		key := generateReportKey(clusterNames)
 		record := generateRecord()
 
 		// write one record to database
