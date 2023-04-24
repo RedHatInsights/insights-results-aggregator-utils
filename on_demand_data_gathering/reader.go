@@ -112,6 +112,20 @@ func queryLoop(client *redis.Client, clusterNames []string, times *os.File) {
 	}
 }
 
+func closeFile(file *os.File) {
+	err := file.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func closeRedisClient(client *redis.Client) {
+	err := client.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 func main() {
 	fmt.Println("Reading cluster names")
 	clusterNames := readClusterNames(clusterNamesFilename)
@@ -126,12 +140,7 @@ func main() {
 	})
 
 	// close Redis client properly at the end
-	defer func() {
-		err := client.Close()
-		if err != nil {
-			log.Fatal(err)
-		}
-	}()
+	defer closeRedisClient(client)
 
 	// open output file
 	fout, err := os.Create(queryTimes)
@@ -140,12 +149,7 @@ func main() {
 	}
 
 	// close fo on exit and check for its returned error
-	defer func() {
-		err := fout.Close()
-		if err != nil {
-			log.Fatal(err)
-		}
-	}()
+	defer closeFile(fout)
 
 	queryLoop(client, clusterNames, fout)
 }
