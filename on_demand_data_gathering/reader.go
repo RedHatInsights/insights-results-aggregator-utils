@@ -33,6 +33,7 @@ const (
 	readingDelay = 1000 * time.Millisecond
 
 	clusterNamesFilename = "cluster_names.txt"
+	queryTimes           = "query_times.txt"
 )
 
 func readClusterNames(filename string) []string {
@@ -72,7 +73,7 @@ func printClusterNames(clusterNames []string) {
 	}
 }
 
-func queryLoop(client *redis.Client, clusterNames []string) {
+func queryLoop(client *redis.Client, clusterNames []string, times *os.File) {
 	// retrieve context
 	log.Print("Retrieving context for Redis connection")
 	context := client.Context()
@@ -103,6 +104,7 @@ func queryLoop(client *redis.Client, clusterNames []string) {
 		t2 := time.Now()
 		duration := t2.Sub(t1)
 		log.Println("Duration", duration)
+		fmt.Fprintln(times, duration.Microseconds())
 
 		time.Sleep(readingDelay)
 
@@ -131,5 +133,19 @@ func main() {
 		}
 	}()
 
-	queryLoop(client, clusterNames)
+	// open output file
+	fout, err := os.Create(queryTimes)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// close fo on exit and check for its returned error
+	defer func() {
+		err := fout.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	queryLoop(client, clusterNames, fout)
 }
