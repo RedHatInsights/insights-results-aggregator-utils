@@ -65,31 +65,14 @@ func chooseClusterName(clusterNames []string) string {
 	return clusterNames[i]
 }
 
-func main() {
-	fmt.Println("Reading cluster names")
-	clusterNames := readClusterNames(clusterNamesFilename)
-
+func printClusterNames(clusterNames []string) {
 	fmt.Println("Cluster names")
 	for _, clusterName := range clusterNames {
 		fmt.Println(clusterName)
 	}
+}
 
-	// construct new Redis client
-	log.Print("Construction Redis client")
-	client := redis.NewClient(&redis.Options{
-		Addr:     redisAddress,
-		Password: "", // no password set
-		DB:       0,  // use default DB
-	})
-
-	// close Redis client properly at the end
-	defer func() {
-		err := client.Close()
-		if err != nil {
-			log.Fatal(err)
-		}
-	}()
-
+func queryLoop(client *redis.Client, clusterNames []string) {
 	// retrieve context
 	log.Print("Retrieving context for Redis connection")
 	context := client.Context()
@@ -125,4 +108,28 @@ func main() {
 
 		log.Println()
 	}
+}
+
+func main() {
+	fmt.Println("Reading cluster names")
+	clusterNames := readClusterNames(clusterNamesFilename)
+	printClusterNames(clusterNames)
+
+	// construct new Redis client
+	log.Print("Construction Redis client")
+	client := redis.NewClient(&redis.Options{
+		Addr:     redisAddress,
+		Password: "", // no password set
+		DB:       0,  // use default DB
+	})
+
+	// close Redis client properly at the end
+	defer func() {
+		err := client.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	queryLoop(client, clusterNames)
 }
