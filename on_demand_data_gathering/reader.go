@@ -14,6 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+// This tool periodically try to retrieve rule hits from Redis storage.
+// If there are multiple results (rule hits) for given cluster, all rule hits
+// are read and displayed on console. Additionally file named "query_times.txt"
+// is created and filled in with query times.
 package main
 
 import (
@@ -148,7 +152,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// close fo on exit and check for its returned error
+	// close fout on exit and check for its returned error
 	defer closeFile(fout)
 
 	queryLoop(client, clusterNames, fout)
