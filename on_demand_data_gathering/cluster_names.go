@@ -28,6 +28,7 @@ limitations under the License.
 // 53e0c655-d88e-4751-9332-3431580c6355
 // bd199701-edf8-43ce-99b4-1ad2c44f7f47
 // 1c5a8c1f-2e91-46ad-86be-de093e839230
+// etc.
 //
 // Please note that Unix line ending is used.
 
@@ -41,7 +42,7 @@ import (
 	"github.com/google/uuid"
 )
 
-const uniqueClusterNames = 10
+const uniqueClusterNames = 100
 
 func main() {
 	// open output file
