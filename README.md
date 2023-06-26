@@ -380,7 +380,9 @@ Generator of random payload for testing REST API, message consumers, test framew
 
 #### Description
 
-This source file contains class named `RandomPayloadGenerator` that can be reused by other scripts and tools to generate random payloed, useful for testing, implementing fuzzers etc.
+This source file contains class named `RandomPayloadGenerator` that can be
+reused by other scripts and tools to generate random payload, useful for
+testing, implementing fuzzers etc.
 
 #### Generated documentation
 
