@@ -5,5 +5,5 @@ go 1.16
 require (
 	github.com/RedHatInsights/insights-operator-utils v1.23.2
 	github.com/aws/aws-sdk-go v1.42.20
-	github.com/rs/zerolog v1.26.0
+	github.com/rs/zerolog v1.29.1
 )
