@@ -63,37 +63,37 @@ Utilities for Insights Results Aggregator
         * [Usage](#usage-8)
     * [`reports.py`](#reportspy)
         * [Description](#description-13)
-        * [Generated documentatin](#generated-documentatin)
+        * [Generated documentation](#generated-documentation-9)
         * [Usage](#usage-9)
     * [`cluster_results_age.py`](#cluster_results_agepy)
         * [Description](#description-14)
-        * [Generated documentatin](#generated-documentatin-1)
+        * [Generated documentation](#generated-documentation-10)
         * [Usage](#usage-10)
 * [Utilities for working with objects stored in AWS S3 bucket](#utilities-for-working-with-objects-stored-in-aws-s3-bucket)
     * [`upload_timestamps.py`](#upload_timestampspy)
         * [Description](#description-15)
-        * [Generated documentation](#generated-documentation-9)
+        * [Generated documentation](#generated-documentation-11)
         * [Usage](#usage-11)
     * [`download_prod_data`](#download_prod_data)
         * [Description](#description-16)
-        * [Generated documentation](#generated-documentation-10)
+        * [Generated documentation](#generated-documentation-12)
         * [Usage](#usage-12)
 * [Monitoring tools](#monitoring-tools)
     * [`go_metrics.py`](#go_metricspy)
-        * [Generated documentation](#generated-documentation-11)
+        * [Generated documentation](#generated-documentation-13)
         * [Usage](#usage-13)
     * [`kafka_lags.py`](#kafka_lagspy)
-        * [Generated documentation](#generated-documentation-12)
+        * [Generated documentation](#generated-documentation-14)
         * [Usage](#usage-14)
         * [Example](#example)
 * [Checking tools](#checking-tools)
     * [`json_check.py`](#json_checkpy)
         * [Usage](#usage-15)
-        * [Generated documentation](#generated-documentation-13)
+        * [Generated documentation](#generated-documentation-15)
 * [Database related tools](#database-related-tools)
     * [`cleanup_old_results.py`](#cleanup_old_resultspy)
         * [Description](#description-17)
-        * [Generated documentation](#generated-documentation-14)
+        * [Generated documentation](#generated-documentation-16)
         * [Database connection](#database-connection)
         * [Usage](#usage-16)
         * [Example](#example-1)
@@ -468,7 +468,7 @@ are exported into CSV format so it will be possible to include them in
 spreadsheets.
 
 
-#### Generated documentatin
+#### Generated documentation
 
 * https://redhatinsights.github.io/insights-results-aggregator-utils/packages/reports.html
 
@@ -502,7 +502,7 @@ Creates plot (graph) displaying statistic about the age of rule results.
 Creates plot (graph) displaying statistic about the age of rule results.
 
 
-#### Generated documentatin
+#### Generated documentation
 
 * https://redhatinsights.github.io/insights-results-aggregator-utils/packages/cluster_results_age.html
 
