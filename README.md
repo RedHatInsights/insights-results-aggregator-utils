@@ -1,6 +1,9 @@
 # insights-results-aggregator-utils
 Utilities for Insights Results Aggregator
 
+[![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
+[![forthebadge made-with-go](https://img.shields.io/badge/Made%20with-Go-1f425f.svg)](https://go.dev/)
+
 [![GitHub Pages](https://img.shields.io/badge/%20-GitHub%20Pages-informational)](https://redhatinsights.github.io/insights-results-aggregator-utils/)
 [![License](https://img.shields.io/badge/license-Apache-blue)](https://github.com/RedHatInsights/insights-results-aggregator-utils/blob/master/LICENSE)
 
@@ -33,67 +36,67 @@ Utilities for Insights Results Aggregator
         * [Generated documentation](#generated-documentation-2)
         * [Usage](#usage-2)
         * [A real example](#a-real-example)
-    * [`gen_broken_messages.py`](#gen_broken_messagespy)
+    * [`gen_messages.py`](#gen_messagespy)
         * [Description](#description-7)
         * [Generated documentation](#generated-documentation-3)
         * [Usage](#usage-3)
-    * [`gen_broken_jsons.py`](#gen_broken_jsonspy)
+    * [`gen_broken_messages.py`](#gen_broken_messagespy)
         * [Description](#description-8)
         * [Generated documentation](#generated-documentation-4)
         * [Usage](#usage-4)
-    * [`random_payload_generator.py`](#random_payload_generatorpy)
+    * [`gen_broken_jsons.py`](#gen_broken_jsonspy)
         * [Description](#description-9)
         * [Generated documentation](#generated-documentation-5)
         * [Usage](#usage-5)
-* [Utilitites for generating reports etc.](#utilitites-for-generating-reports-etc)
-    * [`stat.py`](#statpy)
+    * [`random_payload_generator.py`](#random_payload_generatorpy)
         * [Description](#description-10)
         * [Generated documentation](#generated-documentation-6)
         * [Usage](#usage-6)
-    * [`affected_clusters.py`](#affected_clusterspy)
+* [Utilitites for generating reports etc.](#utilitites-for-generating-reports-etc)
+    * [`stat.py`](#statpy)
         * [Description](#description-11)
         * [Generated documentation](#generated-documentation-7)
         * [Usage](#usage-7)
-    * [`reports.py`](#reportspy)
+    * [`affected_clusters.py`](#affected_clusterspy)
         * [Description](#description-12)
-        * [Generated documentatin](#generated-documentatin)
+        * [Generated documentation](#generated-documentation-8)
         * [Usage](#usage-8)
-    * [`cluster_results_age.py`](#cluster_results_agepy)
+    * [`reports.py`](#reportspy)
         * [Description](#description-13)
-        * [Generated documentatin](#generated-documentatin-1)
+        * [Generated documentation](#generated-documentation-9)
         * [Usage](#usage-9)
+    * [`cluster_results_age.py`](#cluster_results_agepy)
+        * [Description](#description-14)
+        * [Generated documentation](#generated-documentation-10)
+        * [Usage](#usage-10)
 * [Utilities for working with objects stored in AWS S3 bucket](#utilities-for-working-with-objects-stored-in-aws-s3-bucket)
     * [`upload_timestamps.py`](#upload_timestampspy)
-        * [Description](#description-14)
-        * [Generated documentation](#generated-documentation-8)
-        * [Usage](#usage-10)
-    * [`download_prod_data`](#download_prod_data)
         * [Description](#description-15)
-        * [Generated documentation](#generated-documentation-9)
+        * [Generated documentation](#generated-documentation-11)
         * [Usage](#usage-11)
+    * [`download_prod_data`](#download_prod_data)
+        * [Description](#description-16)
+        * [Generated documentation](#generated-documentation-12)
+        * [Usage](#usage-12)
 * [Monitoring tools](#monitoring-tools)
     * [`go_metrics.py`](#go_metricspy)
-        * [Generated documentation](#generated-documentation-10)
-        * [Usage](#usage-12)
-    * [`kafka_lags.py`](#kafka_lagspy)
-        * [Generated documentation](#generated-documentation-11)
+        * [Generated documentation](#generated-documentation-13)
         * [Usage](#usage-13)
+    * [`kafka_lags.py`](#kafka_lagspy)
+        * [Generated documentation](#generated-documentation-14)
+        * [Usage](#usage-14)
         * [Example](#example)
 * [Checking tools](#checking-tools)
     * [`json_check.py`](#json_checkpy)
-        * [Usage](#usage-14)
-        * [Generated documentation](#generated-documentation-12)
+        * [Usage](#usage-15)
+        * [Generated documentation](#generated-documentation-15)
 * [Database related tools](#database-related-tools)
     * [`cleanup_old_results.py`](#cleanup_old_resultspy)
-        * [Description](#description-16)
-        * [Generated documentation](#generated-documentation-13)
+        * [Description](#description-17)
+        * [Generated documentation](#generated-documentation-16)
         * [Database connection](#database-connection)
-        * [Usage](#usage-15)
+        * [Usage](#usage-16)
         * [Example](#example-1)
-* [Testing tools](#testing-tools)
-    * [`st.py` (Stage Tester)](#stpy-stage-tester)
-    * [`pta.py` (Processing Times Analyser)](#ptapy-processing-times-analyser)
-
 * [Package manifest](#package-manifest)
 
 <!-- vim-markdown-toc -->
@@ -465,7 +468,7 @@ are exported into CSV format so it will be possible to include them in
 spreadsheets.
 
 
-#### Generated documentatin
+#### Generated documentation
 
 * https://redhatinsights.github.io/insights-results-aggregator-utils/packages/reports.html
 
@@ -499,7 +502,7 @@ Creates plot (graph) displaying statistic about the age of rule results.
 Creates plot (graph) displaying statistic about the age of rule results.
 
 
-#### Generated documentatin
+#### Generated documentation
 
 * https://redhatinsights.github.io/insights-results-aggregator-utils/packages/cluster_results_age.html
 
