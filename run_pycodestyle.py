@@ -22,7 +22,7 @@ from sys import exit
 import pycodestyle
 
 
-def main():
+def main() -> None:
     """Run pydocstyle checker against all Python sources in the given directory."""
     # Find all files in current directory and subdirectories with '*.py' extension.
     # Files are found recursivelly in all subdirectories as well.
