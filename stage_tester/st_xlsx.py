@@ -1161,7 +1161,7 @@ def xlsx_export_recommendations(worksheet, styles, recommendations):
     """Export recommendations taken from both results sets into XLSX worksheet."""
     # all rule selectors
     rule_selectors = sorted(
-        list(set(recommendations["r1"].keys()) | set(recommendations["r2"].keys()))
+        set(recommendations["r1"].keys()) | set(recommendations["r2"].keys())
     )
 
     # table title + row headers
