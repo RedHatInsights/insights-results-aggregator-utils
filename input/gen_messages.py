@@ -51,7 +51,6 @@ optional arguments:
 # <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/gen_messages.html>
 
 import json
-import sys
 import random
 import uuid
 
