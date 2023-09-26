@@ -55,7 +55,6 @@ create a script to cleanup all records older than 90 days
 
 import sys
 import csv
-import collections
 from datetime import datetime
 
 

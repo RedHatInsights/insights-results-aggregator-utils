@@ -22,7 +22,6 @@
 import boto3
 import botocore
 import csv
-import sys
 from argparse import ArgumentParser
 
 
