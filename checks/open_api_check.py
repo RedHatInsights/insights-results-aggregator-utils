@@ -28,12 +28,10 @@ optional arguments:
 # Link to generated documentation for this script:
 # <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/open_api_check.html>
 
-from pathlib import Path
 from json import load
 from sys import exit
 from os import popen
 from argparse import ArgumentParser
-import os
 
 
 def read_control_code(operation):
