@@ -549,8 +549,8 @@ def compare_results(directory1, directory2, filename, info, verbose):
     common = files1 & files2
 
     # reduntant results
-    redundant_d1 = sorted(list(files1 - common))
-    redundant_d2 = sorted(list(files2 - common))
+    redundant_d1 = sorted(files1 - common)
+    redundant_d2 = sorted(files2 - common)
 
     # compute difference in results
     comparison_results, recommendations = compare_results_sets(
@@ -743,7 +743,7 @@ def export_recommendations(csv_writer, recommendations):
 
     # all rule selectors
     rule_selectors = sorted(
-        list(set(recommendations["r1"].keys()) | set(recommendations["r2"].keys()))
+        set(recommendations["r1"].keys()) | set(recommendations["r2"].keys())
     )
 
     # empty row
