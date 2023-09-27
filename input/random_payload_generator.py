@@ -22,6 +22,7 @@ import random
 
 
 class RandomPayloadGenerator:
+
     """Generator of random payload for testing API."""
 
     def __init__(
