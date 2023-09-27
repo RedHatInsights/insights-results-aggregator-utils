@@ -14,6 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""Plot write into database durations measured and stored in CSV file."""
+
 import sys
 import csv
 import numpy as np
