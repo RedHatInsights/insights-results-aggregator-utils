@@ -14,8 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Converts outputs from OCP rule engine into proper reports.
+"""Converts outputs from OCP rule engine into proper reports.
 
 All input files that have filename 's_*.json' (usually anonymized
 outputs from OCP rule engine') are converted into proper 'report'
