@@ -12,8 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Simple checker for OpenAPI specification files.
+"""Simple checker for OpenAPI specification files.
 
 usage: open_api_check.py [-h] [-v] [-n] [-d DIRECTORY]
 
