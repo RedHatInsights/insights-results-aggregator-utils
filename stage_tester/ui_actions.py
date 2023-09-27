@@ -66,8 +66,8 @@ optional arguments:
                           - "disable_feedback [<feedback string>]"
     -v, --verbose       Make execution more verbose
 
-Notes:
-
+Notes
+-----
 - The following arguments need to be specified:
   -a, --addr
   -s, --rule-selector
@@ -83,8 +83,7 @@ to be provided once.
 ```
 
 Examples
------
-
+--------
 * Thumbs up vote for a given recommendation
 
 ``` ui_actions.py -a 'https://$REST_API_URL' -c '$CLUSTER_ID' -v \
@@ -119,6 +118,7 @@ and if none is provided, rule is disabled and no feedback is sent.
 Generated documentation in literate programming style
 -----
 <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/ui_actions.html>
+
 """
 
 from argparse import ArgumentParser
