@@ -1,3 +1,5 @@
+"""Python project setup file."""
+
 from setuptools import setup
 
 setup(use_scm_version=True)

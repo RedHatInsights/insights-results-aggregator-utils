@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Converts structured data from EDN format into JSON format.
+"""Converts structured data from EDN format into JSON format."""
 
 # Link to generated documentation for this script:
 # <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/edn2json.html>
@@ -37,6 +37,7 @@ filename = sys.argv[1]
 
 # Taken from https://github.com/swaroopch/edn_format/issues/76#issuecomment-749618312
 def edn_to_map(x):
+    """Transform EDN structure into Python map."""
     if isinstance(x, edn_format.ImmutableDict):
         return {edn_to_map(k): edn_to_map(v) for k, v in x.items()}
     elif isinstance(x, edn_format.ImmutableList):

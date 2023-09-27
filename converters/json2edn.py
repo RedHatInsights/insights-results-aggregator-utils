@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Converts structured data from JSON format into EDN format.
+"""Converts structured data from JSON format into EDN format."""
 
 # Link to generated documentation for this script:
 # <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/json2edn.html>

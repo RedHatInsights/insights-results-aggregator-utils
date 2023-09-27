@@ -842,6 +842,7 @@ def export_redundant_clusters(csv_writer, files, title):
 
 
 def export_comparison_results(csv_writer, comparison_results):
+    """Export all comparison results into CSV file."""
     csv_writer.writerow(("Comparison results",))
     csv_writer.writerow(
         (

@@ -143,6 +143,7 @@ RULE_SELECTOR = r"[a-zA-Z_0-9]+\.[a-zA-Z_0-9.]+\|[A-Z_0-9]+$"
 
 
 def register_operation(op, func, data=None):
+    """Register any operations and store it in a map."""
     print(
         f"{sys.argv[0]}: info: registering {op}", f"with data: {data}" if data else ""
     )
@@ -249,6 +250,7 @@ def cli_arguments():
 
 
 def check_api_response(response):
+    """Check the API response HTTP code."""
     assert response is not None, "Proper response expected"
     assert (
         response.status_code == requests.codes.ok
@@ -256,10 +258,12 @@ def check_api_response(response):
 
 
 def print_url(url, rest_op, data):
+    """Print URL the script is going to access."""
     print("\t", f"Operation: {rest_op}", url, f"{data}" if data else "")
 
 
 def execute_operations(addr, proxies, auth, clusters, rule_id, error_key):
+    """Execute all operations stored in a map via REST API."""
     for cluster in clusters:
         for action, ops in REGISTERED_OPERATIONS.items():
             function, payload = ops

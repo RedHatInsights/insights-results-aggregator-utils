@@ -14,6 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""Create a graph with write speed measured and stored into CSV file."""
+
 import sys
 import csv
 import numpy as np
