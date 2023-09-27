@@ -66,7 +66,6 @@ MAX_ACCOUNT_NUMBER = 100000000
 
 def cli_arguments():
     """Retrieve all CLI arguments provided by user."""
-
     # First of all, we need to specify all command line flags that are
     # recognized by this tool.
     parser = ArgumentParser()
@@ -173,7 +172,6 @@ def modify_cluster_id(payload):
 
 def main():
     """Entry point to this script."""
-
     # First of all, we need to parse all command line flags that are
     # recognized by this tool.
     args = cli_arguments()

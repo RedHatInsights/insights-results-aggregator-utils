@@ -31,7 +31,6 @@ Types of input message mutation:
 # <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/gen_broken_messages.html>
 
 import json
-import os
 import sys
 import copy
 import itertools

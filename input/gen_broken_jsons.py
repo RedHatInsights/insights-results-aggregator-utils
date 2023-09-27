@@ -132,7 +132,7 @@ def is_proper_json(payload):
     """Check whether the payload represents proper JSON or not."""
     try:
         s = "".join(payload)
-        obj = json.loads(s)
+        json.loads(s)
         return True
     except Exception as e:
         print(e)

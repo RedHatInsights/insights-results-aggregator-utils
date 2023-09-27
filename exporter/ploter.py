@@ -1,5 +1,4 @@
-"""Simple script for plotting the contents of results.csv
-"""
+"""Simple script for plotting the contents of results.csv."""
 
 import matplotlib.pyplot as plt
 import pandas as pd

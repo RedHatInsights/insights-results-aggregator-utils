@@ -94,8 +94,7 @@ please note that at at least one operation needs to be specified:
 ```
 
 Examples
------
-
+--------
 * Retrieve list of clusters via REST API for organization ID 12345678
 
 ```
@@ -129,6 +128,7 @@ st.py -c -v -d1=c1 -d2=c2 -a https://$REST_API_URL -x http://$PROXY_URL -u $USER
 Generated documentation in literate programming style
 -----
 <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/st.html>
+
 """
 
 
@@ -740,7 +740,6 @@ def read_list_of_clusters_from_directory(directory):
 
 def export_recommendations(csv_writer, recommendations):
     """Export recommendations taken from both results sets."""
-
     # all rule selectors
     rule_selectors = sorted(
         set(recommendations["r1"].keys()) | set(recommendations["r2"].keys())
