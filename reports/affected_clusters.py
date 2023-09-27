@@ -14,8 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Prints all clusters that are affected by selected rule.
+"""Prints all clusters that are affected by selected rule.
 
 This script can be used to analyze data exported from `report` table by
 the following command typed into PSQL console:
