@@ -55,7 +55,7 @@ def check_jsons(verbose, directory):
             # If the file can be opened and loaded as JSON, everything is fine.
             with file.open() as fin:
                 # Try to load and parse the content of JSON file.
-                obj = load(fin)
+                load(fin)
                 # At this point the JSON has been loaded and parsed correctly.
                 if verbose is not None:
                     print("{} is valid".format(file))
