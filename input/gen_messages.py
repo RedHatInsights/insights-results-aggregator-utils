@@ -14,8 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Generates messages to be consumed by Insights Results Aggregator.
+"""Generates messages to be consumed by Insights Results Aggregator.
 
 This script read input message (that should be correct or incorrect, according
 to needs) and generates bunch of new messages derived from input one. Each
