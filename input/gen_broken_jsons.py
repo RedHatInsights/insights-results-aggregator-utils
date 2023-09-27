@@ -14,8 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Generate messages to be consumed by aggregator that are not proper JSONs.
+"""Generate messages to be consumed by aggregator that are not proper JSONs.
 
 This script read input message (that should be correct) and generates bunch of
 new messages. Each generated message is broken - it does not contain proper

@@ -14,8 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Anonymize CCX data pipeline log files by hashing organization ID and cluster ID.
+"""Anonymize CCX data pipeline log files by hashing organization ID and cluster ID.
 
 Usage:
 anonymize_ccx_pipeline_log.py [-h] -s SALT < input.log > output.log

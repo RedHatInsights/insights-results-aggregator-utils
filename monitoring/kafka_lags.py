@@ -14,8 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Plot graph with Kafka lags with linear regression line added into plot.
+"""Plot graph with Kafka lags with linear regression line added into plot.
 
 Source CSV file is to be retrieved from Grafana.
 

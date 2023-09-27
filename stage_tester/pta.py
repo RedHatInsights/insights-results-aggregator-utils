@@ -14,8 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Script to retrieve and analyze processing times from reports taken from external data pipeline.
+"""Script to retrieve and analyze processing times from reports taken from external data pipeline.
 
 Description
 -----

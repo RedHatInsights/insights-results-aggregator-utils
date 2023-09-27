@@ -14,8 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Script to retrieve results from the external data pipeline through the standard REST API.
+"""Script to retrieve results from the external data pipeline through the standard REST API.
 
 Description
 -----

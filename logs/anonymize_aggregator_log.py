@@ -14,8 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Anonymize aggregator log files by hashing organization ID and cluster ID.
+"""Anonymize aggregator log files by hashing organization ID and cluster ID.
 
 Usage:
 -----

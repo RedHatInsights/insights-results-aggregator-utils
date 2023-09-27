@@ -14,8 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-List all rules and other interesting informations found in reports.csv.
+"""List all rules and other interesting informations found in reports.csv.
 
 This script can be used to analyze data exported from `report` table by
 the following command typed into PSQL console:

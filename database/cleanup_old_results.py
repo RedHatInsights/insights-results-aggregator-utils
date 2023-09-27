@@ -14,8 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Prepares script to cleanup old results from database.
+"""Prepares script to cleanup old results from database.
 
 Description:
 -----------
