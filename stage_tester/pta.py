@@ -108,7 +108,6 @@ def main():
     args = cli_arguments()
 
     # verbosity flag
-    verbose = args.verbose
 
     # read the data file
     df = read_timestamps(args.input_file)
