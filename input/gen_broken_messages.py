@@ -14,8 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Generate messages to be consumed by aggregator that are broken in some way.
+"""Generate messages to be consumed by aggregator that are broken in some way.
 
 This script read input message (that should be correct) and generates bunch of
 new messages. Each generated message is broken in some way so it is possible
