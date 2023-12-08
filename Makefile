@@ -11,6 +11,9 @@ ruff: ## Run Ruff linter
 docs-style: ## Check documentation strings in all Python sources from this repository
 	pydocstyle .
 
+shellcheck: ## Run shellcheck
+	./shellcheck.sh
+
 help: ## Show this help screen
 	@echo 'Usage: make <OPTIONS> ... <TARGETS>'
 	@echo ''
