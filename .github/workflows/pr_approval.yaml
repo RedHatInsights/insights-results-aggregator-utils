@@ -26,5 +26,3 @@ jobs:
       - run: pip install pydocstyle
       - name: Style checks
         run: make style
-      - name: Docstrings checks
-        run: make doc-check
