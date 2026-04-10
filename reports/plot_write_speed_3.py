@@ -16,8 +16,9 @@
 
 """Create a graph with write speed measured and stored into CSV file."""
 
-import sys
 import csv
+import sys
+
 import matplotlib.pyplot as plt
 
 # Check if command line argument is specified (it is mandatory).

@@ -25,7 +25,6 @@ Utilities for Insights Results Aggregator
 
 ### Checkers
 
-* [run_pycodestyle.py](packages/run_pycodestyle.html)
 * [json_check.py](packages/json_check.html)
 * [open_api_check.py](packages/open_api_check.html)
 

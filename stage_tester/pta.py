@@ -52,12 +52,12 @@ Generated documentation in literate programming style
 
 """
 
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
 import datetime
-
 from argparse import ArgumentParser
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 
 
 def cli_arguments():

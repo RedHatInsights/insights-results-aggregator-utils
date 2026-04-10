@@ -52,8 +52,8 @@ optional arguments:
 import json
 import random
 import uuid
-
 from argparse import ArgumentParser
+
 from tqdm import tqdm
 
 # ranges for attributes that can be modified
@@ -152,7 +152,7 @@ def generate_output(filename, payload, verbose=False):
     with open(filename, "w") as f:
         json.dump(payload, f, indent=4)
         if verbose:
-            print("Generated file {}".format(filename))
+            print(f"Generated file {filename}")
 
 
 def modify_org_id(payload):
@@ -182,7 +182,6 @@ def main():
 
     # Generate specified number of output messages
     for i in tqdm(range(args.repeat)):
-
         # optional modifications
         if args.org_id:
             modify_org_id(payload)

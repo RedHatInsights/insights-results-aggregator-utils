@@ -16,8 +16,9 @@
 
 """Plot time durations measured and stored in CSV file."""
 
-import sys
 import csv
+import sys
+
 import matplotlib.pyplot as plt
 
 # Check if command line argument is specified (it is mandatory).

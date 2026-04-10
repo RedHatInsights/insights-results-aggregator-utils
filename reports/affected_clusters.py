@@ -36,10 +36,10 @@ ccx-data-pipeline-prod/browse/secrets/ccx-data-pipeline-db
 # Link to generated documentation for this script:
 # <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/affected_clusters.html>
 
+import collections
+import csv
 import json
 import sys
-import csv
-import collections
 
 # Check if both command line arguments are specified (they are mandatory).
 if len(sys.argv) < 3:

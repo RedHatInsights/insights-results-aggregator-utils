@@ -18,7 +18,7 @@ total_messages=0
 
 function measure_usage() {
     rm -r output/*.json
-    total_messages=$(($total_messages + n_messages))
+    total_messages=$((total_messages + n_messages))
 
     # Generate N messages
     echo "Generating $n_messages messages . . ."
@@ -28,19 +28,19 @@ function measure_usage() {
     echo "Sending the $n_messages messages to Kafka . . ."
     ../input/produce.sh
 
-    rule_hits_records=$(($total_messages * $RULE_HITS_PER_MESSAGE))
+    rule_hits_records=$((total_messages * RULE_HITS_PER_MESSAGE))
     echo "Current rule hits should be $rule_hits_records"
-    reports_records=$(($total_messages))
+    reports_records=$((total_messages))
     echo "Current reports should be $reports_records"
-    recommendations_records=$(($total_messages * $RULE_HITS_PER_MESSAGE))
+    recommendations_records=$((total_messages * RULE_HITS_PER_MESSAGE))
     echo "Current recommendations should be $recommendations_records"
 
     # Wait for all the messages to be consumed (manual input)
-    read  -n 1 -p "Please, press any key once the aggregator db writer has finished reading the Kafka messages (i.e no activity in logs)"
+    read -r -n 1 -p "Please, press any key once the aggregator db writer has finished reading the Kafka messages (i.e no activity in logs)"
 
     tmp_output=$(mktemp)
     (
-        cd "$EXPORTER_PATH"
+        cd "$EXPORTER_PATH" || return 1
         /usr/bin/time -f "%P %M" "./insights-results-aggregator-exporter" -metadata > /dev/null 2> "$tmp_output"
     )
 

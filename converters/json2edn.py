@@ -19,8 +19,9 @@
 # Link to generated documentation for this script:
 # <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/json2edn.html>
 
-import sys
 import json
+import sys
+
 import edn_format
 
 # Check if command line argument is specified (it is mandatory).
@@ -35,7 +36,7 @@ if len(sys.argv) < 2:
 filename = sys.argv[1]
 
 # Try to open the JSON file specified.
-with open(filename, "r") as json_input:
+with open(filename) as json_input:
     # open the JSON file and parse it
     payload = json.load(json_input)
     # dump the parsed data structure into EDN format

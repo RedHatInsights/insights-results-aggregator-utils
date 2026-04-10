@@ -139,19 +139,16 @@ Generated documentation in literate programming style
 
 """
 
+import csv
+import json
+import os
+import sys
+from argparse import ArgumentParser
+from collections import Counter, namedtuple
+from datetime import datetime
 
 import requests
-import json
-import sys
-import os
-import csv
-
 import xlsxwriter
-
-from collections import Counter
-from collections import namedtuple
-from datetime import datetime
-from argparse import ArgumentParser
 
 # Data type to represent valid rule selector
 ruleSelector = namedtuple("rule_selector", ["rule_id", "error_key"])
@@ -356,12 +353,12 @@ def main():
         export_times(args.directory1, args.directory2)
 
     if args.compare_results:
-        assert (
-            args.directory1 is not None
-        ), "-d1/--directory1 CLI option needs to be provided in order to compare results"
-        assert (
-            args.directory2 is not None
-        ), "-d2/--directory2 CLI option needs to be provided in order to compare results"
+        assert args.directory1 is not None, (
+            "-d1/--directory1 CLI option needs to be provided in order to compare results"
+        )
+        assert args.directory2 is not None, (
+            "-d2/--directory2 CLI option needs to be provided in order to compare results"
+        )
 
         # retrieve and use additional info about pipeline if user depands to
         info = None
@@ -385,9 +382,9 @@ def call_rest_api(url, proxies, auth):
 
     # elementary check for response content
     assert response is not None, "Proper response expected"
-    assert (
-        response.status_code == requests.codes.ok
-    ), f"Unexpected HTTP code returned: {response.status_code}"
+    assert response.status_code == requests.codes.ok, (
+        f"Unexpected HTTP code returned: {response.status_code}"
+    )
 
     # response should be in JSON format, time to parse it
     payload = response.json()
@@ -455,8 +452,7 @@ def read_cluster_list_from_csv(input_file):
     cluster_list = []
 
     # input file containing list of clusters
-    with open(input_file, "r") as input_file:
-
+    with open(input_file) as input_file:
         # read file as csv file
         csv_reader = csv.reader(input_file)
 
@@ -475,7 +471,7 @@ def read_cluster_list_from_text_file(input_file):
     cluster_list = []
 
     # input file containing list of clusters
-    with open(input_file, "r") as input_file:
+    with open(input_file) as input_file:
         # iterate over all cluster names
         for line in input_file:
             cluster = line.strip()
@@ -524,7 +520,7 @@ def retrieve_results_for_cluster(url, proxies, auth, cluster, verbose):
     # pretty print the output
     results = json.dumps(payload, indent=4)
 
-    filename = "{}.json".format(cluster)
+    filename = f"{cluster}.json"
 
     # generate output file with cluster results
     with open(filename, "w") as json_file:
@@ -697,9 +693,9 @@ def update_recommendations_for_results(counters, results):
         # preliminary check if all attributes are there
         assert "rule_id" in hit, "Expected 'rule_id' attribute"
         assert "extra_data" in hit, "Expected 'extra_data' containing a map"
-        assert (
-            "error_key" in hit["extra_data"]
-        ), "Expected 'extra_data' containing a map"
+        assert "error_key" in hit["extra_data"], (
+            "Expected 'extra_data' containing a map"
+        )
 
         # construct the full rule selector
         rule_id = hit["rule_id"]
@@ -757,7 +753,7 @@ def read_cluster_results(directory, cluster):
     """Try to read results for given cluster, where results are stored in specified directory."""
     filename = f"{directory}/{cluster}.json"
 
-    with open(filename, "r") as fin:
+    with open(filename) as fin:
         raw_data = fin.read()
         results = json.loads(raw_data)
 

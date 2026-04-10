@@ -31,9 +31,9 @@ have following names: 'r_*.json'.
 # Link to generated documentation for this script:
 # <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/2report.html>
 
+import datetime
 import json
 import sys
-import datetime
 from os import listdir
 from os.path import isfile, join
 
@@ -45,13 +45,13 @@ if len(sys.argv) < 3:
     print("Usage: 2report.py org_id cluster_id")
 
 # First command line argument should contain organization ID.
-orgID = sys.argv[1]
+org_id = sys.argv[1]
 
 # Second command line argument should contain cluster name.
-clusterName = sys.argv[2]
+cluster_name = sys.argv[2]
 
 # Retrieve actual time and format it according to ISO standard.
-lastChecked = datetime.datetime.utcnow().isoformat() + "Z"
+last_checked = datetime.datetime.utcnow().isoformat() + "Z"
 
 
 def remove_internal_rules(data, key, selector):
@@ -59,16 +59,15 @@ def remove_internal_rules(data, key, selector):
     # Proper JSON reports from OCP should contain attribute named `reports`.
     # It is needed to retrieve its content which is list of reports and
     # process each report separately.
-    if "reports" in data:
-        if key in data:
-            reports = data[key]
-            new = []
-            for report in reports:
-                # Filter out all internal rules.
-                if not report[selector].startswith("ccx_rules_ocp.internal."):
-                    print("adding", report[selector])
-                    new.append(report)
-            data[key] = new
+    if "reports" in data and key in data:
+        reports = data[key]
+        new = []
+        for report in reports:
+            # Filter out all internal rules.
+            if not report[selector].startswith("ccx_rules_ocp.internal."):
+                print("adding", report[selector])
+                new.append(report)
+        data[key] = new
 
 
 # Iterate over all files found in current directory.
@@ -95,9 +94,9 @@ for filename in files:
             # contain the original data, but organization ID, cluster ID, and
             # last checked attributes will be changed accordingly
             report = {}
-            report["OrgID"] = int(orgID)
-            report["ClusterName"] = clusterName
-            report["LastChecked"] = lastChecked
+            report["OrgID"] = int(org_id)
+            report["ClusterName"] = cluster_name
+            report["LastChecked"] = last_checked
             report["Report"] = data
 
             # Export the anonymized report

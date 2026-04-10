@@ -31,8 +31,8 @@ Types of input message mutation:
 # <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/gen_broken_jsons.html>
 
 import json
-import sys
 import random
+import sys
 from argparse import ArgumentParser
 
 # Basic parameters of simple fuzzer
@@ -58,7 +58,7 @@ def generate_output(filename, payload, verbose):
         for line in payload:
             fout.write(line)
         if verbose:
-            print("Generated file {}".format(filename))
+            print(f"Generated file {filename}")
 
 
 def shuffle_lines(payload, verbose):

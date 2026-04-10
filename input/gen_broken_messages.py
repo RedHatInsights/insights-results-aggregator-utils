@@ -30,14 +30,13 @@ Types of input message mutation:
 # Link to generated documentation for this script:
 # <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/gen_broken_messages.html>
 
-import json
-import sys
 import copy
 import itertools
+import json
 import random
+import sys
 
 from random_payload_generator import RandomPayloadGenerator
-
 
 added_counter = 0
 mutated_counter = 0
@@ -53,7 +52,7 @@ def generate_output(filename, payload):
     """Generate output JSON file with indentation."""
     with open(filename, "w") as f:
         json.dump(payload, f, indent=4)
-        print("Generated file {}".format(filename))
+        print(f"Generated file {filename}")
 
 
 def filename_removed_items(removed_keys, selector=None):
@@ -69,14 +68,14 @@ def filename_added_items():
     """Generate filename for JSON with items added into original payload."""
     global added_counter
     added_counter += 1
-    return "broken_added_items_{:03d}.json".format(added_counter)
+    return f"broken_added_items_{added_counter:03d}.json"
 
 
 def filename_mutated_items():
     """Generate filename for JSON with items added into original payload."""
     global mutated_counter
     mutated_counter += 1
-    return "broken_mutated_items_{:03d}.json".format(mutated_counter)
+    return f"broken_mutated_items_{mutated_counter:03d}.json"
 
 
 def remove_items_one_iter(original_payload, items_count, remove_flags, selector=None):
@@ -104,10 +103,9 @@ def remove_items_one_iter(original_payload, items_count, remove_flags, selector=
 
 def remove_items(original_payload, selector=None):
     """Algorithm to remove items from original payload."""
-    if selector is None:
-        items_count = len(original_payload)
-    else:
-        items_count = len(original_payload[selector])
+    items_count = (
+        len(original_payload) if selector is None else len(original_payload[selector])
+    )
 
     # lexicographics ordering
     remove_flags_list = list(itertools.product([True, False], repeat=items_count))
@@ -125,7 +123,7 @@ def add_items_one_iter(original_payload, how_many):
     new_payload = copy.deepcopy(original_payload)
     rpg = RandomPayloadGenerator()
 
-    for i in range(how_many):
+    for _ in range(how_many):
         new_key = rpg.generate_random_key_for_dict(new_payload)
         new_value = rpg.generate_random_payload()
         new_payload[new_key] = new_value
@@ -137,7 +135,7 @@ def add_items_one_iter(original_payload, how_many):
 def add_random_items(original_payload, min, max, mutations):
     """Algorithm to add items with random values into original payload."""
     for how_many in range(min, max):
-        for i in range(1, mutations):
+        for _ in range(1, mutations):
             add_items_one_iter(original_payload, how_many)
 
 
@@ -147,7 +145,7 @@ def mutate_items_one_iteration(original_payload, how_many):
     new_payload = copy.deepcopy(original_payload)
     rpg = RandomPayloadGenerator()
 
-    for i in range(how_many):
+    for _ in range(how_many):
         selected_key = random.choice(list(original_payload.keys()))
         new_value = rpg.generate_random_payload()
         new_payload[selected_key] = new_value
@@ -159,7 +157,7 @@ def mutate_items_one_iteration(original_payload, how_many):
 def mutate_items(original_payload, min, max):
     """Algorithm to mutate items with random values in original payload."""
     for how_many in range(1, len(original_payload)):
-        for i in range(min, max):
+        for _ in range(min, max):
             mutate_items_one_iteration(original_payload, how_many)
 
 
