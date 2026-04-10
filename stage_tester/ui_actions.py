@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 # Copyright © 2021 Red Hat, Inc
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -121,12 +120,11 @@ Generated documentation in literate programming style
 
 """
 
-from argparse import ArgumentParser
-from argparse import RawTextHelpFormatter
-import requests
-
 import re
 import sys
+from argparse import ArgumentParser, RawTextHelpFormatter
+
+import requests
 
 ALLOWED_OPERATIONS = {
     "like",
@@ -206,8 +204,7 @@ def cli_arguments():
         "--cluster-list",
         dest="cluster_list_file",
         required=not ({"-c", "--cluster"} & set(sys.argv)),
-        help="File containing list of clusters to interact with "
-        "(1 or more cluster uuid expected)",
+        help="File containing list of clusters to interact with (1 or more cluster uuid expected)",
     )
 
     parser.add_argument(
@@ -252,9 +249,9 @@ def cli_arguments():
 def check_api_response(response):
     """Check the API response HTTP code."""
     assert response is not None, "Proper response expected"
-    assert (
-        response.status_code == requests.codes.ok
-    ), "Received {response.status_code} when {requests.codes.ok} expected "
+    assert response.status_code == requests.codes.ok, (
+        "Received {response.status_code} when {requests.codes.ok} expected "
+    )
 
 
 def print_url(url, rest_op, data):
@@ -286,8 +283,7 @@ def main():
     # check -c and -l args are not both provided
     if args.cluster and args.cluster_list_file:
         print(
-            f"{sys.argv[0]}: "
-            f"error: Please provide cluster UUID through either -c or -l, not both."
+            f"{sys.argv[0]}: error: Please provide cluster UUID through either -c or -l, not both."
         )
         sys.exit(1)
 
@@ -329,11 +325,13 @@ def main():
     verbose = args.verbose
     proxies = {"https": args.proxy} if args.proxy else None
     auth = (args.user, args.password)
-    clusters = (
-        {args.cluster}
-        if args.cluster
-        else set(open(args.cluster_list_file).read().split())
-    )
+
+    if args.cluster:
+        clusters = {args.cluster}
+    elif args.cluster_list_file:
+        with open(args.cluster_list_file) as cluster_list:
+            clusters = set(cluster_list.read().split())
+
     rule_id, error_key = selector.split("|")
 
     if verbose:

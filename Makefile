@@ -2,17 +2,12 @@
 
 style:	code-style docs-style shellcheck ## Perform all style checks
 
-code-style: ## Check code style for all Python sources from this repository
-	python3 tools/run_pycodestyle.py
-
 ruff: ## Run Ruff linter
-	ruff .
-
-docs-style: ## Check documentation strings in all Python sources from this repository
-	pydocstyle .
+	pre-commit run --all-files ruff-check
+	pre-commit run --all-files ruff-format
 
 shellcheck: ## Run shellcheck
-	./shellcheck.sh
+	pre-commit run --all-files shellcheck
 
 help: ## Show this help screen
 	@echo 'Usage: make <OPTIONS> ... <TARGETS>'

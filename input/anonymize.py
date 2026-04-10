@@ -50,7 +50,7 @@ for filename in input_files:
                 data["info"] = []
 
             # Generate output JSON file
-            outfilename = "s_{:0>5d}.json".format(i)
+            outfilename = f"s_{i:0>5d}.json"
             i += 1
 
             # Export the updated report

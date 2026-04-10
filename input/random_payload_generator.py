@@ -17,12 +17,11 @@
 # Link to generated documentation for this script:
 # <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/random_payload_generator.html>
 
-import string
 import random
+import string
 
 
 class RandomPayloadGenerator:
-
     """Generator of random payload for testing API."""
 
     def __init__(
@@ -155,11 +154,7 @@ class RandomPayloadGenerator:
         # If types are not restricted, we use the default set - strings,
         # integers, floats, lists (recursive), dictionary (recursive), and
         # booleans.
-        if restrict_types:
-            types = restrict_types
-        else:
-            types = (str, int, float, list, dict, bool)
-
+        types = restrict_types or (str, int, float, list, dict, bool)
         selected_type = random.choice(types)
 
         return self.generate_random_value(selected_type)

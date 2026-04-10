@@ -19,7 +19,7 @@ while true
 do
     # All JSON files in current directory will be sent to Kafka via Kafkacat
     i=0
-    for file in output/*.json 
+    for file in output/*.json
     do
         # Update the port accordingly (this one is for Kafka running inside Docker)
         kafkacat -b localhost:9092 -P -t ccx.ocp.results $file

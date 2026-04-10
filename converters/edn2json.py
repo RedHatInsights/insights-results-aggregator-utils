@@ -19,8 +19,9 @@
 # Link to generated documentation for this script:
 # <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/edn2json.html>
 
-import sys
 import json
+import sys
+
 import edn_format
 
 # Check if command line argument is specified (it is mandatory).
@@ -49,7 +50,7 @@ def edn_to_map(x):
 
 
 # Try to open the EDN file specified.
-with open(filename, "r") as edn_input:
+with open(filename) as edn_input:
     # open the EDN file and parse it
     payload = edn_format.loads(edn_input.read())
     print(json.dumps(edn_to_map(payload), indent=2))

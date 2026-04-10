@@ -27,10 +27,10 @@ optional arguments:
 # Link to generated documentation for this script:
 # <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/open_api_check.html>
 
-from json import load
-from sys import exit
-from os import popen
 from argparse import ArgumentParser
+from json import load
+from os import popen
+from sys import exit
 
 
 def read_control_code(operation):
@@ -118,7 +118,6 @@ def check_description_for_method_parameters(path, method, m):
 
         # Check all parameters.
         for parameter in parameters:
-
             # Check if description attribute exists.
             if "description" not in parameter:
                 print(
@@ -256,14 +255,14 @@ def check_openapi_json(verbose, directory):
     filename = directory + "openapi.json"
 
     # If the file can be opened and loaded as JSON, everything is fine.
-    with open(filename, "r") as fin:
+    with open(filename) as fin:
         try:
             # Try to load and parse the content of JSON file.
             obj = load(fin)
 
             # At this point the JSON has been loaded and parsed correctly.
             if verbose is not None:
-                print("{} has valid JSON format".format(filename))
+                print(f"{filename} has valid JSON format")
 
             failures += check_info_node(obj, verbose)
             failures += check_all_paths(obj, verbose)
@@ -275,7 +274,7 @@ def check_openapi_json(verbose, directory):
             # There are several reasons and possibilities why the file can not
             # be read as JSON, so we just print the error message taken from
             # exception object.
-            print("{} has invalid JSON format".format(filename))
+            print(f"{filename} has invalid JSON format")
             failures += 1
             print(e)
 
@@ -308,27 +307,22 @@ def display_report(passes, failures, nocolors):
     if failures == 0:
         if passes == 0:
             print(
-                "{}[WARN]{}: no JSON files with OpenAPI detected".format(
-                    magenta_background, no_color
-                )
+                f"{magenta_background}[WARN]{no_color}: no JSON files with OpenAPI detected"
             )
         else:
             print(
-                "{}[OK]{}: OpenAPI file seems to have proper format and content".format(
-                    green_background, no_color
-                )
+                f"{green_background}[OK]{no_color}: "
+                "OpenAPI file seems to have proper format and content"
             )
     else:
         print(
-            "{}[FAIL]{}: file with invalid format and/or content detected".format(
-                red_background, no_color
-            )
+            f"{red_background}[FAIL]{no_color}: file with invalid format and/or content detected"
         )
 
     # Print just number of passes and failures at the end, as this information
     # can be processed on CI.
-    print("{} passes".format(passes))
-    print("{} failures".format(failures))
+    print(f"{passes} passes")
+    print(f"{failures} failures")
 
 
 def main():

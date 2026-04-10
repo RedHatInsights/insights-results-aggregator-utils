@@ -23,10 +23,10 @@ Memory and GC statistic is being exported into CSV file to be further processed.
 # <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/go_metrics.html>
 
 import csv
-import requests
 import time
-
 from argparse import ArgumentParser
+
+import requests
 from prometheus_client.parser import text_string_to_metric_families
 
 # Tuple containing all exported metrics.

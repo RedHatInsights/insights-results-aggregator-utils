@@ -19,8 +19,9 @@
 # Link to generated documentation for this script:
 # <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/cluster_id_distribution.html>
 
-import sys
 import csv
+import sys
+
 import matplotlib.pyplot as plt
 import numpy
 

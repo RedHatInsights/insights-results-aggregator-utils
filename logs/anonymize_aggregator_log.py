@@ -33,8 +33,8 @@ anonymize_aggregator_log.py -s foobar < original.log > anonymized.log
 # Link to generated documentation for this script:
 # <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/anonymize_aggregator_log.html>
 
-from hashlib import blake2b
 from argparse import ArgumentParser
+from hashlib import blake2b
 from sys import stdin
 
 
@@ -70,7 +70,7 @@ def hash_org_id(line, salt):
     new_org_id = int(h.hexdigest(), 16)
 
     # Format all three parts of log entry into expected output.
-    return "{}{}{}".format(beginning, new_org_id, ending)
+    return f"{beginning}{new_org_id}{ending}"
 
 
 def hash_cluster_id(line, salt):
@@ -91,9 +91,7 @@ def hash_cluster_id(line, salt):
     x = h.hexdigest()
 
     # Format all parts of log entry into expected output.
-    return "{}{}-{}-{}-{}-{}{}".format(
-        beginning, x[0:8], x[8:12], x[12:16], x[16:20], x[20:], ending
-    )
+    return f"{beginning}{x[0:8]}-{x[8:12]}-{x[12:16]}-{x[16:20]}-{x[20:]}{ending}"
 
 
 def hash_sensitive_values(line, salt=b"foo"):
@@ -125,7 +123,7 @@ def main():
 
     # This script works as a standard Unix filter (input->output), so we have
     # to process input in line-by-line basis.
-    for cnt, line in enumerate(stdin):
+    for _cnt, line in enumerate(stdin):
         line = line.strip()
         # If the line contains any information that need to be anonymized,
         # do so.

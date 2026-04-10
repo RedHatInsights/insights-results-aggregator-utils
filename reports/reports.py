@@ -32,10 +32,10 @@ ccx-data-pipeline-prod/browse/secrets/ccx-data-pipeline-db
 # Link to generated documentation for this script:
 # <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/reports.html>
 
+import collections
+import csv
 import json
 import sys
-import csv
-import collections
 
 # not supported unless we get the real organization list
 import organizations
@@ -78,7 +78,7 @@ rules = collections.Counter()
 hits = collections.Counter()
 
 
-def readOrganization(org_id):
+def read_organization(org_id):
     """Read organization for the provided organization ID."""
     if org_id in organizations.orgs:
         return organizations.orgs[org_id]
@@ -114,19 +114,18 @@ with open(input_csv) as csv_input:
             for info in infolist:
                 if info["key"] == "GRAFANA_LINK":
                     cluster = info["details"]["cluster_id"]
-            if cluster is not None:
-                if "reports" in data:
-                    hits[len(data["reports"])] += 1
-                    clusters_hits[org_id] += 1
-                    reports = data["reports"]
-                    realRuleFound = False
-                    for r in reports:
-                        rule = r["component"]
-                        if rule != "ccx_rules_ocm.tutorial_rule.report":
-                            realRuleFound = True
-                        rules[rule] += 1
-                    if realRuleFound:
-                        clusters_hits_no_tutorial[org_id] += 1
+            if cluster is not None and "reports" in data:
+                hits[len(data["reports"])] += 1
+                clusters_hits[org_id] += 1
+                reports = data["reports"]
+                real_rule_found = False
+                for r in reports:
+                    rule = r["component"]
+                    if rule != "ccx_rules_ocm.tutorial_rule.report":
+                        real_rule_found = True
+                    rules[rule] += 1
+                if real_rule_found:
+                    clusters_hits_no_tutorial[org_id] += 1
 
 
 # Try to generate report with CSV format
@@ -146,7 +145,7 @@ print("Organization ID", "Domain", "Clusters", "Hit", "Hit/no tutorial", sep=","
 for org in orgs.most_common(MOST_USED_ORGS):
     print(
         org[0],
-        readOrganization(org[0]),
+        read_organization(org[0]),
         org[1],
         clusters_hits[org[0]],
         clusters_hits_no_tutorial[org[0]],
@@ -160,11 +159,11 @@ print("Organization ID", "Domain", "Clusters", "Hit", "Hit/no tutorial", sep=","
 
 i = 0
 for org in orgs.most_common(1000000000000):
-    name = readOrganization(org[0])
+    name = read_organization(org[0])
     if name != "***unknown***" and name != "redhat.com":
         print(
             org[0],
-            readOrganization(org[0]),
+            read_organization(org[0]),
             org[1],
             clusters_hits[org[0]],
             clusters_hits_no_tutorial[org[0]],

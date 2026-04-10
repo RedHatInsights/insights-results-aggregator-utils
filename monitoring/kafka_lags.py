@@ -29,9 +29,10 @@ kafka_lags.py overall.csv")
 """
 
 import sys
-import pandas as pd
-import numpy as np
+
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 
 # Standard moving average window
 sma_window = 50

@@ -19,10 +19,11 @@
 # Link to generated documentation for this script:
 # <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/upload_timestamps.html>
 
-import boto3
-import botocore
 import csv
 from argparse import ArgumentParser
+
+import boto3
+import botocore
 
 
 def connect_to_s3(aws_access_key_id, aws_secret_access_key, region_name):

@@ -27,11 +27,11 @@ optional arguments:
 # Link to generated documentation for this script:
 # <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/json_check.html>
 
-from pathlib import Path
-from json import load
-from sys import exit
-from os import popen
 from argparse import ArgumentParser
+from json import load
+from os import popen
+from pathlib import Path
+from sys import exit
 
 
 def read_control_code(operation):
@@ -58,14 +58,14 @@ def check_jsons(verbose, directory):
                 load(fin)
                 # At this point the JSON has been loaded and parsed correctly.
                 if verbose is not None:
-                    print("{} is valid".format(file))
+                    print(f"{file} is valid")
 
                 passes += 1
         except ValueError as e:
             # There are several reasons and possibilities why the file can not
             # be read as JSON, so we just print the error message taken from
             # exception object.
-            print("{} is invalid".format(file))
+            print(f"{file} is invalid")
             failures += 1
             print(e)
 
@@ -98,24 +98,16 @@ def display_report(passes, failures, nocolors):
     if failures == 0:
         # If there are no failures, then check if any JSON file has been found at all.
         if passes == 0:
-            print(
-                "{}[WARN]{}: no JSON files detected".format(
-                    magenta_background, no_color
-                )
-            )
+            print(f"{magenta_background}[WARN]{no_color}: no JSON files detected")
         else:
-            print(
-                "{}[OK]{}: all JSONs have proper format".format(
-                    green_background, no_color
-                )
-            )
+            print(f"{green_background}[OK]{no_color}: all JSONs have proper format")
     else:
-        print("{}[FAIL]{}: invalid JSON(s) detected".format(red_background, no_color))
+        print(f"{red_background}[FAIL]{no_color}: invalid JSON(s) detected")
 
     # Print just number of passes and failures at the end, as this information
     # can be processed on CI.
-    print("{} passes".format(passes))
-    print("{} failures".format(failures))
+    print(f"{passes} passes")
+    print(f"{failures} failures")
 
 
 def main():

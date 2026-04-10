@@ -3,13 +3,11 @@
 # Link to generated documentation for this script:
 # <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/issue.html>
 
-import os
-import sys
-import requests
 import json
-
-from datetime import datetime
 from argparse import ArgumentParser
+from datetime import datetime
+
+import requests
 
 
 def current_time_formatted():
@@ -35,14 +33,11 @@ def make_github_issue(
 ):
     """Create an issue on github.com using the given parameters."""
     # URL to create issues via `POST` HTTP method.
-    url = "https://api.github.com/repos/%s/%s/import/issues" % (
-        organization,
-        repository,
-    )
+    url = f"https://api.github.com/repos/{organization}/{repository}/import/issues"
 
     # Construct headers that need to be set.
     headers = {
-        "Authorization": "token %s" % token,
+        "Authorization": f"token {token}",
         "Accept": "application/vnd.github.golden-comet-preview+json",
     }
 
@@ -63,9 +58,9 @@ def make_github_issue(
     response = requests.request("POST", url, data=payload, headers=headers)
     # Check if the issue has been created or if any error happens.
     if response.status_code == 202:
-        print('Successfully created Issue "%s"' % title)
+        print(f'Successfully created Issue "{title}"')
     else:
-        print('Could not create Issue "%s"' % title)
+        print(f'Could not create Issue "{title}"')
         print("Response:", response.content)
 
 

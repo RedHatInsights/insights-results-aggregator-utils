@@ -19,10 +19,11 @@
 # Link to generated documentation for this script:
 # <https://redhatinsights.github.io/insights-results-aggregator-utils/packages/cluster_results_age.html>
 
-import sys
-import csv
 import collections
+import csv
+import sys
 from datetime import datetime
+
 import matplotlib.pyplot as plt
 
 days_stat = collections.Counter()
@@ -45,11 +46,9 @@ d2 = datetime.strptime("2020-07-31", "%Y-%m-%d")
 with open(input_csv) as csv_input:
     # And open this file as CSV
     csv_reader = csv.reader(csv_input)
-    rows = 0
 
     # Read all rows from the provided CSV file.
     for row in csv_reader:
-        rows += 1
         d1 = datetime.strptime(row[0], "%Y-%m-%d %H:%M:%S.%f")
         offset = d2 - d1
         days_stat[offset.days] += 1
