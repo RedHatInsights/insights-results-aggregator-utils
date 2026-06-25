@@ -3,7 +3,7 @@ module publisher
 go 1.23.0
 
 require (
-	github.com/go-redis/redis/v9 v9.20.1
+	github.com/go-redis/redis/v9 v9.21.0
 	github.com/google/uuid v1.6.0
 )
 
