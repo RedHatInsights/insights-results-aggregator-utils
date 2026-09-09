@@ -1,6 +1,6 @@
 module github.com/RedHatInsights/insights-results-aggregator-utils/s3/download_prod_data
 
-go 1.25.0
+go 1.26.0
 
 require (
 	github.com/RedHatInsights/insights-operator-utils v1.28.0
@@ -25,5 +25,5 @@ require (
 	github.com/mattn/go-colorable v0.1.15 // indirect
 	github.com/mattn/go-isatty v0.0.24 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
-	golang.org/x/sys v0.47.0 // indirect
+	golang.org/x/sys v0.48.0 // indirect
 )
